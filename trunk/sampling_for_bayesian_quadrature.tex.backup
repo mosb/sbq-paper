@@ -79,6 +79,15 @@
 We describe a novel approach to quadrature for probabilistic integrals, offering a competitor to traditional Monte Carlo methods. We use a Bayesian quadrature framework \citep{BZHermiteQuadrature,BZMonteCarlo}.
 \end{abstract} 
 
+\section{Introduction}
+
+Bayesian inference often requires the evaluation of nonanalytic
+definite integrals that must be approximated using numerical
+integration.  In the main, these methods estimate the integral given
+the value of the integrand on a set of sample points, a set that is limited in size by the computational expense of evaluating the integrand.
+As discussed in \citep{MCUnsound}, traditional Monte Carlo
+integration techniques do not make the best possible use of this valuable information. An alternative is found in Bayesian quadrature \citep{BZHermiteQuadrature}, that uses these samples within a Gaussian process model to perform inference about the integrand. The analytic niceties of the Gaussian then permit inference to be performed about the integral itself, the ultimate object of our interest.
+
 \section{Gaussian Processes}
 
 Gaussian processes (\gp s) offer a powerful method to perform Bayesian
@@ -335,7 +344,10 @@ Again, the scales $h_f$ and $h_g$ cancel out of our mean estimate.
 
 \section{Linearisation}
 
-Imagine we want to evaluate the evidence $\inty{r}$, an integral over non-negative likelihoods, $r$.
+Imagine we want to evaluate the evidence $\inty{r}$, an integral over non-negative likelihoods, $r(\phi)$, who arguments are the parameters of the relevant model.
+$$
+\inty{r} = \int r(\phi) p(\phi) \ud\phi
+$$
 
 Firstly, we define the transformation
 \begin{align*}
@@ -397,11 +409,11 @@ We use another \gpb for $\psi$, with the affine covariance
 \end{equation*}
 reflecting the assumption that $\psi$ is, as desired, affine in $\tr$. With this covariance, and given observations
 $\psi_0 \deq \psi(\tr_0)$, $\pderiv{\psi_0}{\tr(\phi)} \deq \pderiv{\psi}{\tr(\phi)}(\tr_0)$ (whose values we'll return to later), we have the \emph{linearisation} approximation
-\begin{align*}
-&\novmean{\psi[\tr]}{\psi_0,\pderiv{\psi_0}{\tq(\phi)}, \tr} 
-= \psi_0+
+\begin{multline}\label{eq:linearisation}
+\novmean{\psi[\tr]}{\psi_0,\pderiv{\psi_0}{\tq(\phi)}, \tr} 
+= \psi_0+\\
 \int \pderiv{\psi_0}{\tr(\phi)}\bigl(\tr(\phi)-\tr_0(\phi)\bigr)\ud\phi\,.
-\end{align*}
+\end{multline}
 
 We are going to perform this linearisation of $\psi(\tq,\tr)$ around the point defined by $\tr_0 \deq t(m_{r|s})$. $m_{r|s}$ is the \gpb conditional mean (as per \eqref{eq:GPMean}) for $r$ given observations $r(\vph_s)$. For this \gp (over the non-log space), we take zero prior means and Gaussian
 covariances of the form \eqref{eq:Gaussian_cov_fn}. With appropriate selections of input scales $w_r$ for such covariances, and defining
@@ -424,6 +436,10 @@ Our linearisation corresponds to giving our \gpb over $\psi$ observations at $\t
  = \bigl(\mean{r(\phi)}{\vr_s}+\gamma\bigr)\,\po{\phi}
 \nonumber
 \end{align}
+As with any linearisation approximation, \eqref{eq:linearisation} gives the value at the selected point $\tr_0$, plus a correction factor modelling the influence of the first derivatives. 
+These correction factor contains a further non-analytic integral, over $\phi$. Fortunately, they're not too far away from being analytic; almost all terms with dependence on $\phi$ within those integrals are Gaussian. The exception is the $t_r(m_{r|s})$ terms within $\Delta$. As such, we perform another stage of Bayesian quadrature by treating $\Delta$ as an unknown function of $\phi$.
+For this function we take Gaussian process priors with zero prior mean and Gaussian covariance \eqref{eq:Gaussian_cov_fn}.
+
 Note that our choice of $\tr_0$ allowed us to resolve the integrals required. For future notational convenience, we assume that if we have an observation of $\psi_0$, we will also have observations of its functional derivatives.
 
 \begin{align*}
@@ -438,6 +454,8 @@ Note that our choice of $\tr_0$ allowed us to resolve the integrals required. Fo
 
 \section{Sampling for Bayesian Quadrature}
 
+We aim to select samples $\phi_s$ so as to minimise the uncertainty in the evidence. We expect such samples to be useful not just for estimating the evidence, but also for any other related expectations, such as would be required to perform prediction using the model.
+
 The variance in the evidence is
 \begin{align*}
 \cov{\langle r\rangle}{\tvr_{s}}
@@ -451,7 +469,6 @@ To resolve the first term, define a new functional
 which we again linearise around $\tr_0$. Hence, as per the above
 \begin{align*}
 & \cov{\langle r\rangle}{\chi_0,\psi_0,\tvr_{s}} = \mean{\inty{r}^2}{\chi_0,\tvr_s} - \mean{\inty{r}}{\psi_0,\tvr_s}^2
-\\
 % & =  (\mean{\inty{r}}{\vr_s})^2 \\
 % & \qquad + 2\mean{\inty{r}}{\vr_s}
 % \bigl(\mean{\inty{r \Delta}}{\vr_s} + \gamma\, \mean{\inty{\Delta}}{\vr_s}\bigr)
@@ -474,15 +491,25 @@ where
 \end{align*}
 
 
-Consider adding a new sample at $\phi_a$.
+Consider adding a new sample at $\phi_a$. The expected variance in our evidence after doing so is
 \begin{align*}
 & \bigl\langle \cov{\langle r\rangle}{\chi_0,\psi_0,\tvr_{s,a}}\mid \chi_0,\psi_0,\tvr_{s}\bigr\rangle\\
 & = \mean{\inty{r}^2}{\chi_0,\tvr_s}  - 
-\int\mean{\inty{r}}{\psi_0,\tvr_{a,s}}^2\p{\tr_a}{\tvr_s}\ud\tr_a\\
+\int\mean{\inty{r}}{\psi_0,\tvr_{a,s}}^2\p{\tr_a}{\tvr_s}\ud\tr_a\,.
 \end{align*}
-The first term is independent of the selection of $\phi_a$ and hence can be safely ignored. Noting that $\int \exp(c \tr_a) \N{\tr_a;m, \sigma^2} \ud\tr_a = \exp(c\, m + \nicefrac{1}{2}\, c^2 \sigma^2)$ 
+The first term is independent of the selection of $\phi_a$ and hence can be safely ignored. Noting that $\int \exp(c\, \tr_a)\, \N{\tr_a;m, \sigma^2} \ud\tr_a = \exp(c\, m + \nicefrac{1}{2}\, c^2 \sigma^2)$, the second term can be resolved analytically for any trial $\phi_a$ (we omit the laborious details of doing so). With this expression, we now select the $\phi_a$ that minimises the second term using a numerical optimisation technique. 
 
 \section{Marginalising quadrature hyperparameters}
+
+Hitherto, we have taken the maximum likelihood values for the quadrature hyperparameters $\theta$ of the quadrature-\gpb used to model the integrand. Once we have very many samples, this approximation seems reasonable: with lots of data, we can be almost certain about the values of the quadrature hyperparameters. However, in the process of taking samples, we'd like to acknowledge the influence new samples may have on our beliefs about the quadrature-hyperparameters. We'd expect this would further promote exploration, particularly early on, so as to firm up our beliefs about the quadrature-hyperparameters. The quadrature-hyperparameters of most interest are the input scales; these hyperparameters can have a very dramatic influence on our fit to a function.
+
+
+\begin{align*}
+& \mean{\inty{r}}{\psi_0,\tvr_s} \\
+& \deq \int \mean{\psi[\tr]}{\psi_0,\tr}
+\p{\tr}{\tvr_s, \theta}\, \p{\theta}{\tvr_s}\ud \tr 
+\end{align*}
+
 \bibliography{bub}
 \bibliographystyle{icml2012}
 

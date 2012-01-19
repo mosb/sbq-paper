@@ -501,6 +501,22 @@ The first term is independent of the selection of $\phi_a$ and hence can be safe
 
 \section{Marginalising quadrature hyperparameters}
 
+Hitherto, we have taken the maximum likelihood values for the quadrature hyperparameters $\theta$ of the quadrature-\gpb used to model the integrand. Once we have very many samples, this approximation seems reasonable: with lots of data, we can be almost certain about the values of the quadrature hyperparameters. However, in the process of taking samples, we'd like to acknowledge the influence new samples may have on our beliefs about the quadrature-hyperparameters. We'd expect this would further promote exploration, particularly early on, so as to firm up our beliefs about the quadrature-hyperparameters. The quadrature-hyperparameters of most interest are the input scales $w_r$; these hyperparameters can have a very dramatic influence on our fit to a function.
+
+Unfortunately, the dependence of our predictions upon these input scales is complex, ruling out analytic results. However, any approximation we make is likely to improve upon our existing assumption that the posterior for all quadrature-hyperparameters is a delta function! Our approach will be to assume that
+\begin{itemize}
+\item all quadrature hyperparameters aside from the input scales are taken as their maximum likelihood values
+ \item that the posterior for $w_r$ is Gaussian with mean equal to the maximum likelihood value, essentially assuming that our prior is very broad. The Gaussian's covariance matrix is taken as diagonal with diagonal elements equal to the squared input scales $w_s$ of another gp, fitted to the likelihood $s(w_r)$ of the input scales $w_r$. 
+\item that our predictions for $\tr_a$ have a mean which is linear in $w_r$ around the maximum likelihood values, and a variance which is essentially constant.  
+\end{itemize}
+ 
+
+\begin{align*}
+& \mean{\inty{r}}{\psi_0,\tvr_s} \\
+& \deq \int \mean{\psi[\tr]}{\psi_0,\tr}
+\p{\tr}{\tvr_s, \theta}\, \p{\theta}{\tvr_s}\ud \tr 
+\end{align*}
+
 \bibliography{bub}
 \bibliographystyle{icml2012}
 

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=latex 2011.11.30)  19 JAN 2012 18:59
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=latex 2011.11.30)  19 JAN 2012 19:39
 entering extended mode
  %&-line parsing enabled.
 **sampling_for_bayesian_quadrature.tex
@@ -795,26 +795,6 @@ Overfull \hbox (5.1225pt too wide) in paragraph at lines 78--78
  [] 
  []
 
-
-Package natbib Warning: Citation `BZHermiteQuadrature' on page 1 undefined on i
-nput line 79.
-
-
-Package natbib Warning: Citation `BZMonteCarlo' on page 1 undefined on input li
-ne 79.
-
-
-Package natbib Warning: Citation `MCUnsound' on page 1 undefined on input line 
-88.
-
-
-Package natbib Warning: Citation `BZHermiteQuadrature' on page 1 undefined on i
-nput line 89.
-
-
-Package natbib Warning: Citation `GPsBook' on page 1 undefined on input line 94
-.
-
 LaTeX Font Info:    Try loading font information for U+msa on input line 95.
 (/usr/share/texmf-texlive/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2009/06/22 v3.00 AMS symbols A
@@ -824,32 +804,25 @@ LaTeX Font Info:    Try loading font information for U+msb on input line 95.
 (/usr/share/texmf-texlive/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2009/06/22 v3.00 AMS symbols B
 )
+Underfull \hbox (badness 5970) in paragraph at lines 93--101
+\OT1/cmr/m/n/10 to per-form Bayesian in-fer-ence about func-tions
+ []
 
-Package natbib Warning: Citation `BZHermiteQuadrature' on page 1 undefined on i
-nput line 164.
+
+Underfull \hbox (badness 10000) in paragraph at lines 164--167
+[]\OT1/cmr/m/it/10 Bayesian quadra-ture \OT1/cmr/m/n/10 ([], [];
+ []
 
 
-Package natbib Warning: Citation `BZMonteCarlo' on page 1 undefined on input li
-ne 164.
+Underfull \hbox (badness 3668) in paragraph at lines 164--167
+[]\OT1/cmr/m/n/10 , []) is a means of
+ []
 
 [1
 
 
 
 ]
-
-Package natbib Warning: Citation `OsborneAnon' on page 2 undefined on input lin
-e 179.
-
-
-Package natbib Warning: Citation `BZNumericalAnalysis' on page 2 undefined on i
-nput line 188.
-
-
-Package natbib Warning: Citation `MCUnsound' on page 2 undefined on input line 
-188.
-
-
 Underfull \vbox (badness 4254) has occurred while \output is active []
 
 
@@ -868,23 +841,17 @@ Overfull \hbox (11.37209pt too wide) in paragraph at lines 392--392
 [] 
  []
 
-[3] (./sampling_for_bayesian_quadrature.bbl)
+[3] (./sampling_for_bayesian_quadrature.bbl [4]) [5
 
-Package natbib Warning: There were undefined citations.
-
-[4] (./sampling_for_bayesian_quadrature.aux
-
-Package natbib Warning: Citation(s) may have changed.
-(natbib)                Rerun to get citations correct.
-
-) ) 
+]
+(./sampling_for_bayesian_quadrature.aux) ) 
 Here is how much of TeX's memory you used:
- 10839 strings out of 495062
- 151864 string characters out of 1182643
+ 10842 strings out of 495062
+ 151900 string characters out of 1182643
  327793 words of memory out of 3000000
- 13714 multiletter control sequences out of 15000+50000
- 14874 words of font info for 55 fonts, out of 3000000 for 9000
+ 13716 multiletter control sequences out of 15000+50000
+ 15209 words of font info for 56 fonts, out of 3000000 for 9000
  28 hyphenation exceptions out of 8191
- 45i,15n,56p,554b,352s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 45i,15n,56p,826b,425s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on sampling_for_bayesian_quadrature.dvi (4 pages, 45108 bytes).
+Output written on sampling_for_bayesian_quadrature.dvi (5 pages, 54972 bytes).
