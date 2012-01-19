@@ -1,0 +1,400 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%% ICML 2012 EXAMPLE LATEX SUBMISSION FILE %%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Use the following line _only_ if you're still using LaTeX 2.09.
+%\documentstyle[icml2012,epsf,natbib]{article}
+% If you rely on Latex2e packages, like most moden people use this:
+\documentclass{article}
+
+\usepackage{preamble}
+
+%\usepackage{subfig}
+%\usepackage{hyperref}
+\newcommand{\dblspace}{\setlength{\baselineskip}{0.8cm}}
+\renewcommand{\pskinny}[2]{p\big(#1|#2\big)}
+
+
+% For figures
+\usepackage{graphicx} % more modern
+%\usepackage{epsfig} % less modern
+\usepackage{subfigure} 
+
+% For citations
+\usepackage{natbib}
+
+% For algorithms
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
+% As of 2011, we use the hyperref package to produce hyperlinks in the
+% resulting PDF.  If this breaks your system, please commend out the
+% following usepackage line and replace \usepackage{icml2012} with
+% \usepackage[nohyperref]{icml2012} above.
+\usepackage{hyperref}
+
+% Packages hyperref and algorithmic misbehave sometimes.  We can fix
+% this with the following command.
+\newcommand{\theHalgorithm}{\arabic{algorithm}}
+
+% Employ the following version of the ``usepackage'' statement for
+% submitting the draft version of the paper for review.  This will set
+% the note in the first column to ``Under review.  Do not distribute.''
+\usepackage{icml2012} 
+% Employ this version of the ``usepackage'' statement after the paper has
+% been accepted, when creating the final version.  This will set the
+% note in the first column to ``Appearing in''
+% \usepackage[accepted]{icml2012}
+
+
+% The \icmltitle you define below is probably too long as a header.
+% Therefore, a short form for the running title is supplied here:
+\icmltitlerunning{Submission and Formatting Instructions for ICML 2012}
+
+\begin{document} 
+
+\twocolumn[
+\icmltitle{Sampling for Bayesian Quadrature}
+
+% It is OKAY to include author information, even for blind
+% submissions: the style file will automatically remove it for you
+% unless you've provided the [accepted] option to the icml2012
+% package.
+\icmlauthor{Your Name}{email@yourdomain.edu}
+\icmladdress{Your Fantastic Institute,
+            314159 Pi St., Palo Alto, CA 94306 USA}
+\icmlauthor{Your CoAuthor's Name}{email@coauthordomain.edu}
+\icmladdress{Their Fantastic Institute,
+            27182 Exp St., Toronto, ON M6H 2T1 CANADA}
+
+% You may provide any keywords that you 
+% find helpful for describing your paper; these are used to populate 
+% the "keywords" metadata in the PDF but will not be shown in the document
+\icmlkeywords{Bayesian Quadrature, Monte Carlor, Gaussian Processes}
+
+\vskip 0.3in
+]
+
+\begin{abstract} 
+We describe a novel approach to quadrature for probabilistic integrals, offering a competitor to traditional Monte Carlo methods. We use a Bayesian quadrature framework \citep{BZHermiteQuadrature,BZMonteCarlo}.
+\end{abstract} 
+
+\section{Gaussian Processes}
+
+Gaussian processes (\gp s) offer a powerful method to perform Bayesian
+inference about functions \citep{GPsBook}. A \gpb is defined as a
+distribution over the functions $f: \Phi \rightarrow \mathbb{R}$ such
+that the distribution over the possible function values on any finite
+subset of $\Phi$ is multivariate Gaussian.  For a function $f(\phi)$,
+the prior distribution over its values $\vf$ on a subset
+$\vph \subset \Phi$ are completely specified by a mean vector
+$\vmu$ and covariance matrix $K$
+\begin{align*}%\label{eq:GPDefn}
+\textstyle
+ &\p{\vf}{I} \deq \N{\vf}{\vmu_{f}}{K_{f}}\\
+ &\deq\frac{1}{\sqrt{\det{2\pi K_{f}}}}\,\exp \big(-\frac{1}{2}\,(\vf-\vmu_{f})\tra\,K_{f}\inv\,(\vf-\vmu_{f})\big),
+\end{align*}
+where $I$, the \emph{context}, forms the background knowledge upon which all our probabilities are conditioned. Its ubqiuity leads us to henceforth drop it from explicit representation for notational convenience. The context, $I$, includes prior knowledge of both the
+mean and covariance functions, which generate $\vmu_{f}$ and
+$K_{f}$ respectively. The prior mean function is chosen as
+appropriate for the problem at hand (often a constant), and the
+covariance function is chosen to reflect any prior knowledge about the
+structure of the function of interest, for example periodicity or
+differentiability. In this paper, we'll use Gaussian
+covariance functions,
+\begin{align} \label{eq:Gaussian_cov_fn}
+% K(\vph,\vph') & \deq \prod_{e=1}^{E} K_e\big(\phi\pha_e,\phi_e'\big)\\
+\textstyle
+K_{f}(\phi_1,\phi_2)& \deq h_f^2\,\N{\phi_1}{\phi_2}{w_{f}}.
+\end{align} 
+Here $h_f$ specifies the output scale (`height') over $f$, while $w_f$ defines a (squared) input scale (`width') over $\phi$. Note that $\phi$ itself may be multi-dimensional, in which case $w_f$ must actually be a covariance matrix. Where this is true for the remainder of the paper, we'll take $w_f$ as diagonal. 
+% Our \gpb distribution is specified by various hyperparameters $\theta_e\allv
+% e=1,\,\ldots,\,E$, collectively denoted as $\vect{\theta} \deq
+% \{\theta_e\allv e=1,\,\ldots,\, E\}$.  $\vect{\theta}$ includes the mean
+% function $\vmu$, as well as parameters required by the covariance
+% function, input and output scales, amplitudes, periods, etc. as
+% needed.
+
+Let us assume we have observations $(\vph_s,\vf_s)$ and
+are interested in making predictions about the function
+valus $f_\star$ at input $\phi_\star$. We will assume that knowledge of function inputs such as
+$\vph_s$ and $\phi_\star$ is incorporated into $I$ (and will hence usually be hidden). With
+this information, we have the predictive equations
+$$
+\pskinny{\vf_\star}{\vf_s} = 
+\bN{\vf_\star}
+{\meancond{f}{\vph_\star}{s}}
+{\covcond{f}{\vph_\star}{s}}\,,
+$$
+where we have, for the mean $\novmean{a}{b}\deq \int a\,\pskinny{a}{b} \ud
+a$ and variance $\novcov{a}{b}\deq \int
+\big(a-\novmean{a}{b}\big)^2\,\pskinny{a}{b} \ud a$,
+\begin{align} 
+\textstyle
+&\meancond{f}{\phi_\star}{s}
+\deq \mean{f_\star}{\vf_s}
+\nonumber\\
+&= \mu_{f}(\phi_\star) + 
+K_{f}(\phi_\star,\vph_s)
+K_{f}(\vph_s,\vph_s)\inv
+\bigl(\vf_s-{\mu}_{f}(\vph_s)\bigr) \label{eq:GPMean}
+\\
+&\covcond{f}{\phi_\star}{s}
+\deq {\cov{f_\star}{\vf_s}} 
+\nonumber\\
+&= K_{f}(\phi_\star,\phi_\star) - 
+K_{f}(\phi_\star,\vph_s)
+K_{f}(\vph_s,\vph_s)\inv
+K_{f}(\vph_s,\phi_\star)\,. \nonumber%\label{eq:GPCov}
+\end{align} 
+
+\section{Bayesian Quadrature} \label{sec:BQ}
+
+% Note that maximum likelihood is also subject to issues. $\p{D}{\phi,I}$, how come (known) $I$ is on the right and (known) $D$ is on the left? 
+
+\emph{Bayesian quadrature} \citep{BZHermiteQuadrature,BZMonteCarlo} is a means of
+performing Bayesian inference about the value of a potentially
+nonanalytic integral 
+\begin{equation} \label{eq:intyf}
+ \inty{f} \deq \int f(\phi)\,\po{\phi}\,\ud\phi\,.
+\end{equation}
+Note that we use a condensed notation; this and all integrals to follow are definite integrals over the entire domain of interest.
+We'll assume we are integrating with respect to a Gaussian
+prior
+\begin{align}\label{eq:phiprior}
+\textstyle
+ \po{\phi} & \deq \N{\phi}{\nu_{\phi}}{\lambda_{\phi}} \,,
+\end{align}
+although other convenient forms, or, if necessary, the use of an
+importance re-weighting trick, allow any other integral to be
+approximated \citep{OsborneAnon}. If $\phi$ is a vector, $\nu_{\phi}$ is a  vector of identical size, and $\lambda_{\phi}$ an appropriate covariance matrix.
+
+Quadrature involves evaluating $f(\phi)$ at a
+vector of sample points $\vph_s$, giving $\vf\pha_s\deq
+f(\vph_s)$. Of course, this evaluation is usually a computationally expensive
+operation.
+%---we clearly can't afford to evaluate $f(\phi)$ for all possible inputs $\phi$ for an unbounded domain $\Phi$. 
+The resultant sparsity of our samples introduces uncertainty about the function $f$ between them, and hence uncertainty about the integral $\inty{f}$.
+
+As ever in the face of uncertainty, we address the estimation of the value of our integral as a problem of Bayesian inference \citep{BZNumericalAnalysis}. In considering any problem of inference, we need to be clear about both what information we have and which uncertain variables we are interested in. In our case, both the values $f(\vphS)$ and their locations $\vphS$ represent valuable pieces of knowledge. As discussed by \citet{MCUnsound}, traditional Monte Carlo, which approximates as
+\begin{equation} \label{eq:MC_integral_estimate}
+\inty{f} \simeq \frac{1}{\card{s}} \sum_{i=1}^{\card{s}} f(\phi_i)\,,
+\end{equation}
+effectively ignores the information content of $\vphS$, leading to unsatisfactory behaviour\footnote{
+  For example, imagine that we had $\card{s}=3$, and $\phi_1 = \phi_2$. In this case, the identical value $q(\phi_1)= q(\phi_2)$ will receive $\nicefrac{2}{3}$ of the weight, whereas the equally useful $q(\phi_3)$ will receive only $\nicefrac{1}{3}$.}.
+
+% As with our convention above, we will take knowledge of
+% sample locations $\vph_s$ to be implicit within $I$. However, as we don't know $f(\phi)$ for any $\phi \not \in \vphS$, we are uncertain about the function $f(\cdot)$. As a consequence, we are also uncertain about the value of the integral $\inty{f}$. As such, we possess probability distributions over both $f(\cdot)$ and $\inty{f}$. 
+% %The resulting Bayesian network is depicted in Figure \ref{fig:BMC}.
+
+%  \begin{figure}[ht]
+% \hspace{-1cm}
+% 	\begin{pspicture}(-5,0)(5,4.25)%
+% 	%\showgrid
+% 	\GM@Inode{0}{3.5}{1}%	
+% 	%\rput(I){\rput(0,-2){\GM@node{X}}}   \GM@label[angle=90]{X}{$X$}
+% 	\rput(0,2){\GM@detnode{psi}}   \GM@label[angle=-90]{psi}{$\rv{\inty{f}}$}
+% 
+% % NB \Phi is the actual value of the hyperparameters -- doesn't make any sense to write \Phi_i
+% 
+% 	\rput(psi){\rput(1.25,-2){\GM@plate[plateLabelPos=bl]{2}{4.2}{$i'\not\in s$}}}
+% 	\rput(psi){\rput(2.5,1){\GM@node[observed=true]{phij}}}   \GM@label[angle=90]{phij}{$\rv{\phi}_{i'}$}
+% 	\rput(phij){\rput(0,-2){\GM@detnode{qj}}}   \GM@label[angle=130]{qj}{$\rv{f}_{i'}$}
+% 
+% 	\rput(psi){\rput(-3.25,-2){\GM@plate[plateLabelPos=br]{2}{4.2}{$i \in s$}}}
+% 	\rput(psi){\rput(-2.5,1){\GM@node[observed=true]{phii}}}   \GM@label[angle=90]{phii}{$\rv{\phi}_i$}
+% 	\rput(phii){\rput(0,-2){\GM@detnode[observed=true]{qi}}}   \GM@label[angle=50]{qi}{$\rv{f}_i$}
+% 
+% 	\pnode(0,0.5){mid}
+% 
+% 	%\ncline[arrows=->]{phi}{X}
+% 
+% 
+% 	\ncline[arrows=->]{phij}{qj}
+% 	\ncline[arrows=->]{qj}{psi}
+% 	\ncline[arrows=->]{phij}{psi}
+% 
+% 	\ncline[arrows=->]{phii}{qi}
+% 	\ncline[arrows=->]{qi}{psi}
+% 	\ncline[arrows=->]{phii}{psi}
+% 
+% 	\ncarc{qj}{qi}
+% 	\nccircle[angleA=-90]{qj}{0.5}
+% 	\nccircle[angleA=90]{qi}{0.5}
+% 
+% 	\end{pspicture}%
+% \caption{Bayesian network for Bayesian Quadrature.}
+% \label{fig:BMC}
+% \end{figure}
+
+We choose for $f$ a 
+\gpb prior with mean $\mu_f$ and the Gaussian covariance function \eqref{eq:Gaussian_cov_fn}.
+Here the scales $h_f$ and $w_f$ are \emph{quadrature hyperparameters}, hyperparameters that specify the
+ \gpb used for Bayesian quadrature. These scales, and the others that follow, will be taken as given and incorporated into the (hidden) context $I$.
+
+% Many more of these will be implicitly introduced in the coming sections; we'll take this as given and incorporate them into the (hidden) context $I$. 
+% Note that it will later become apparent that our inference for $\inty{f}$ is independent of the $h_f$ quadrature hyperparameter.
+
+Note that variables over which we have a multivariate Gaussian distribution are jointly Gaussian distributed with any projections of those variables. Because integration is a projection, we can hence use our computed samples $\vf_s$ to perform analytic Gaussian process inference about the value of integrals over $f(\phi)$, such as $\inty{f}$. Our mean estimate for $\inty{f}$ given $\vf_s$ is
+
+\begin{align} \label{eq:mean_inty_f}
+\mean{\inty{f}}{\vf_s}
+& 
+=\iint \inty{f}\,\p{\inty{f}}{f}\p{f}{\vf_s} \ud \inty{f} \,\ud f                                                                                                                                                               \nonumber\\
+&
+ =\iint \inty{f}\,\dd{\inty{f}}{\int f(\phi)\,\po{\phi}\,\ud\phi}
+\nonumber\\
+&\hspace{2.5cm}
+\N{f}{\meancondfn{f}{s}}{\covcondfn{f}{s}} \ud \inty{f} \,\ud f \nonumber\\
+&
+ = \int \meancondfn{f}{s}(\phi)\,\po{\phi}\,\ud\phi\nonumber\\
+&
+ = 
+%\N{\inty{f}}
+\mu_f + \ntT{s}{f}\, \dtt{s}{f}
+%{\varpi_{f}-\ntT{s}{f} K_{f}(\vph_s,\vph_s)\inv \nt{s}{f}}
+\,,
+\end{align}
+where for $\phi_i \in \vph_s$,
+\begin{align*}
+\fnt{\phi_i}{f} & \deq \!\int K_f(\phi_i,\phi)\po{\phi}\ud\phi
+ = h_f^2\,\N{\phi_i}{\nu_{\phi}}{\lambda_{\phi}+w_{f}}\\
+%\intertext{and}
+\dtt{s}{f} & \deq K_{f}\bigl(\vph_s,\vph_s\bigr)\inv (\vf_s-{\mu}_{f})\,.
+\end{align*}
+Note that the form of our `best estimate' for $\inty{f}$, \eqref{eq:mean_inty_f}, is an affine combination of the samples $\vf_s$, just as for traditional quadrature or Monte Carlo techniques. Indeed, if $\mu_f$ is taken as the mean of $\vf_s$ (as is usual for \gpb inference), the second term in \eqref{eq:mean_inty_f} can be viewed as a correction factor to the Monte Carlo estimate \eqref{eq:MC_integral_estimate}.
+Note also that $h_f$ represents a simple multiplicative factor to both $\ntT{s}{f}$ and $K_{f}\bigl(\vph_s,\vph_s\bigr)$, and as such cancels out of \eqref{eq:mean_inty_f}. 
+
+\section{Linearisation}
+
+Imagine we want to evaluate the evidence $\inty{r}$, an integral over non-negative likelihoods, $r$.
+
+Firstly, we define the transformation
+\begin{align*}
+t\bigl(r(\phi)\bigr) & \deq \log\left(\nicefrac{r(\phi)}{\gamma} + 1\right)
+\intertext{and its inverse}
+t\inv\bigl(\tr(\phi)\bigr) & \deq \gamma \bigl(\exp \tr(\phi)-1\bigr)
+\end{align*}
+% and their inverses
+% $$
+% t_q\inv\bigl(\tq(\phi)\bigr) \deq \gamma_q\bigl(\eta+\exp \tq(\phi)\bigr)
+% \qquad \text{and} \qquad
+% t_q\inv\bigl(\tq(\phi)\bigr) \deq \gamma_q\bigl(\eta+\exp \tq(\phi)\bigr)\,,
+% $$
+(which has well-defined inverse $t\inv$) where 
+$
+ \gamma \deq 100\, \max(\vr_s)
+$
+is a constant introduced for superior numerical accuracy.
+
+We now assign \gpb priors to the functions
+\begin{align*}
+ \tr & \deq  t(r)
+\end{align*}
+% We assume that far away from our existing observations,
+% the means for $q$ and $r$ are equal to a value suitably close to
+% zero, and hence take a corresponding zero prior mean for the \gp s over $\tq$ and $\tr$. 
+with Gaussian
+covariances of the form \eqref{eq:Gaussian_cov_fn}.
+%the minimum of the existing observations.
+These choices of prior distribution are motivated by the fact that
+$l$ is strictly positive and possesses a large dynamic
+range. 
+
+
+\begin{align}
+\mean{\inty{r}}{\vr_s}
+% & 
+% =\iint \inty{l}\,\p{\inty{l}}{l}\p{l}{\vl_s} \ud \inty{l} \,\ud l                                                                                                                                                               \nonumber\\
+% &
+&  =\int \Bigl( \int t\inv\bigr(\tr(\phi)\bigl)\,\po{\phi}\,\ud\phi\Bigr)
+\N{\tr}{\meancondfn{\tr}{s}}{\covcondfn{\tr}{s}} \ud \tr \nonumber
+\end{align}
+
+Here the exponential in $t\inv$ ruins the linearity that yielded the analyticity in section \ref{sec:BQ}. To combat this, we perform inference for $\inty{r}$ directly as a functional of $\tr$.
+
+\begin{align*}
+ \psi[\tr] \deq \inty{r} & = \gamma \Bigl(-1 + \int  \exp \tr(\phi) p(\phi) \ud \phi\Bigr)\\
+\pderiv{}{\tr(\phi)}\psi[\tr] & = \gamma \exp \tr(\phi) p(\phi)
+\end{align*}
+
+We use another \gpb for $\psi$, with the affine covariance
+\begin{equation*}
+ K_\psi(\tr,\tr')
+% \deq 
+%  K_\psi\bigl((\tvq\pha_c,\tvr\pha_c),(\tvq'_c,\tvr'_c)\bigr)
+\deq
+\int\tr(\phi) \tr'(\phi) \ud \phi
++ \omega^2
+\end{equation*}
+reflecting the assumption that $\psi$ is, as desired, affine in $\tr$. With this covariance, and given observations
+$\psi_0 \deq \psi(\tr_0)$, $\pderiv{\psi_0}{\tr(\phi)} \deq \pderiv{\psi}{\tr(\phi)}(\tr_0)$ (whose values we'll return to later), we have the \emph{linearisation} approximation
+\begin{align*}
+&\novmean{\psi[\tr]}{\psi_0,\pderiv{\psi_0}{\tq(\phi)}, \tr} 
+= \psi_0+
+\int \pderiv{\psi_0}{\tr(\phi)}\bigl(\tr(\phi)-\tr_0(\phi)\bigr)\ud\phi\,.
+\end{align*}
+
+We are going to perform this linearisation of $\psi(\tq,\tr)$ around the point defined by $\tr_0 \deq t(m_{r|s})$. $m_{r|s}$ is the \gpb conditional mean (as per \eqref{eq:GPMean}) for $r$ given observations $r(\vph_s)$. For this \gp (over the non-log space), we take zero prior means and Gaussian
+covariances of the form \eqref{eq:Gaussian_cov_fn}. With appropriate selections of input scales $w_r$ for such covariances, and defining
+\begin{align*}
+\Delta & \deq m_{\tilde{r}|s} - t(m_{r|s})\,,
+\end{align*}
+(the differences between the \gpb means over our transformed quantities and the transformed \gpb means over original quantities) we have
+\begin{align}\label{eq:mt_sim_tm}
+\Delta_\tr \simeq 0\,,
+\end{align}
+That is, $\tr_0$ is close to the peaks of our Gaussians over $\tr$, rendering our linearisation appropriate. The choice of this point is motivated by the fact that for it, our integrals become tractable.
+
+Our linearisation corresponds to giving our \gpb over $\psi$ observations at $\tr_0=t(m_{r|s})$ of both the functional itself,
+\begin{align}
+\psi_0 & \deq \psi[\tr_0]
+= 
+{\mean{\inty{r}}{\vr_s}} \label{eq:rho_0}
+\intertext{along with its functional derivatives}
+\pderiv{\psi_0}{\tr(\phi)} & \deq \pderiv{\psi}{\tr(\phi)}[\tr_0]
+ = \bigl(\mean{r(\phi)}{\vr_s}+\gamma_q\bigr)\,\po{\phi}
+\nonumber
+\end{align}
+Note that our choice of $\tr_0$ allowed us to resolve the integrals required. For future notational convenience, we assume that if we have an observation of $\psi_0$, we will also have observations of its functional derivatives.
+
+\begin{align*}
+& \mean{\inty{r}}{\psi_0,\tr_s} \\
+& \deq \int \mean{\psi[\tr]}{\psi_0,\tr}
+\p{\tr}{\tvr_s}\, \ud \tr 
+\\
+& = \mean{\inty{r}}{\vr_s} +\gamma_q \\
+& \hspace{0.5cm} + \iint  \mean{r(\phi)}{\vr_s}\,\po{\phi} \N{\tr}{m_{\tilde{r}|s}}{C_{\tilde{r}|s}} \ud\phi\,\ud\tr
+\end{align*}
+
+
+
+\section{Marginalising quadrature hyperparameters}
+\section{Sampling for Bayesian Quadrature}
+
+Consider adding a new sample at $\phi_a$
+
+\begin{align*}
+ \bigl\langle \cov{\langle f\rangle}{\vf_{s,a}}\mid \vf_{s}\bigr\rangle
+& = \iiint
+\end{align*}
+
+
+\bibliography{bub}
+\bibliographystyle{icml2012}
+
+\end{document} 
+
+
+% This document was modified from the file originally made available by
+% Pat Langley and Andrea Danyluk for ICML-2K. This version was
+% created by Lise Getoor and Tobias Scheffer, it was slightly modified  
+% from the 2010 version by Thorsten Joachims & Johannes Fuernkranz, 
+% slightly modified from the 2009 version by Kiri Wagstaff and 
+% Sam Roweis's 2008 version, which is slightly modified from 
+% Prasad Tadepalli's 2007 version which is a lightly 
+% changed version of the previous year's version by Andrew Moore, 
+% which was in turn edited from those of Kristian Kersting and 
+% Codrina Lauth. Alex Smola contributed to the algorithmic style files.  
+
+

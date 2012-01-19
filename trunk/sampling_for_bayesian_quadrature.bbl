@@ -1,0 +1,41 @@
+\begin{thebibliography}{6}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Nonymous(1900)]{OsborneAnon}
+Nonymous, A.
+\newblock PhD thesis, 1900.
+
+\bibitem[O'Hagan(1987)]{MCUnsound}
+O'Hagan, A.
+\newblock {Monte Carlo is fundamentally unsound}.
+\newblock \emph{The Statistician}, 36:\penalty0 247--249, 1987.
+
+\bibitem[O'Hagan(1991)]{BZHermiteQuadrature}
+O'Hagan, A.
+\newblock Bayes-{H}ermite quadrature.
+\newblock \emph{Journal of Statistical Planning and Inference}, 29:\penalty0
+  245--260, 1991.
+
+\bibitem[O'Hagan(1992)]{BZNumericalAnalysis}
+O'Hagan, A.
+\newblock {Some {B}ayesian numerical analysis}.
+\newblock In Bernardo, J.~M., Berger, J.~O., Dawid, A.~P., and Smith, A. F.~M.
+  (eds.), \emph{{B}ayesian Statistics 4}, pp.\  345--363. Oxford University
+  Press, 1992.
+
+\bibitem[Rasmussen \& Ghahramani(2003)Rasmussen and Ghahramani]{BZMonteCarlo}
+Rasmussen, C.~E. and Ghahramani, Z.
+\newblock {{B}ayesian Monte Carlo}.
+\newblock In Becker, S. and Obermayer, K. (eds.), \emph{Advances in Neural
+  Information Processing Systems}, volume~15. MIT Press, Cambridge, MA, 2003.
+
+\bibitem[Rasmussen \& Williams(2006)Rasmussen and Williams]{GPsBook}
+Rasmussen, C.~E. and Williams, C. K.~I.
+\newblock \emph{{G}aussian Processes for Machine Learning}.
+\newblock MIT Press, 2006.
+
+\end{thebibliography}

@@ -1,0 +1,189 @@
+\ProvidesPackage{preamble}
+
+%\usepackage[T1]{fontenc}
+%\usepackage[latin1]{inputenc}
+\usepackage{url}
+%\usepackage{natbib}
+\usepackage{array}
+\usepackage{amsmath,amssymb,amsfonts,textcomp}
+%\usepackage{bbold}
+%\usepackage[english]{babel}
+%\usepackage{graphicx}
+%\usepackage{verbatim}
+%\usepackage{amsthm}
+%\usepackage{hyperref}
+%\usepackage{epsfig}
+%\usepackage{multirow}
+ %\usepackage[dvips]{color}
+\usepackage{epic}
+%\usepackage{appendix}
+\usepackage[english]{babel}
+\usepackage{color,psfrag}
+\usepackage{pstool}
+\usepackage{booktabs}
+\usepackage{relsize}
+\usepackage{nicefrac}
+
+%\usepackage{subfig}
+\usepackage{pst-all} % PSTricks
+\usepackage{com.braju.graphicalmodels} % Email author to get this package
+%\catcode`\@=11 - THIS NEEDS TO BE IN EACH DOCUMENT
+%\pagestyle{empty}
+\psset{xunit=10mm,yunit=10mm,arrowscale=1.5}
+
+% \usepackage{caption}
+% % \usepackage{afterpage}
+% % \usepackage{algorithmic}
+% % \usepackage{algorithm}
+% % \usepackage{rotating}
+% % \usepackage{booktabs}
+% % \abovetopsep=0.3cm
+% 
+% \DeclareCaptionLabelFormat{continued}{Continued #1 #2}
+% \captionsetup[ContinuedFloat]{labelformat=continued}
+\newcommand{\acro}[1]{\textsc{#1}}
+% The 'F', as in 'pF', is for 'Full'
+\newcommand{\vect}[1]{\boldsymbol{#1}}
+% for lines that need to be skinny -- rg
+\newcommand{\mat}[1]{\mathbf{#1}}
+\newcommand{\pderiv}[2]{\frac{\partial #1}{\partial #2}}
+
+\newcommand{\pha}{^{\phantom{:}}}
+
+\newcommand{\argmin}{\operatornamewithlimits{argmin}}
+\newcommand{\argmax}{\operatornamewithlimits{argmax}}
+\newcommand{\ud}{\mathrm{d}}
+% The following designed for probabilities with long arguments
+\newcommand{\Prob}[2]{P\!\left(\,#1\;\middle\vert\;#2\,\right)}
+\newcommand{\ProbF}[3]{P\!\left(\,#1\!=\!#2\;\middle\vert\;#3\,\right)}
+\newcommand{\p}[2]{p\!\left(#1\middle\vert#2\right)}
+\newcommand{\po}[1]{p\!\left(#1\right)}
+\newcommand{\pF}[3]{p\!\left(\,#1\!=\!#2\;\middle\vert\;#3\,\right)} 
+\newcommand{\mean}[2]{{m}\!\left(#1\middle\vert#2\right)}
+\newcommand{\novmean}[2]{{m}\!\left(#1\middle\vert#2\right)}
+\newcommand{\novcov}[2]{{C}\!\left(#1\middle\vert#2\right)}
+\newcommand{\cov}[2]{{C}\!\left(#1\middle\vert#2\right)} 
+\newcommand{\pskinny}[2]{p\!\left(#1\;\middle\vert\;#2\right)}
+\newcommand{\meanskinny}[2]{{m}\!\left(#1\middle\vert#2\right)}
+\newcommand{\covskinny}[2]{{C}\!\left(#1\middle\vert#2\right)} 
+
+\newcommand{\secm}[2]{{S}\!\left(#1\!\;\middle\vert\;\!#2\right)} 
+
+\newcommand{\novmeancond}[3]{m^{#1}_{#2|#3}}
+\newcommand{\novcovcond}[3]{C^{#1}_{#2|#3}}
+\newcommand{\meanast}[2]{m^{#1}_{*|#2}}
+\newcommand{\meancond}[3]{{m}_{#1|#3}(#2)}
+\newcommand{\covcond}[3]{{C}_{#1|#3}(#2)}
+\newcommand{\allv}{{\vect{:}}}
+\newcommand{\meancondfn}[2]{{m}_{#1|#2}}
+\newcommand{\covcondfn}[2]{{C}_{#1|#2}}
+
+%\newcommand{\inty}[1]{\textstyle{\int}\!#1}
+\newcommand{\inty}[1]{\langle #1 \rangle}
+%\newcommand{\rv}[1]{\mathring{#1}}
+\newcommand{\rv}[1]{{#1}}
+
+\newcommand{\vx}{\vect{x}}
+\newcommand{\vy}{\vect{y}}
+\newcommand{\vz}{\vect{z}}
+\newcommand{\vmu}{\vect{\mu}}
+\newcommand{\st}{_\star}
+\newcommand{\sti}{_{\star,i}}
+\newcommand{\vl}{\vect{l}}
+\newcommand{\vq}{\vect{q}}
+\newcommand{\vr}{\vect{r}}
+\newcommand{\vf}{\vect{f}}
+\newcommand{\vg}{\vect{g}}
+\newcommand{\ve}{\vect{\epsilon}}
+
+\newcommand{\inv}{^{{\mathsmaller{-1}}}}
+\newcommand{\tl}{{\tilde{l}}}
+\newcommand{\tr}{{\tilde{r}}}
+\newcommand{\tvr}{\tilde{\vect{r}}}
+\newcommand{\tq}{{\tilde{q}}}
+\newcommand{\tvq}{\tilde{\vect{q}}}
+
+\newcommand{\mi}[2]{m_i(y_{#1}|I_{#2})}
+\newcommand{\Ci}[2]{C_i(y_{#1}|I_{#2})}
+
+\newcommand{\meanopt}[3]{\vect{m}_{#1}(\vy_{#2}|I_{#3})}
+\newcommand{\covopt}[3]{\mat{C}_{#1}(\vy_{#2}|I_{#3})}
+\newcommand{\Lossi}[2]{\text{V}_i(\,x_{#1}\,|\,I_{#2}\,)}
+\newcommand{\Loss}[3]{\Lambda_{#1}(\,x_{#2}\,|\,I_{#3}\,)}
+\newcommand{\Lossd}[3]{\Lambda'_{#1}(\,x_{#2}\,|\,I'_{#3}\,)}
+
+%
+\newcommand{\vxst}{\vx_\star}
+\newcommand{\vxD}{X_d}
+
+\newcommand{\vt}{\vect{t}}
+\newcommand{\vtst}{\vect{t}_\star}
+\newcommand{\vtD}{\vect{t}_d}
+
+\newcommand{\yst}{y_\star}
+\newcommand{\vyst}{\vy_\star}
+\newcommand{\vyD}{\vect{y}_d}
+\newcommand{\ryst}{\rv{y}_\star}
+
+\newcommand{\vlst}{\vect{l}_\star}
+\newcommand{\vlD}{\vect{l}_d}
+
+\newcommand{\vzst}{\vect{z}_\star}
+\newcommand{\vzD}{\vect{z}_d}
+
+\newcommand{\vph}{\vect{\phi}}
+\newcommand{\vphS}{\vph_s}
+\newcommand{\phst}{\phi_*}
+
+\newcommand{\Dt}{\vect{\mathfrak{a}}}
+\newcommand{\Kt}[1]{\vect{\mathfrak{b}}_{\star,#1}}
+
+\newcommand{\Tt}{\vect{\mathfrak{c}}}
+\newcommand{\ntS}{\vect{\mathfrak{n}}_s}
+\newcommand{\nts}[1]{\vect{\mathfrak{n}}_{s,#1}}
+\newcommand{\mt}[1]{\vect{\mathfrak{m}}_{s,#1}}
+
+\newcommand{\nt}[2]{{\varUpsilon}^{(1)}_{#2}(\vect{\phi}_#1)}
+\newcommand{\fnt}[2]{{\varUpsilon}_{#2}(#1)}
+\newcommand{\ntT}[2]{{\varUpsilon}_{#2}(\vect{\phi}_#1)\tra}
+\newcommand{\Nt}{\varUpsilon^{(2)}}
+\newcommand{\Ntt}[2]{\varUpsilon^{(2)}_{#2}(\vect{\phi}_{#1},\vect{\phi}_{#1})}
+\newcommand{\ot}{\upsilon}
+\newcommand{\Ot}{\varUpsilon}
+\newcommand{\Ott}[4]{\varUpsilon^{(3)}_{#1}(\vph_{#2},\vph_{#3},\vph_{#4})}
+\newcommand{\dtt}[2]{\tau_{#2}(\vect{\phi}_#1)}
+
+
+
+\newcommand{\N}[3]{\mathcal{N}\!\left(#1;#2,#3\right)}
+\newcommand{\bN}[3]{\mathcal{N}\big(#1;#2,#3\big)}
+\newcommand{\boldN}[3]{\text{\textbf{\mathcal{N}}}\big(#1;#2,#3\big)}
+\newcommand{\Ph}[3]{\Phi\!\left(#1;#2,#3\right)}
+\newcommand{\dd}[2]{\delta\!\left(#1-#2\right)}
+\newcommand{\ones}[1]{\mat{1}_{#1}}
+\newcommand{\eye}[1]{\mat{E}_{#1}}
+\newcommand{\tra}{^\ensuremath{\mathsf{T}}}
+\newcommand{\trace}{\operatorname{tr}}
+\newcommand{\deq}{:=}
+\newcommand{\degree}{^\circ}
+
+\providecommand{\norm}[1]{\left\lvert#1\right\rvert}
+\providecommand{\normw}[1]{\left\lVert#1\right\rVert_w}
+\providecommand{\card}[1]{\left\lvert#1\right\rvert}
+
+\DeclareMathOperator{\chol}{chol}
+\DeclareMathOperator{\diag}{diag}
+% \
+\newcommand{\de}{\epsilon_{rr}}
+\newcommand{\gpb}{{{\acro{gp}}} }
+\newcommand{\gp}{{{\acro{gp}}}}
+
+\newenvironment{narrow}[2]{%
+  \begin{list}{}{%
+  \setlength{\topsep}{0pt}%
+  \setlength{\leftmargin}{#1}%
+  \setlength{\rightmargin}{#2}%
+  \setlength{\listparindent}{\parindent}%
+  \setlength{\itemindent}{\parindent}%
+  \setlength{\parsep}{\parskip}}%
+\item[]}{\end{list}}
