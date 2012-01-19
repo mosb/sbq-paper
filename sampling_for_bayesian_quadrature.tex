@@ -79,6 +79,15 @@
 We describe a novel approach to quadrature for probabilistic integrals, offering a competitor to traditional Monte Carlo methods. We use a Bayesian quadrature framework \citep{BZHermiteQuadrature,BZMonteCarlo}.
 \end{abstract} 
 
+\section{Introduction}
+
+Bayesian inference often requires the evaluation of nonanalytic
+definite integrals that must be approximated using numerical
+integration.  In the main, these methods estimate the integral given
+the value of the integrand on a set of sample points, a set that is limited in size by the computational expense of evaluating the integrand.
+As discussed in \citep{MCUnsound}, traditional Monte Carlo
+integration techniques do not make the best possible use of this valuable information. An alternative is found in Bayesian quadrature \citep{BZHermiteQuadrature}, that uses these samples within a Gaussian process model to perform inference about the integrand. The analytic niceties of the Gaussian then permit inference to be performed about the integral itself, the ultimate object of our interest.
+
 \section{Gaussian Processes}
 
 Gaussian processes (\gp s) offer a powerful method to perform Bayesian
@@ -265,9 +274,80 @@ where for $\phi_i \in \vph_s$,
 Note that the form of our `best estimate' for $\inty{f}$, \eqref{eq:mean_inty_f}, is an affine combination of the samples $\vf_s$, just as for traditional quadrature or Monte Carlo techniques. Indeed, if $\mu_f$ is taken as the mean of $\vf_s$ (as is usual for \gpb inference), the second term in \eqref{eq:mean_inty_f} can be viewed as a correction factor to the Monte Carlo estimate \eqref{eq:MC_integral_estimate}.
 Note also that $h_f$ represents a simple multiplicative factor to both $\ntT{s}{f}$ and $K_{f}\bigl(\vph_s,\vph_s\bigr)$, and as such cancels out of \eqref{eq:mean_inty_f}. 
 
+For our later use, consider now the more general integral over the product of two functions, $f$ and $g$,
+$$\inty{f g} \deq \int f(\phi)\,g(\phi)\,\po{\phi}\,\ud\phi\,,$$ 
+for which, given independent \gp s (with constant mean and Gaussian covariance) and function observations $\vf_{s} \deq f(\vph_{s})$ and  $\vg_{t} \deq g(\vph_{t})$, we have
+% \begin{align} \label{eq:mean_inty_fg}
+% \mean{\inty{f g}}{\vf_s,\,\vect{g}_t}
+% & 
+% =\iint \inty{f g}\,\p{\inty{f g}}{f,\,g}\p{f}{\vf_s}\,\p{g}{\vect{g}_t}\, \ud \inty{f g} \,\ud f \,\ud g                                                                                                                                                                 \nonumber\\
+% &
+% %  =\iint \inty{f g}\,\dd{\inty{f g}}{\int f(\phi)\,g(\phi)\,\po{\phi}\,\ud\phi}\N{f}{\meancondfn{f}{s}}{\covcondfn{f}{s}}\,\N{g}{\meancondfn{g}{s}}{\covcondfn{g}{s}}\, \ud \inty{f g} \,\ud f\,\ud g \nonumber\\
+% % &
+%  = 
+% %\N{\inty{f}}
+% {\dtt{s}{f}}\tra \,\Nt_{f,g}(\vph_s,\vph_t)\,\dtt{t}{g}
+% %{\varpi_{f}-\ntT{s}{f} K_{f}(\vph_s,\vph_s)\inv \nt{s}{f}}
+% \,,
+% \end{align}
+% where, for $\phi_i \in \vph_s,\,\phi_j \in \vph_t$,
+% \begin{align*} %\label{eq:Nt}
+% \Nt_{f,g}(\phi_i,\phi_j) & \deq 
+% \int K_f(\phi_i,\phi)\,\po{\phi}K_g(\phi,\phi_j)\, \ud\phi\nonumber\\
+% & =h_f^2\, h_g^2\,
+% \N{\begin{bmatrix} \phi_i \\ \phi_j \end{bmatrix}}{\begin{bmatrix} \nu_{\phi}\\ \nu_{\phi} \end{bmatrix}}{\begin{bmatrix}  \lambda_\phi+W_f & \lambda_\phi \\ \lambda_\phi & \lambda_\phi+W_g
+% \end{bmatrix}}\,.
+% \end{align*}
+% Again, the scales $h_f$ and $h_g$ cancel out of our mean estimate, in this case, \eqref{eq:mean_inty_fg}.
+% 
+% Finally, consider the  integral over three independent functions, $f$, $g$ and $h$,
+% $$\inty{f g h} \deq \int f(\phi)\,g(\phi)\,h(\phi)\,\po{\phi}\,\ud\phi\,,$$ 
+\begin{align*} %\label{eq:mean_inty_fgh}
+& \mean{\inty{f g}}{\vf_{s},\,\vg_{t}} \nonumber\\
+& 
+=
+\iint \inty{f\,g}\,\p{\inty{f\,g}}{{f\,g}}
+% \nonumber\\
+% &
+%\hspace{3cm}
+\p{f}{\vf_s}\p{g}{\vg_t}\ud \inty{f\,g}\ud f\ud g                                                                                                                                                                      \nonumber\\
+&
+%  =\iint \inty{f g}\,\dd{\inty{f g}}{\int f(\phi)\,g(\phi)\,\po{\phi}\,\ud\phi}\N{f}{\meancondfn{f}{s}}{\covcondfn{f}{s}}\,\N{g}{\meancondfn{g}{s}}{\covcondfn{g}{s}}\, \ud \inty{f g} \,\ud f\,\ud g \nonumber\\
+% &
+ = 
+%\N{\inty{f}}
+\mu_f\,\mu_g
++ \mu_f\,\ntT{s}{g}\, \dtt{s}{g}
++ \mu_g\,\ntT{s}{f}\, \dtt{s}{f}
+\nonumber\\
+&\hspace{3cm}
++ \dtt{{s}}{f}\tra\,\Ot_{f,g}\bigr(\vph_{s},\,\vph_{t}\bigr)\,\dtt{{t}}{g}
+%{\varpi_{f}-\ntT{s}{f} K_{f}(\vph_s,\vph_s)\inv \nt{s}{f}}
+\,,
+\end{align*}
+where, for $\phi_i \in \vph_{s}$ and $\phi_j \in \vph_{t}$,
+\begin{align*} %\label{eq:Nt}
+& \Ot_{f,g}\bigr(\phi_{i},\,\phi_{j}\bigl) 
+\deq 
+\!\int K_{f}(\phi_i,\phi)\,K_{g}(\phi_j,\phi)\,\po{\phi}\, \ud\phi\nonumber\\
+& =h_{f}^2\, h_{g}^2\,
+\N{\begin{bmatrix} \phi_i \\ \phi_j \end{bmatrix}}
+{\begin{bmatrix} \nu_{\phi}\\ \nu_{\phi}\end{bmatrix}}
+{\begin{bmatrix}  
+\lambda_\phi+w_{f} & \lambda_\phi \\ 
+\lambda_\phi & \lambda_\phi +w_{g}
+\end{bmatrix}}\,.
+\end{align*}
+Here we have overloaded the definition of $\Ot$; its two definitions can be clearly distinguished by the number of arguments with which it is presented. 
+Again, the scales $h_f$ and $h_g$ cancel out of our mean estimate.
+%, in this case, \eqref{eq:mean_inty_fg}.
+
 \section{Linearisation}
 
-Imagine we want to evaluate the evidence $\inty{r}$, an integral over non-negative likelihoods, $r$.
+Imagine we want to evaluate the evidence $\inty{r}$, an integral over non-negative likelihoods, $r(\phi)$, who arguments are the parameters of the relevant model.
+$$
+\inty{r} = \int r(\phi) p(\phi) \ud\phi
+$$
 
 Firstly, we define the transformation
 \begin{align*}
@@ -329,11 +409,11 @@ We use another \gpb for $\psi$, with the affine covariance
 \end{equation*}
 reflecting the assumption that $\psi$ is, as desired, affine in $\tr$. With this covariance, and given observations
 $\psi_0 \deq \psi(\tr_0)$, $\pderiv{\psi_0}{\tr(\phi)} \deq \pderiv{\psi}{\tr(\phi)}(\tr_0)$ (whose values we'll return to later), we have the \emph{linearisation} approximation
-\begin{align*}
-&\novmean{\psi[\tr]}{\psi_0,\pderiv{\psi_0}{\tq(\phi)}, \tr} 
-= \psi_0+
+\begin{multline}\label{eq:linearisation}
+\novmean{\psi[\tr]}{\psi_0,\pderiv{\psi_0}{\tq(\phi)}, \tr} 
+= \psi_0+\\
 \int \pderiv{\psi_0}{\tr(\phi)}\bigl(\tr(\phi)-\tr_0(\phi)\bigr)\ud\phi\,.
-\end{align*}
+\end{multline}
 
 We are going to perform this linearisation of $\psi(\tq,\tr)$ around the point defined by $\tr_0 \deq t(m_{r|s})$. $m_{r|s}$ is the \gpb conditional mean (as per \eqref{eq:GPMean}) for $r$ given observations $r(\vph_s)$. For this \gp (over the non-log space), we take zero prior means and Gaussian
 covariances of the form \eqref{eq:Gaussian_cov_fn}. With appropriate selections of input scales $w_r$ for such covariances, and defining
@@ -356,6 +436,10 @@ Our linearisation corresponds to giving our \gpb over $\psi$ observations at $\t
  = \bigl(\mean{r(\phi)}{\vr_s}+\gamma\bigr)\,\po{\phi}
 \nonumber
 \end{align}
+As with any linearisation approximation, \eqref{eq:linearisation} gives the value at the selected point $\tr_0$, plus a correction factor modelling the influence of the first derivatives. 
+These correction factor contains a further non-analytic integral, over $\phi$. Fortunately, they're not too far away from being analytic; almost all terms with dependence on $\phi$ within those integrals are Gaussian. The exception is the $t_r(m_{r|s})$ terms within $\Delta$. As such, we perform another stage of Bayesian quadrature by treating $\Delta$ as an unknown function of $\phi$.
+For this function we take Gaussian process priors with zero prior mean and Gaussian covariance \eqref{eq:Gaussian_cov_fn}.
+
 Note that our choice of $\tr_0$ allowed us to resolve the integrals required. For future notational convenience, we assume that if we have an observation of $\psi_0$, we will also have observations of its functional derivatives.
 
 \begin{align*}
@@ -365,29 +449,57 @@ Note that our choice of $\tr_0$ allowed us to resolve the integrals required. Fo
 \\
 & = \mean{\inty{r}}{\vr_s} + \iint \bigl(\mean{r(\phi)}{\vr_s}+\gamma\bigr)\,\Delta(\phi)\,\po{\phi}\ud\phi
 \\
-& = \mean{\inty{r}}{\vr_s} + \mean{\inty{r \Delta}}{\vr_s} + \gamma\, \mean{\inty{r \Delta}}{\vr_s}
+& = \mean{\inty{r}}{\vr_s} + \mean{\inty{r \Delta}}{\vr_s} + \gamma\, \mean{\inty{ \Delta}}{\vr_s}
 \end{align*}
 
-
-
-\section{Marginalising quadrature hyperparameters}
 \section{Sampling for Bayesian Quadrature}
 
+We aim to select samples $\phi_s$ so as to minimise the uncertainty in the evidence. We expect such samples to be useful not just for estimating the evidence, but also for any other related expectations, such as would be required to perform prediction using the model.
+
 The variance in the evidence is
-
 \begin{align*}
-\cov{\langle r\rangle}{\psi_0,\tvr_{s}}
-& = \int \inty{r}^2 \p{\inty{r}}{\psi_0,\tvr_s} \ud\inty{r}- \mean{\inty{r}}{\psi_0,\tvr_s}^2 
-
+\cov{\langle r\rangle}{\tvr_{s}}
+& = \int \inty{r}^2 \p{\inty{r}}{\tvr_s} \ud\inty{r}- \mean{\inty{r}}{\tvr_s}^2\,.
+\end{align*}
+To resolve the first term, define a new functional
+\begin{align*}
+ \chi[\tr] \deq \inty{r}^2 & = \gamma^2\bigl(\int  \exp \tr(\phi) p(\phi) \ud \phi-1\bigr)^2\\
+\pderiv{}{\tr(\phi)}\chi[\tr] & = 2\gamma \exp \tr(\phi) p(\phi) \bigl(\int  \exp \tr(\phi) p(\phi) \ud \phi-1\bigr)
+\end{align*}
+which we again linearise around $\tr_0$. Hence, as per the above
+\begin{align*}
+& \cov{\langle r\rangle}{\chi_0,\psi_0,\tvr_{s}} = \mean{\inty{r}^2}{\chi_0,\tvr_s} - \mean{\inty{r}}{\psi_0,\tvr_s}^2
+% & =  (\mean{\inty{r}}{\vr_s})^2 \\
+% & \qquad + 2\mean{\inty{r}}{\vr_s}
+% \bigl(\mean{\inty{r \Delta}}{\vr_s} + \gamma\, \mean{\inty{\Delta}}{\vr_s}\bigr)
+% \\
+% & \qquad - \bigl(
+% \mean{\inty{r}}{\vr_s} + \mean{\inty{r \Delta}}{\vr_s} + \gamma\, \mean{\inty{ \Delta}}{\vr_s}
+% \bigr)^2
+% & = \mean{\inty{r}}{\vr_s}
+% \bigl(\mean{\inty{r \Delta}}{\vr_s} + \gamma\, \mean{\inty{\Delta}}{\vr_s}\bigr)
+% \\
+% & \qquad - \bigl( \mean{\inty{r \Delta}}{\vr_s} + \gamma\, \mean{\inty{ \Delta}}{\vr_s}
+% \bigr)^2
+% \,.
+\end{align*}
+where
+\begin{align*}
+&\mean{\inty{r}^2}{\chi_0,\tvr_s} = (\mean{\inty{r}}{\vr_s})^2 \\
+& \hspace{1cm}  + 2\mean{\inty{r}}{\vr_s}
+\bigl(\mean{\inty{r \Delta}}{\vr_s} + \gamma\, \mean{\inty{\Delta}}{\vr_s}\bigr)
 \end{align*}
 
-Consider adding a new sample at $\phi_a$.
 
+Consider adding a new sample at $\phi_a$. The expected variance in our evidence after doing so is
 \begin{align*}
- \bigl\langle \cov{\langle f\rangle}{\vf_{s,a}}\mid \vf_{s}\bigr\rangle
-& = \iiint
+& \bigl\langle \cov{\langle r\rangle}{\chi_0,\psi_0,\tvr_{s,a}}\mid \chi_0,\psi_0,\tvr_{s}\bigr\rangle\\
+& = \mean{\inty{r}^2}{\chi_0,\tvr_s}  - 
+\int\mean{\inty{r}}{\psi_0,\tvr_{a,s}}^2\p{\tr_a}{\tvr_s}\ud\tr_a\,.
 \end{align*}
+The first term is independent of the selection of $\phi_a$ and hence can be safely ignored. Noting that $\int \exp(c\, \tr_a)\, \N{\tr_a;m, \sigma^2} \ud\tr_a = \exp(c\, m + \nicefrac{1}{2}\, c^2 \sigma^2)$, the second term can be resolved analytically for any trial $\phi_a$ (we omit the laborious details of doing so). With this expression, we now select the $\phi_a$ that minimises the second term using a numerical optimisation technique. 
 
+\section{Marginalising quadrature hyperparameters}
 
 \bibliography{bub}
 \bibliographystyle{icml2012}
