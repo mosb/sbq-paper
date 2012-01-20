@@ -442,15 +442,17 @@ For this function we take Gaussian process priors with zero prior mean and Gauss
 
 Note that our choice of $\tr_0$ allowed us to resolve the integrals required. For future notational convenience, we assume that if we have an observation of $\psi_0$, we will also have observations of its functional derivatives.
 
-\begin{align*}
-& \mean{\inty{r}}{\psi_0,\tvr_s} \\
+\begin{align}
+& \mean{\inty{r}}{\psi_0,\tvr_s} \nonumber\\
 & \deq \int \mean{\psi[\tr]}{\psi_0,\tr}
 \p{\tr}{\tvr_s}\, \ud \tr 
-\\
+\nonumber\\
+& = \mean{\psi[\tr]}{\psi_0,m_{\tr|s}} \nonumber\\
 & = \mean{\inty{r}}{\vr_s} + \iint \bigl(\mean{r(\phi)}{\vr_s}+\gamma\bigr)\,\Delta(\phi)\,\po{\phi}\ud\phi
-\\
+\nonumber\\
 & = \mean{\inty{r}}{\vr_s} + \mean{\inty{r \Delta}}{\vr_s} + \gamma\, \mean{\inty{ \Delta}}{\vr_s}
-\end{align*}
+\label{eq:mean_ev}
+\end{align}
 
 \section{Sampling for Bayesian Quadrature}
 
@@ -485,37 +487,80 @@ which we again linearise around $\tr_0$. Hence, as per the above
 \end{align*}
 where
 \begin{align*}
-&\mean{\inty{r}^2}{\chi_0,\tvr_s} = (\mean{\inty{r}}{\vr_s})^2 \\
-& \hspace{1cm}  + 2\mean{\inty{r}}{\vr_s}
+&\mean{\inty{r}^2}{\chi_0,\tvr_s} \\
+& = \mean{\chi[\tr]}{\chi_0,m_{\tr|s}} \\
+& = (\mean{\inty{r}}{\vr_s})^2 \\
+& \hspace{1cm} + 2\mean{\inty{r}}{\vr_s}
 \bigl(\mean{\inty{r \Delta}}{\vr_s} + \gamma\, \mean{\inty{\Delta}}{\vr_s}\bigr)
 \end{align*}
 
 
 Consider adding a new sample at $\phi_a$. The expected variance in our evidence after doing so is
-\begin{align*}
-& \bigl\langle \cov{\langle r\rangle}{\chi_0,\psi_0,\tvr_{s,a}}\mid \chi_0,\psi_0,\tvr_{s}\bigr\rangle\\
+\begin{align}
+& \bigl\langle \cov{\langle r\rangle}{\chi_0,\psi_0,\tvr_{s,a}}\mid \chi_0,\psi_0,\tvr_{s}\bigr\rangle\nonumber\\
 & = \mean{\inty{r}^2}{\chi_0,\tvr_s}  - 
-\int\mean{\inty{r}}{\psi_0,\tvr_{a,s}}^2\p{\tr_a}{\tvr_s}\ud\tr_a\,.
-\end{align*}
+\int\mean{\inty{r}}{\psi_0,\tvr_{a,s}}^2\p{\tr_a}{\tvr_s}\ud\tr_a\,.\label{eqn:exp_var}
+\end{align}
 The first term is independent of the selection of $\phi_a$ and hence can be safely ignored. Noting that $\int \exp(c\, \tr_a)\, \N{\tr_a;m, \sigma^2} \ud\tr_a = \exp(c\, m + \nicefrac{1}{2}\, c^2 \sigma^2)$, the second term can be resolved analytically for any trial $\phi_a$ (we omit the laborious details of doing so). With this expression, we now select the $\phi_a$ that minimises the second term using a numerical optimisation technique. 
 
 \section{Marginalising quadrature hyperparameters}
 
-Hitherto, we have taken the maximum likelihood values for the quadrature hyperparameters $\theta$ of the quadrature-\gpb used to model the integrand. Once we have very many samples, this approximation seems reasonable: with lots of data, we can be almost certain about the values of the quadrature hyperparameters. However, in the process of taking samples, we'd like to acknowledge the influence new samples may have on our beliefs about the quadrature-hyperparameters. We'd expect this would further promote exploration, particularly early on, so as to firm up our beliefs about the quadrature-hyperparameters. The quadrature-hyperparameters of most interest are the input scales $w_r$; these hyperparameters can have a very dramatic influence on our fit to a function.
+Hitherto, we have taken the maximum likelihood values $m_\theta$ for the quadrature hyperparameters $\theta$ of the quadrature-\gpb used to model the integrand. Once we have very many samples, this approximation seems reasonable: with lots of data, we can be almost certain about the values of the quadrature hyperparameters. However, in the process of taking samples, we'd like to acknowledge the influence new samples may have on our beliefs about the quadrature-hyperparameters. We'd expect this would further promote exploration, particularly early on, so as to firm up our beliefs about the quadrature-hyperparameters. The quadrature-hyperparameters of most interest are the input scales $w_r$; these hyperparameters can have a very dramatic influence on our fit to a function.
 
 Unfortunately, the dependence of our predictions upon these input scales is complex, ruling out analytic results. However, any approximation we make is likely to improve upon our existing assumption that the posterior for all quadrature-hyperparameters is a delta function! Our approach will be to assume that
 \begin{itemize}
-\item all quadrature hyperparameters aside from the input scales are taken as their maximum likelihood values
- \item that the posterior for $w_r$ is Gaussian with mean equal to the maximum likelihood value, essentially assuming that our prior is very broad. The Gaussian's covariance matrix is taken as diagonal with diagonal elements equal to the squared input scales $w_s$ of another gp, fitted to the likelihood $s(w_r)$ of the input scales $w_r$. 
+ \item that the posterior for $\theta$ is Gaussian with mean equal to the maximum likelihood value $m_\theta$, essentially assuming that our prior is very broad. 
+\item The Gaussian's covariance matrix $C_\theta$ is taken as diagonal. For quadrature hyperparameters other than the input scales, we take the appropriate diagonal elements as infinitesimally small, such that our posterior for these parameters is a delta function. For the the diagonal elements corresponding to $w_r$, we use the squared input scales $w_s$ of another \gp, fitted to the likelihood $s(w_r)$ of the input scales $w_r$. 
 \item that our predictions for $\tr_a$ have a mean which is linear in $w_r$ around the maximum likelihood values, and a variance which is essentially constant.  
 \end{itemize}
  
-
+With these assumptions, we have
 \begin{align*}
 & \mean{\inty{r}}{\psi_0,\tvr_s} \\
-& \deq \int \mean{\psi[\tr]}{\psi_0,\tr}
-\p{\tr}{\tvr_s, \theta}\, \p{\theta}{\tvr_s}\ud \tr 
+& \deq \iint \mean{\psi[\tr]}{\psi_0,\tr}
+\p{\tr}{\tvr_s, \theta}\, \p{\theta}{\tvr_s}\ud \tr\,\ud \theta\\
+& = \iint \mean{\psi[\tr]}{\psi_0,\tr} \N{\tr}{m_{\tr|s,\theta}}{C_{\tr|s,\theta}}
+\\
+& \hspace{5cm}\N{\theta}{m_\theta}{C_\theta}\ud \tr\,\ud \theta
+\\
+& \simeq \iint \mean{\psi[\tr]}{\psi_0,\tr} 
+\\
+& \hspace{2cm}\N{\tr}
+{m_{\tr|s,m_\theta}+\pderiv{m_{\tr|s,\theta}}{\theta}(\theta-m_\theta)}
+{C_{\tr|s,m_\theta}}
+\\
+& \hspace{4cm}
+\N{\theta}{m_\theta}{C_\theta}\ud \tr\,\ud \theta
+\\
+& = \iint \mean{\psi[\tr]}{\psi_0,\tr} \\
+& \hspace{1cm}\N{\tr}
+{m_{\tr|s,m_\theta}}
+{C_{\tr|s,m_\theta}+\pderiv{m_{\tr|s,\theta}}{\theta}C_\theta\pderiv{m\tra_{\tr|s,\theta}}{\theta}}
+\ud \tr
+\\
+& = \mean{\psi[\tr]}{\psi_0,m_{\tr|s,m_\theta}}\,,
 \end{align*}
+which is identical to \eqref{eq:mean_ev} (note that we had previously just implicitly assumed that $\theta=m_\theta$). However, for the expected variance after adding a sample, we have
+\begin{align}\label{eqn:exp_var_wtheta}
+& \bigl\langle \cov{\langle r\rangle}{\chi_0,\psi_0,\tvr_{s,a}}\mid \chi_0,\psi_0,\tvr_{s}\bigr\rangle
+\nonumber\\
+& =  \mean{\chi[\tr]}{\chi_0,m_{\tr|s,m_\theta}}  - 
+\int\mean{\inty{r}}{\psi_0,\tvr_{a,s}}^2
+\nonumber\\
+& \hspace{2cm}
+\times\N{\tr_a}
+{\tilde{m}_a }
+{\tilde{C}_a +\pderiv{\tilde{m}_a}{\theta}C_\theta\pderiv{\tilde{m}\tra_a}{\theta}}
+\ud\tr_a\,.
+\end{align}
+where
+\begin{align*}
+\tilde{m}_a & \deq \mean{\tr_a}{\tvr_s,m_\theta}\\
+\tilde{C}_a & \deq \cov{\tr_a}{\tvr_s,m_\theta}\,.
+\end{align*}
+As with \eqref{eqn:exp_var}, \eqref{eqn:exp_var_wtheta} can be evaluated analytically, and minimised to determine the optimal $\phi_a$.
+Hence our variance for $\tr_a$ has been inflated due to our consideration of the influence of hyperparameters, which we expect to promote additional exploration, as desired.
+
 
 \bibliography{bub}
 \bibliographystyle{icml2012}
