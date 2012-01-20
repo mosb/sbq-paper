@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=latex 2011.11.30)  19 JAN 2012 19:39
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=latex 2011.11.30)  20 JAN 2012 15:47
 entering extended mode
  %&-line parsing enabled.
 **sampling_for_bayesian_quadrature.tex
@@ -841,17 +841,24 @@ Overfull \hbox (11.37209pt too wide) in paragraph at lines 392--392
 [] 
  []
 
-[3] (./sampling_for_bayesian_quadrature.bbl [4]) [5
+[3]
+Overfull \hbox (8.77008pt too wide) in paragraph at lines 542--542
+[] 
+ []
 
-]
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [4]
+(./sampling_for_bayesian_quadrature.bbl) [5]
 (./sampling_for_bayesian_quadrature.aux) ) 
 Here is how much of TeX's memory you used:
- 10842 strings out of 495062
- 151900 string characters out of 1182643
+ 10845 strings out of 495062
+ 151945 string characters out of 1182643
  327793 words of memory out of 3000000
- 13716 multiletter control sequences out of 15000+50000
+ 13719 multiletter control sequences out of 15000+50000
  15209 words of font info for 56 fonts, out of 3000000 for 9000
  28 hyphenation exceptions out of 8191
- 45i,15n,56p,826b,425s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 45i,15n,56p,837b,352s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on sampling_for_bayesian_quadrature.dvi (5 pages, 54972 bytes).
+Output written on sampling_for_bayesian_quadrature.dvi (5 pages, 60356 bytes).
