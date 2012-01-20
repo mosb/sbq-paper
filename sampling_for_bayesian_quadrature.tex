@@ -415,7 +415,7 @@ $\psi_0 \deq \psi(\tr_0)$, $\pderiv{\psi_0}{\tr(\phi)} \deq \pderiv{\psi}{\tr(\p
 \int \pderiv{\psi_0}{\tr(\phi)}\bigl(\tr(\phi)-\tr_0(\phi)\bigr)\ud\phi\,.
 \end{multline}
 
-We are going to perform this linearisation of $\psi(\tq,\tr)$ around the point defined by $\tr_0 \deq t(m_{r|s})$. $m_{r|s}$ is the \gpb conditional mean (as per \eqref{eq:GPMean}) for $r$ given observations $r(\vph_s)$. For this \gp (over the non-log space), we take zero prior means and Gaussian
+We are going to perform this linearisation of $\psi(\tq,\tr)$ around the point defined by $\tr_0 \deq t(m_{r|s})$. $m_{r|s}$ is the \gpb conditional mean (as per \eqref{eq:GPMean}) for $r$ given observations $r(\vph_s)$. For this \gpb (over the non-log space), we take zero prior means and Gaussian
 covariances of the form \eqref{eq:Gaussian_cov_fn}. With appropriate selections of input scales $w_r$ for such covariances, and defining
 \begin{align*}
 \Delta & \deq m_{\tilde{r}|s} - t(m_{r|s})\,,
@@ -438,7 +438,13 @@ Our linearisation corresponds to giving our \gpb over $\psi$ observations at $\t
 \end{align}
 As with any linearisation approximation, \eqref{eq:linearisation} gives the value at the selected point $\tr_0$, plus a correction factor modelling the influence of the first derivatives. 
 These correction factor contains a further non-analytic integral, over $\phi$. Fortunately, they're not too far away from being analytic; almost all terms with dependence on $\phi$ within those integrals are Gaussian. The exception is the $t_r(m_{r|s})$ terms within $\Delta$. As such, we perform another stage of Bayesian quadrature by treating $\Delta$ as an unknown function of $\phi$.
-For this function we take Gaussian process priors with zero prior mean and Gaussian covariance \eqref{eq:Gaussian_cov_fn}.
+For this function we take Gaussian process priors with zero prior mean and Gaussian covariance \eqref{eq:Gaussian_cov_fn}. We must now choose sample points $\vph_c$ at which to evaluate our $\Delta$ function. 
+% Unfortunately, it is impractical to resolve this decision problem in the same manner as the selection of $\vphS$, our ultimate goal (a topic that receives our full attention in Section \ref{sec:SBQ})).
+$\vph_c$ should firstly include $\vph_s$, at which points we know that $\delta$ is equal to zero. Note firstly that a simple heuristic for determining the `best' samples (in the sense of samples with which to fit a \gp) is to select those samples at extrema. Note that the peaks and troughs of $\delta$ occur at points far-removed from $\vph_s$, but no further away than a few input scales. This is where the transformed mean for $r$ is liable to differ most from the mean of the transformed variable (and the appropriate $\Delta$ extremised). That is, we would like to select $\vph_c$ as points as far away from all points in $\vph_s$ as possible, while still remaining within a few input scales. 
+%For convenience, we define the allowable region to be the box defined by the least upper bound of $\vph_s$ plus three input scales and the greatest lower bound minus three input scales. 
+Finding $\vph_c$ hence requires solving the largest empty sphere problem, which we can solve with the use of a Voronoi diagram \citep{Voronoi, shamos1975closest, okabe1997locational}. 
+Where this requires computation in excess of that afforded by our allowance, we instead construct a \acro{kd}-tree \citep{bentley1975multidimensional} for our $\vph_s$, and select $\vph_c$ as the centres of the hyper-rectangles defined by the splitting
+hyperplanes of the tree.
 
 Note that our choice of $\tr_0$ allowed us to resolve the integrals required. For future notational convenience, we assume that if we have an observation of $\psi_0$, we will also have observations of its functional derivatives.
 

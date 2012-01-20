@@ -1,9 +1,15 @@
-\begin{thebibliography}{6}
+\begin{thebibliography}{10}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
   \providecommand{\doi}[1]{doi: #1}\else
   \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Bentley(1975)]{bentley1975multidimensional}
+Bentley, J.L.
+\newblock Multidimensional binary search trees used for associative searching.
+\newblock \emph{Communications of the ACM}, 18\penalty0 (9):\penalty0 509--517,
+  1975.
 
 \bibitem[Nonymous(1900)]{OsborneAnon}
 Nonymous, A.
@@ -27,6 +33,12 @@ O'Hagan, A.
   (eds.), \emph{{B}ayesian Statistics 4}, pp.\  345--363. Oxford University
   Press, 1992.
 
+\bibitem[Okabe \& Suzuki(1997)Okabe and Suzuki]{okabe1997locational}
+Okabe, A. and Suzuki, A.
+\newblock Locational optimization problems solved through {V}oronoi diagrams.
+\newblock \emph{European Journal of Operational Research}, 98\penalty0
+  (3):\penalty0 445--456, 1997.
+
 \bibitem[Rasmussen \& Ghahramani(2003)Rasmussen and Ghahramani]{BZMonteCarlo}
 Rasmussen, C.~E. and Ghahramani, Z.
 \newblock {{B}ayesian Monte Carlo}.
@@ -37,5 +49,18 @@ Rasmussen, C.~E. and Ghahramani, Z.
 Rasmussen, C.~E. and Williams, C. K.~I.
 \newblock \emph{{G}aussian Processes for Machine Learning}.
 \newblock MIT Press, 2006.
+
+\bibitem[Shamos \& Hoey(1975)Shamos and Hoey]{shamos1975closest}
+Shamos, M.I. and Hoey, D.
+\newblock Closest-point problems.
+\newblock In \emph{Foundations of Computer Science, 1975., 16th Annual
+  Symposium on}, pp.\  151--162. IEEE, 1975.
+
+\bibitem[Voronoi(1907)]{Voronoi}
+Voronoi, G.
+\newblock Nouvelles applications des param\`{e}tres continus \`{a} la
+  th\'{e}orie des formes quadratiques.
+\newblock \emph{Journal f\"{u}r die Reine und Angewandte Mathematik},
+  133:\penalty0 97--178, 1907.
 
 \end{thebibliography}
