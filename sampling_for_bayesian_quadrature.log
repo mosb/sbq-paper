@@ -1,14 +1,23 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=latex 2011.10.7)  21 JAN 2012 16:18
+This is pdfTeX, Version 3.1415926-1.40.11 (TeX Live 2010) (format=latex 2011.4.14)  22 JAN 2012 16:48
 entering extended mode
+ restricted \write18 enabled.
  %&-line parsing enabled.
 **sampling_for_bayesian_quadrature.tex
 (./sampling_for_bayesian_quadrature.tex
 LaTeX2e <2009/09/24>
-Babel <v3.8l> and hyphenation patterns for english, usenglishmax, dumylang, noh
-yphenation, loaded.
-(/usr/share/texmf-texlive/tex/latex/base/article.cls
+Babel <v3.8l> and hyphenation patterns for english, dumylang, nohyphenation, ge
+rman-x-2009-06-19, ngerman-x-2009-06-19, ancientgreek, ibycus, arabic, armenian
+, basque, bulgarian, catalan, pinyin, coptic, croatian, czech, danish, dutch, u
+kenglish, usenglishmax, esperanto, estonian, farsi, finnish, french, galician, 
+german, ngerman, swissgerman, monogreek, greek, hungarian, icelandic, assamese,
+ bengali, gujarati, hindi, kannada, malayalam, marathi, oriya, panjabi, tamil, 
+telugu, indonesian, interlingua, irish, italian, kurmanji, lao, latin, latvian,
+ lithuanian, mongolian, mongolianlmc, bokmal, nynorsk, polish, portuguese, roma
+nian, russian, sanskrit, serbian, slovak, slovenian, spanish, swedish, turkish,
+ turkmen, ukrainian, uppersorbian, welsh, loaded.
+(/usr/local/texlive/2010/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
-(/usr/share/texmf-texlive/tex/latex/base/size10.clo
+(/usr/local/texlive/2010/texmf-dist/tex/latex/base/size10.clo
 File: size10.clo 2007/10/19 v1.4h Standard LaTeX file (size option)
 )
 \c@part=\count79
@@ -24,12 +33,11 @@ File: size10.clo 2007/10/19 v1.4h Standard LaTeX file (size option)
 \bibindent=\dimen102
 ) (./preamble.sty
 Package: preamble 
-
-(/usr/share/texmf-texlive/tex/latex/ltxmisc/url.sty
+(/usr/local/texlive/2010/texmf-dist/tex/latex/url/url.sty
 \Urlmuskip=\muskip10
 Package: url 2006/04/12  ver 3.3  Verb mode for urls, etc.
 )
-(/usr/share/texmf-texlive/tex/latex/tools/array.sty
+(/usr/local/texlive/2010/texmf-dist/tex/latex/tools/array.sty
 Package: array 2008/09/09 v2.4c Tabular extension package (FMi)
 \col@sep=\dimen103
 \extrarowheight=\dimen104
@@ -37,24 +45,24 @@ Package: array 2008/09/09 v2.4c Tabular extension package (FMi)
 \extratabsurround=\skip43
 \backup@length=\skip44
 )
-(/usr/share/texmf-texlive/tex/latex/amsmath/amsmath.sty
+(/usr/local/texlive/2010/texmf-dist/tex/latex/amsmath/amsmath.sty
 Package: amsmath 2000/07/18 v2.13 AMS math features
 \@mathmargin=\skip45
 
 For additional information on amsmath, use the `?' option.
-(/usr/share/texmf-texlive/tex/latex/amsmath/amstext.sty
+(/usr/local/texlive/2010/texmf-dist/tex/latex/amsmath/amstext.sty
 Package: amstext 2000/06/29 v2.01
 
-(/usr/share/texmf-texlive/tex/latex/amsmath/amsgen.sty
+(/usr/local/texlive/2010/texmf-dist/tex/latex/amsmath/amsgen.sty
 File: amsgen.sty 1999/11/30 v2.0
 \@emptytoks=\toks15
 \ex@=\dimen105
 ))
-(/usr/share/texmf-texlive/tex/latex/amsmath/amsbsy.sty
+(/usr/local/texlive/2010/texmf-dist/tex/latex/amsmath/amsbsy.sty
 Package: amsbsy 1999/11/29 v1.2d
 \pmbraise@=\dimen106
 )
-(/usr/share/texmf-texlive/tex/latex/amsmath/amsopn.sty
+(/usr/local/texlive/2010/texmf-dist/tex/latex/amsmath/amsopn.sty
 Package: amsopn 1999/12/14 v2.01 operator names
 )
 \inf@bad=\count87
@@ -95,17 +103,17 @@ LaTeX Font Info:    Redeclaring font encoding OMS on input line 568.
 LaTeX Info: Redefining \[ on input line 2666.
 LaTeX Info: Redefining \] on input line 2667.
 )
-(/usr/share/texmf-texlive/tex/latex/amsfonts/amssymb.sty
+(/usr/local/texlive/2010/texmf-dist/tex/latex/amsfonts/amssymb.sty
 Package: amssymb 2009/06/22 v3.00
 
-(/usr/share/texmf-texlive/tex/latex/amsfonts/amsfonts.sty
+(/usr/local/texlive/2010/texmf-dist/tex/latex/amsfonts/amsfonts.sty
 Package: amsfonts 2009/06/22 v3.00 Basic AMSFonts support
 \symAMSa=\mathgroup4
 \symAMSb=\mathgroup5
 LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
 (Font)                  U/euf/m/n --> U/euf/b/n on input line 96.
 ))
-(/usr/share/texmf-texlive/tex/latex/base/textcomp.sty
+(/usr/local/texlive/2010/texmf-dist/tex/latex/base/textcomp.sty
 Package: textcomp 2005/09/27 v1.99g Standard LaTeX package
 Package textcomp Info: Sub-encoding information:
 (textcomp)               5 = only ISO-Adobe without \textcurrency
@@ -120,7 +128,7 @@ Package textcomp Info: Sub-encoding information:
 (textcomp)             See the documentation for details.
 Package textcomp Info: Setting ? sub-encoding to TS1/1 on input line 71.
 
-(/usr/share/texmf-texlive/tex/latex/base/ts1enc.def
+(/usr/local/texlive/2010/texmf-dist/tex/latex/base/ts1enc.def
 File: ts1enc.def 2001/06/05 v3.0e (jk/car/fm) Standard LaTeX file
 )
 LaTeX Info: Redefining \oldstylenums on input line 266.
@@ -172,7 +180,7 @@ Package textcomp Info: Setting pplj sub-encoding to TS1/3 on input line 324.
 Package textcomp Info: Setting ptmx sub-encoding to TS1/4 on input line 325.
 Package textcomp Info: Setting ptmj sub-encoding to TS1/4 on input line 326.
 )
-(/usr/share/texmf-texlive/tex/latex/eepic/epic.sty
+(/usr/local/texlive/2010/texmf-dist/tex/latex/eepic/epic.sty
 Enhancements to Picture Environment. Version 1.2 - Released June 1, 1986
 \@@multicnt=\count99
 \d@lta=\count100
@@ -190,48 +198,46 @@ Enhancements to Picture Environment. Version 1.2 - Released June 1, 1986
 \num@segments=\count105
 \num@segmentsi=\count106
 \@datafile=\read1
-) (/usr/share/texmf-texlive/tex/generic/babel/babel.sty
+) (/usr/local/texlive/2010/texmf-dist/tex/generic/babel/babel.sty
 Package: babel 2008/07/06 v3.8l The Babel package
 
-(/usr/share/texmf-texlive/tex/generic/babel/english.ldf
+(/usr/local/texlive/2010/texmf-dist/tex/generic/babel/english.ldf
 Language: english 2005/03/30 v3.3o English support from the babel system
 
-(/usr/share/texmf-texlive/tex/generic/babel/babel.def
+(/usr/local/texlive/2010/texmf-dist/tex/generic/babel/babel.def
 File: babel.def 2008/07/06 v3.8l Babel common definitions
 \babel@savecnt=\count107
 \U@D=\dimen120
 )
-\l@british = a dialect from \language\l@english 
-\l@UKenglish = a dialect from \language\l@english 
 \l@canadian = a dialect from \language\l@american 
 \l@australian = a dialect from \language\l@british 
 \l@newzealand = a dialect from \language\l@british 
 ))
-(/usr/share/texmf-texlive/tex/latex/graphics/color.sty
+(/usr/local/texlive/2010/texmf-dist/tex/latex/graphics/color.sty
 Package: color 2005/11/14 v1.0j Standard LaTeX Color (DPC)
 
-(/etc/texmf/tex/latex/config/color.cfg
+(/usr/local/texlive/2010/texmf-dist/tex/latex/latexconfig/color.cfg
 File: color.cfg 2007/01/18 v1.5 color configuration of teTeX/TeXLive
 )
 Package color Info: Driver file: dvips.def on input line 130.
 
-(/usr/share/texmf-texlive/tex/latex/graphics/dvips.def
+(/usr/local/texlive/2010/texmf-dist/tex/latex/graphics/dvips.def
 File: dvips.def 1999/02/16 v3.0i Driver-dependant file (DPC,SPQR)
 )
-(/usr/share/texmf-texlive/tex/latex/graphics/dvipsnam.def
+(/usr/local/texlive/2010/texmf-dist/tex/latex/graphics/dvipsnam.def
 File: dvipsnam.def 1999/02/16 v3.0i Driver-dependant file (DPC,SPQR)
 ))
-(/usr/share/texmf-texlive/tex/latex/psfrag/psfrag.sty
+(/usr/local/texlive/2010/texmf-dist/tex/latex/psfrag/psfrag.sty
 Package: psfrag 1998/04/11 v3.04 PSfrag (MCG)
 
-(/usr/share/texmf-texlive/tex/latex/graphics/graphics.sty
+(/usr/local/texlive/2010/texmf-dist/tex/latex/graphics/graphics.sty
 Package: graphics 2009/02/05 v1.0o Standard LaTeX Graphics (DPC,SPQR)
 
-(/usr/share/texmf-texlive/tex/latex/graphics/trig.sty
+(/usr/local/texlive/2010/texmf-dist/tex/latex/graphics/trig.sty
 Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
 )
-(/etc/texmf/tex/latex/config/graphics.cfg
-File: graphics.cfg 2009/08/28 v1.8 graphics configuration of TeX Live
+(/usr/local/texlive/2010/texmf-dist/tex/latex/latexconfig/graphics.cfg
+File: graphics.cfg 2010/04/23 v1.9 graphics configuration of TeX Live
 )
 Package graphics Info: Driver file: dvips.def on input line 91.
 )
@@ -239,34 +245,40 @@ Package graphics Info: Driver file: dvips.def on input line 91.
 \pfg@scount=\count109
 \pfg@temp=\write3
 )
-(/usr/share/texmf-texlive/tex/latex/pstool/pstool.sty
+(/usr/local/texlive/2010/texmf-dist/tex/latex/pstool/pstool.sty
 Package: pstool 2009/07/17 v1.3 Wrapper for processing PostScript/psfrag figure
 s
 
-(/usr/share/texmf-texlive/tex/generic/oberdiek/catchfile.sty
-Package: catchfile 2007/11/11 v1.2 Catches the contents of a file (HO)
+(/usr/local/texlive/2010/texmf-dist/tex/generic/oberdiek/catchfile.sty
+Package: catchfile 2010/04/28 v1.5 Catches the contents of a file (HO)
 
-(/usr/share/texmf-texlive/tex/generic/oberdiek/infwarerr.sty
-Package: infwarerr 2007/09/09 v1.2 Providing info/warning/message (HO)
+(/usr/local/texlive/2010/texmf-dist/tex/generic/oberdiek/infwarerr.sty
+Package: infwarerr 2010/04/08 v1.3 Providing info/warning/message (HO)
+)
+(/usr/local/texlive/2010/texmf-dist/tex/generic/oberdiek/ltxcmds.sty
+Package: ltxcmds 2010/04/26 v1.7 LaTeX kernel commands for general use (HO)
+)
+(/usr/local/texlive/2010/texmf-dist/tex/generic/oberdiek/etexcmds.sty
+Package: etexcmds 2010/01/28 v1.3 Prefix for e-TeX command names (HO)
+Package etexcmds Info: Could not find \expanded.
+(etexcmds)             That can mean that you are not using pdfTeX 1.50 or
+(etexcmds)             that some package has redefined \expanded.
+(etexcmds)             In the latter case, load this package earlier.
 ))
-(/usr/share/texmf-texlive/tex/generic/oberdiek/ifpdf.sty
-Package: ifpdf 2009/04/10 v2.0 Provides the ifpdf switch (HO)
+(/usr/local/texlive/2010/texmf-dist/tex/generic/oberdiek/ifpdf.sty
+Package: ifpdf 2010/01/28 v2.1 Provides the ifpdf switch (HO)
 Package ifpdf Info: pdfTeX in pdf mode not detected.
 )
-(/usr/share/texmf-texlive/tex/latex/ifplatform/ifplatform.sty
+(/usr/local/texlive/2010/texmf-dist/tex/latex/ifplatform/ifplatform.sty
 Package: ifplatform 2009/09/10 v0.3a Testing for the operating system
 
-(/usr/share/texmf-texlive/tex/generic/oberdiek/pdftexcmds.sty
-Package: pdftexcmds 2009/09/23 v0.6 LuaTeX support for pdfTeX utility functions
- (HO)
+(/usr/local/texlive/2010/texmf-dist/tex/generic/oberdiek/pdftexcmds.sty
+Package: pdftexcmds 2010/04/01 v0.9 Utility functions of pdfTeX for LuaTeX (HO)
 
-(/usr/share/texmf-texlive/tex/generic/oberdiek/ifluatex.sty
-Package: ifluatex 2009/04/17 v1.2 Provides the ifluatex switch (HO)
+
+(/usr/local/texlive/2010/texmf-dist/tex/generic/oberdiek/ifluatex.sty
+Package: ifluatex 2010/03/01 v1.3 Provides the ifluatex switch (HO)
 Package ifluatex Info: LuaTeX not detected.
-)
-(/usr/share/texmf-texlive/tex/generic/oberdiek/ltxcmds.sty
-Package: ltxcmds 2009/08/05 v1.0 Some LaTeX kernel commands for general use (HO
-)
 )
 Package pdftexcmds Info: LuaTeX not detected.
 Package pdftexcmds Info: \pdf@primitive is available.
@@ -276,23 +288,23 @@ Package pdftexcmds Info: \pdf@ifprimitive is available.
 Package ifplatform Warning: 
     shell escape is disabled, so I can only detect \ifwindows.
 
-) (/usr/share/texmf-texlive/tex/latex/graphics/graphicx.sty
+) (/usr/local/texlive/2010/texmf-dist/tex/latex/graphics/graphicx.sty
 Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
 
-(/usr/share/texmf-texlive/tex/latex/graphics/keyval.sty
+(/usr/local/texlive/2010/texmf-dist/tex/latex/graphics/keyval.sty
 Package: keyval 1999/03/16 v1.13 key=value parser (DPC)
 \KV@toks@=\toks20
 )
 \Gin@req@height=\dimen121
 \Gin@req@width=\dimen122
 )
-(/usr/share/texmf-texlive/tex/latex/bigfoot/suffix.sty
+(/usr/local/texlive/2010/texmf-dist/tex/latex/bigfoot/suffix.sty
 Package: suffix 2006/07/15 1.5 Variant command support
 )
-(/usr/share/texmf-texlive/tex/latex/xkeyval/xkeyval.sty
+(/usr/local/texlive/2010/texmf-dist/tex/latex/xkeyval/xkeyval.sty
 Package: xkeyval 2008/08/13 v2.6a package option processing (HA)
 
-(/usr/share/texmf-texlive/tex/generic/xkeyval/xkeyval.tex
+(/usr/local/texlive/2010/texmf-dist/tex/generic/xkeyval/xkeyval.tex
 \XKV@toks=\toks21
 \XKV@tempa@toks=\toks22
 \XKV@depth=\count110
@@ -300,7 +312,7 @@ File: xkeyval.tex 2008/08/13 v2.6a key=value parser (HA)
 ))
 \pstool@out=\write4
 )
-(/usr/share/texmf-texlive/tex/latex/booktabs/booktabs.sty
+(/usr/local/texlive/2010/texmf-dist/tex/latex/booktabs/booktabs.sty
 Package: booktabs 2005/04/14 v1.61803 publication quality tables
 \heavyrulewidth=\dimen123
 \lightrulewidth=\dimen124
@@ -320,442 +332,227 @@ Package: booktabs 2005/04/14 v1.61803 publication quality tables
 \@lastruleclass=\count114
 \@thisrulewidth=\dimen135
 )
-(/usr/share/texmf-texlive/tex/latex/ltxmisc/relsize.sty
+(/usr/local/texlive/2010/texmf-dist/tex/latex/relsize/relsize.sty
 Package: relsize 2003/07/04 ver 3.1
 )
-(/usr/share/texmf-texlive/tex/latex/units/nicefrac.sty
+(/usr/local/texlive/2010/texmf-dist/tex/latex/units/nicefrac.sty
 Package: nicefrac 1998/08/04 v0.9b Nice fractions
 \L@UnitsRaiseDisplaystyle=\skip48
 \L@UnitsRaiseTextstyle=\skip49
 \L@UnitsRaiseScriptstyle=\skip50
 
-(/usr/share/texmf-texlive/tex/latex/base/ifthen.sty
+(/usr/local/texlive/2010/texmf-dist/tex/latex/base/ifthen.sty
 Package: ifthen 2001/05/26 v1.1c Standard LaTeX ifthen package (DPC)
-))
-(/usr/share/texmf-texlive/tex/latex/pstricks/pst-all.sty
-Package: pst-all 2008/01/01 the main pstricks tools
-
-(/usr/share/texmf-texlive/tex/latex/pstricks/pstricks.sty
-Package: pstricks 2008/11/26 v0.40 LaTeX wrapper for `PSTricks' (RN,HV)
-
-(/usr/share/texmf-texlive/tex/generic/pstricks/pstricks.tex
-`PSTricks' v1.29  <2009/05/19> (tvz)
-\pst@dima=\dimen136
-\pst@dimb=\dimen137
-\pst@dimc=\dimen138
-\pst@dimd=\dimen139
-\pst@dimg=\dimen140
-\pst@dimh=\dimen141
-\pst@hbox=\box29
-\pst@boxg=\box30
-\pst@cnta=\count115
-\pst@cntb=\count116
-\pst@cntc=\count117
-\pst@cntd=\count118
-\pst@cntg=\count119
-\pst@cnth=\count120
-\pst@toks=\toks23
-(/usr/share/texmf-texlive/tex/generic/pstricks/pstricks.con)
-\psunit=\dimen142
-\psxunit=\dimen143
-\psyunit=\dimen144
-\pslinewidth=\dimen145
-\pst@customdefs=\toks24
-\pslinearc=\dimen146
-\everypsbox=\toks25
-\psframesep=\dimen147
-\pslabelsep=\dimen148
-\pst@shift=\dimen149
-\theoverlaybox=\box31
-)
-File: pstricks.tex 2009/05/19 v1.29 `PSTricks' (tvz,hv)
-
-(/usr/share/texmf/tex/latex/xcolor/xcolor.sty
-Package: xcolor 2007/01/21 v2.11 LaTeX color extensions (UK)
-
-(/etc/texmf/tex/latex/config/color.cfg
-File: color.cfg 2007/01/18 v1.5 color configuration of teTeX/TeXLive
-)
-Package xcolor Info: Driver file: dvips.def on input line 225.
-LaTeX Info: Redefining \color on input line 702.
-Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1337.
-Package xcolor Info: Model `RGB' extended on input line 1353.
-Package xcolor Info: Model `HTML' substituted by `rgb' on input line 1355.
-Package xcolor Info: Model `Hsb' substituted by `hsb' on input line 1356.
-Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1357.
-Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1358.
-Package xcolor Info: Model `Gray' substituted by `gray' on input line 1359.
-Package xcolor Info: Model `wave' substituted by `hsb' on input line 1360.
-))
-(/usr/share/texmf-texlive/tex/latex/pstricks/pst-node.sty
-Package: pst-node 2006/01/01 package wrapper for pst-node.tex
-
-(/usr/share/texmf-texlive/tex/generic/pstricks/pst-node.tex  v1.01, 2008/11/26
-\psrow=\count121
-\pscol=\count122
-\psmatrixcnt=\count123
-\psrowsep=\skip51
-\pscolsep=\skip52
-)
-File: pst-node.tex 2008/11/26 1.01 `pst-node' (tvz)
-) (/usr/share/texmf-texlive/tex/latex/pst-tree/pst-tree.sty
-Package: pst-tree 2009/01/25 package wrapper for pst-tree.tex
-
-(/usr/share/texmf-texlive/tex/generic/pst-tree/pst-tree.tex
-(/usr/share/texmf-texlive/tex/generic/xkeyval/pst-xkey.tex
-File: pst-xkey.tex 2005/11/25 v1.6 PSTricks specialization of xkeyval (HA)
-)
- v1.11, 2009/09/17(tvz,dg,hv)
-\pstree@rootbox=\box32
-\pstree@box=\box33
-\psnodecnt=\count124
-\pstreelevel=\count125
-\pstreecnt=\count126
-\pstree@cnt=\count127
-\pstree@stop=\count128
-)
-File: pst-tree.tex 2009/09/17 1.11 `pst-tree' (tvz,hv)
-)
-(/usr/share/texmf-texlive/tex/latex/pstricks/pst-plot.sty
-Package: pst-plot 2004/07/15 package wrapper for pst-plot.tex
-
-(/usr/share/texmf-texlive/tex/generic/pstricks/pst-plot.tex
-(/usr/share/texmf-texlive/tex/generic/multido/multido.tex
- v1.41, 2004/05/18 <tvz>
-\multido@count=\count129
-\multidocount=\count130
-\multido@stuff=\toks26
-)  v1.04, 2009/06/08)
-File: pst-plot.tex 2009/06/08 1.04 `pst-plot' (tvz)
-)
-(/usr/share/texmf-texlive/tex/latex/pst-grad/pst-grad.sty
-Package: pst-grad 2004/07/15 package wrapper for pst-grad.tex (hv)
-
-(/usr/share/texmf-texlive/tex/generic/pst-grad/pst-grad.tex
-`pst-grad' v1.06, 2006/11/27 (tvz,dg,hv))
-File: pst-grad.tex 2006/11/27 1.06 `pst-grad' (tvz)
-)
-(/usr/share/texmf-texlive/tex/latex/pst-coil/pst-coil.sty
-Package: pst-coil 2006/08/11 package wrapper for pst-coil.tex (hv)
-
-(/usr/share/texmf-texlive/tex/generic/pst-coil/pst-coil.tex  v1.06, 2006/11/27)
-File: pst-coil.tex 2006/11/05 v1.00 `pst-coil' (tvz)
-) (/usr/share/texmf-texlive/tex/latex/pst-text/pst-text.sty
-Package: pst-text 2006/01/01 package wrapper for pst-text.tex (hv)
-
-(/usr/share/texmf-texlive/tex/generic/pst-text/pst-text.tex
- v1.00, 2006/11/05(tvz,hv))
-File: pst-text.tex 2006/11/05 1.00 `pst-text' (tvz)
-)
-(/usr/share/texmf-texlive/tex/latex/pst-3d/pst-3d.sty
-Package: pst-3d 2005/09/02 package wrapper for pst-3d.tex (hv)
-
-(/usr/share/texmf-texlive/tex/generic/pst-3d/pst-3d.tex
-`PST-3d' v1.00, 2005/09/03 (tvz))
-File: pst-3d.tex 2005/09/03 v1.00 `PST-3d' (tvz)
-)
-(/usr/share/texmf-texlive/tex/latex/pst-eps/pst-eps.sty
-Package: pst-eps 2005/05/20 package wrapper for pst-eps.tex (hv)
-
-(/usr/share/texmf-texlive/tex/generic/pst-eps/pst-eps.tex  v1.00, 2006/11/04
-\pst@epsout=\write5
-\pst@tempout=\write6
-)
-File: pst-eps.tex 2006/11/04 1.00 `pst-eps' (tvz)
-)
-(/usr/share/texmf-texlive/tex/latex/pst-fill/pst-fill.sty
-Package: pst-fill 2005/09/13 package wrapper for pst-fill.tex (hv)
-
-(/usr/share/texmf-texlive/tex/generic/pst-fill/pst-fill.tex
-`PST-Fill' v1.01, 2007/03/10 (tvz,dg,hv)
-\pst@fillbox=\box34
-)
-File: pst-fill.tex 2007/03/10 v1.01 `PST-fill' (tvz,dg)
-)
-(/usr/share/texmf-texlive/tex/latex/pstricks-add/pstricks-add.sty
-Package: pstricks-add 2009/03/17 v. 0.13 package wrapper for pstricks-add.tex (
-hv)
-
-(/usr/share/texmf-texlive/tex/generic/pstricks-add/pstricks-add.tex
-(/usr/share/texmf-texlive/tex/generic/pstricks-add/pst-fp.tex
-`pst-fp' v0.02, 2009/04/02 (hv)
-\pstFP@xs=\count131
-\pstFP@xia=\count132
-\pstFP@xib=\count133
-\pstFP@xfa=\count134
-\pstFP@xfb=\count135
-\pstFP@rega=\count136
-\pstFP@regb=\count137
-\pstFP@regs=\count138
-\pstFP@times=\count139
-)
-(/usr/share/texmf-texlive/tex/generic/pst-math/pst-math.tex
-`pst-math' v0.23 , (CJ,hv)) `pstricks-add' v3.35, 2009/10/12 (dr,hv)
-\pst@dimm=\dimen150
-\pst@dimn=\dimen151
-\pst@dimo=\dimen152
-\pst@dimp=\dimen153
-\pst@cntm=\count140
-\pst@cntn=\count141
-\pst@cnto=\count142
-\pst@cntp=\count143
-\@zero=\count144
-\pstRadUnit=\dimen154
-\pstRadUnitInv=\dimen155
-\pshooklength=\dimen156
-\pshookwidth=\dimen157
-\@digitcounter=\count145
-\psk@subticksize=\dimen158
-\pst@xticksizeA=\dimen159
-\pst@xticksizeB=\dimen160
-\pst@xticksizeC=\dimen161
-\pst@yticksizeA=\dimen162
-\pst@yticksizeB=\dimen163
-\pst@yticksizeC=\dimen164
-\psk@llx=\dimen165
-\psk@lly=\dimen166
-\psk@urx=\dimen167
-\psk@ury=\dimen168
-\pst@xunit=\dimen169
-\pst@yunit=\dimen170
-\linecnt=\count146
-\chart@ColorIndex=\dimen171
-\chart@ColorStep=\dimen172
-\pst@chartHeight=\dimen173
-\pst@chartStackDepth=\dimen174
-\pst@chartStackWidth=\dimen175
-\chart@Toggle=\count147
-)
-File: pstricks-add.tex 2009/10/12 v3.35 `PSTricks-add' (hv)
-)
-(/usr/share/texmf-texlive/tex/latex/multido/multido.sty
-Package: multido 2004/05/17 package wrapper for PSTricks `multido.tex', (HV/RN)
-
-))
-(./com.braju.graphicalmodels.sty
-Package: com.braju.graphicalmodels 2000/10/26 PSTricks extensions by Henrik Ben
-gtsson <hb@maths.lth.se>
- (./com.braju.pstricks.sty
-Package: com.braju.pstricks 2000/12/03 PSTricks extensions by Henrik Bengtsson 
-<hb@maths.lth.se>
-
-(/usr/share/texmf-texlive/tex/latex/tools/calc.sty
-Package: calc 2007/08/22 v4.3 Infix arithmetic (KKT,FJ)
-\calc@Acount=\count148
-\calc@Bcount=\count149
-\calc@Adimen=\dimen176
-\calc@Bdimen=\dimen177
-\calc@Askip=\skip53
-\calc@Bskip=\skip54
-LaTeX Info: Redefining \setlength on input line 76.
-LaTeX Info: Redefining \addtolength on input line 77.
-\calc@Ccount=\count150
-\calc@Cskip=\skip55
-)
-\pst@Thermometer@width=\skip56
-\pst@Thermometer@height=\skip57
-)
-\GM@x=\skip58
-\GM@y=\skip59
-\GM@xa=\skip60
-\GM@ya=\skip61
-\GM@xb=\skip62
-\GM@yb=\skip63
-\GM@xc=\skip64
-\GM@yc=\skip65
-\GM@dx=\skip66
-\GM@dy=\skip67
-\GM@dima=\skip68
-\GM@dimb=\skip69
-\GM@dimc=\skip70
-\c@GM@counta=\count151
-\c@GM@countb=\count152
-\c@GM@countc=\count153
-\GM@nodeSize=\skip71
-\GM@offset=\skip72
-\c@GM@observed=\count154
-\c@GM@query=\count155
-))
-(/usr/share/texmf-texlive/tex/latex/subfigure/subfigure.sty
+)))
+(/usr/local/texlive/2010/texmf-dist/tex/latex/subfigure/subfigure.sty
 Package: subfigure 2002/03/15 v2.1.5 subfigure package
-\subfigtopskip=\skip73
-\subfigcapskip=\skip74
-\subfigcaptopadj=\dimen178
-\subfigbottomskip=\skip75
-\subfigcapmargin=\dimen179
-\subfiglabelskip=\skip76
-\c@subfigure=\count156
-\c@lofdepth=\count157
-\c@subtable=\count158
-\c@lotdepth=\count159
+\subfigtopskip=\skip51
+\subfigcapskip=\skip52
+\subfigcaptopadj=\dimen136
+\subfigbottomskip=\skip53
+\subfigcapmargin=\dimen137
+\subfiglabelskip=\skip54
+\c@subfigure=\count115
+\c@lofdepth=\count116
+\c@subtable=\count117
+\c@lotdepth=\count118
 
 ****************************************
 * Local config file subfigure.cfg used *
 ****************************************
-(/usr/share/texmf-texlive/tex/latex/subfigure/subfigure.cfg)
-\subfig@top=\skip77
-\subfig@bottom=\skip78
-) (./natbib.sty
-Package: natbib 2009/07/16 8.31 (PWD, AO)
-\bibhang=\skip79
-\bibsep=\skip80
-LaTeX Info: Redefining \cite on input line 694.
-\c@NAT@ctr=\count160
+(/usr/local/texlive/2010/texmf-dist/tex/latex/subfigure/subfigure.cfg)
+\subfig@top=\skip55
+\subfig@bottom=\skip56
 )
-(./algorithm.sty
+(./natbib.sty
+Package: natbib 2009/07/16 8.31 (PWD, AO)
+\bibhang=\skip57
+\bibsep=\skip58
+LaTeX Info: Redefining \cite on input line 694.
+\c@NAT@ctr=\count119
+) (./algorithm.sty
 Package: algorithm 
 
 Document Style `algorithm' - floating environment
-(/usr/share/texmf-texlive/tex/latex/float/float.sty
+(/usr/local/texlive/2010/texmf-dist/tex/latex/float/float.sty
 Package: float 2001/11/08 v1.3d Float enhancements (AL)
-\c@float@type=\count161
-\float@exts=\toks27
-\float@box=\box35
-\@float@everytoks=\toks28
-\@floatcapt=\box36
+\c@float@type=\count120
+\float@exts=\toks23
+\float@box=\box29
+\@float@everytoks=\toks24
+\@floatcapt=\box30
 )
-\@float@every@algorithm=\toks29
-\c@algorithm=\count162
-) (./algorithmic.sty
+\@float@every@algorithm=\toks25
+\c@algorithm=\count121
+)
+(./algorithmic.sty
 Package: algorithmic 
 
 Document Style `algorithmic' - environment
-\c@ALC@line=\count163
-\c@ALC@rem=\count164
-\ALC@tlm=\skip81
-) (/usr/share/texmf-texlive/tex/latex/hyperref/hyperref.sty
-Package: hyperref 2009/10/09 v6.79a Hypertext links for LaTeX
+(/usr/local/texlive/2010/texmf-dist/tex/latex/tools/calc.sty
+Package: calc 2007/08/22 v4.3 Infix arithmetic (KKT,FJ)
+\calc@Acount=\count122
+\calc@Bcount=\count123
+\calc@Adimen=\dimen138
+\calc@Bdimen=\dimen139
+\calc@Askip=\skip59
+\calc@Bskip=\skip60
+LaTeX Info: Redefining \setlength on input line 76.
+LaTeX Info: Redefining \addtolength on input line 77.
+\calc@Ccount=\count124
+\calc@Cskip=\skip61
+)
+\c@ALC@line=\count125
+\c@ALC@rem=\count126
+\ALC@tlm=\skip62
+)
+(/usr/local/texlive/2010/texmf-dist/tex/latex/hyperref/hyperref.sty
+Package: hyperref 2010/06/18 v6.81g Hypertext links for LaTeX
 
-(/usr/share/texmf-texlive/tex/generic/oberdiek/ifvtex.sty
-Package: ifvtex 2008/11/04 v1.4 Switches for detecting VTeX and its modes (HO)
+(/usr/local/texlive/2010/texmf-dist/tex/generic/oberdiek/kvsetkeys.sty
+Package: kvsetkeys 2010/03/01 v1.9 Key value parser (HO)
+)
+(/usr/local/texlive/2010/texmf-dist/tex/generic/oberdiek/pdfescape.sty
+Package: pdfescape 2010/03/01 v1.9 Provides hex, PDF name and string conversion
+s (HO)
+)
+(/usr/local/texlive/2010/texmf-dist/tex/generic/oberdiek/ifvtex.sty
+Package: ifvtex 2010/03/01 v1.5 Switches for detecting VTeX and its modes (HO)
 Package ifvtex Info: VTeX not detected.
 )
-(/usr/share/texmf-texlive/tex/generic/ifxetex/ifxetex.sty
+(/usr/local/texlive/2010/texmf-dist/tex/generic/ifxetex/ifxetex.sty
 Package: ifxetex 2009/01/23 v0.5 Provides ifxetex conditional
 )
-(/usr/share/texmf-texlive/tex/latex/oberdiek/hycolor.sty
-Package: hycolor 2009/10/02 v1.5 Code for color options of hyperref/bookmark (H
-O)
+(/usr/local/texlive/2010/texmf-dist/tex/latex/oberdiek/hycolor.sty
+Package: hycolor 2009/12/12 v1.6 Color options of hyperref/bookmark (HO)
 
-(/usr/share/texmf-texlive/tex/latex/oberdiek/xcolor-patch.sty
-Package: xcolor-patch 2009/10/02 xcolor patch
+(/usr/local/texlive/2010/texmf-dist/tex/latex/oberdiek/xcolor-patch.sty
+Package: xcolor-patch 2009/12/12 xcolor patch
 ))
-\@linkdim=\dimen180
-\Hy@linkcounter=\count165
-\Hy@pagecounter=\count166
-
-(/usr/share/texmf-texlive/tex/latex/hyperref/pd1enc.def
-File: pd1enc.def 2009/10/09 v6.79a Hyperref: PDFDocEncoding definition (HO)
+(/usr/local/texlive/2010/texmf-dist/tex/latex/oberdiek/letltxmacro.sty
+Package: letltxmacro 2008/06/24 v1.3 Let assignment for LaTeX macros (HO)
 )
-(/usr/share/texmf-texlive/tex/generic/oberdiek/etexcmds.sty
-Package: etexcmds 2007/12/12 v1.2 Prefix for e-TeX command names (HO)
-Package etexcmds Info: Could not find \expanded.
-(etexcmds)             That can mean that you are not using pdfTeX 1.50 or
-(etexcmds)             that some package has redefined \expanded.
-(etexcmds)             In the latter case, load this package earlier.
+\@linkdim=\dimen140
+\Hy@linkcounter=\count127
+\Hy@pagecounter=\count128
+
+(/usr/local/texlive/2010/texmf-dist/tex/latex/hyperref/pd1enc.def
+File: pd1enc.def 2010/06/18 v6.81g Hyperref: PDFDocEncoding definition (HO)
 )
-(/usr/share/texmf-texlive/tex/latex/latexconfig/hyperref.cfg
-File: hyperref.cfg 2002/06/06 v1.2 hyperref configuration of TeXLive
-)
-(/usr/share/texmf-texlive/tex/latex/oberdiek/kvoptions.sty
-Package: kvoptions 2009/08/13 v3.4 Keyval support for LaTeX options (HO)
-
-(/usr/share/texmf-texlive/tex/generic/oberdiek/kvsetkeys.sty
-Package: kvsetkeys 2009/07/30 v1.5 Key value parser with default handler suppor
-t (HO)
-))
-Package hyperref Info: Hyper figures OFF on input line 2975.
-Package hyperref Info: Link nesting OFF on input line 2980.
-Package hyperref Info: Hyper index ON on input line 2983.
-Package hyperref Info: Plain pages OFF on input line 2990.
-Package hyperref Info: Backreferencing OFF on input line 2995.
-
-Implicit mode ON; LaTeX internals redefined
-Package hyperref Info: Bookmarks ON on input line 3191.
-LaTeX Info: Redefining \url on input line 3428.
-(/usr/share/texmf-texlive/tex/generic/oberdiek/bitset.sty
-Package: bitset 2007/09/28 v1.0 Data type bit set (HO)
-
-(/usr/share/texmf-texlive/tex/generic/oberdiek/intcalc.sty
+(/usr/local/texlive/2010/texmf-dist/tex/generic/oberdiek/intcalc.sty
 Package: intcalc 2007/09/27 v1.1 Expandable integer calculations (HO)
 )
-(/usr/share/texmf-texlive/tex/generic/oberdiek/bigintcalc.sty
+(/usr/local/texlive/2010/texmf-dist/tex/latex/latexconfig/hyperref.cfg
+File: hyperref.cfg 2002/06/06 v1.2 hyperref configuration of TeXLive
+)
+(/usr/local/texlive/2010/texmf-dist/tex/latex/oberdiek/kvoptions.sty
+Package: kvoptions 2010/02/22 v3.7 Keyval support for LaTeX options (HO)
+)
+Package hyperref Info: Hyper figures OFF on input line 3658.
+Package hyperref Info: Link nesting OFF on input line 3663.
+Package hyperref Info: Hyper index ON on input line 3666.
+Package hyperref Info: Plain pages OFF on input line 3673.
+Package hyperref Info: Backreferencing OFF on input line 3678.
+
+Implicit mode ON; LaTeX internals redefined
+Package hyperref Info: Bookmarks ON on input line 3874.
+LaTeX Info: Redefining \url on input line 4159.
+(/usr/local/texlive/2010/texmf-dist/tex/generic/oberdiek/bitset.sty
+Package: bitset 2007/09/28 v1.0 Data type bit set (HO)
+
+(/usr/local/texlive/2010/texmf-dist/tex/generic/oberdiek/bigintcalc.sty
 Package: bigintcalc 2007/11/11 v1.1 Expandable big integer calculations (HO)
 ))
-\Fld@menulength=\count167
-\Field@Width=\dimen181
-\Fld@charsize=\dimen182
-\Field@toks=\toks30
-Package hyperref Info: Hyper figures OFF on input line 4377.
-Package hyperref Info: Link nesting OFF on input line 4382.
-Package hyperref Info: Hyper index ON on input line 4385.
-Package hyperref Info: backreferencing OFF on input line 4392.
-Package hyperref Info: Link coloring OFF on input line 4397.
-Package hyperref Info: Link coloring with OCG OFF on input line 4402.
-Package hyperref Info: PDF/A mode OFF on input line 4407.
+\Fld@menulength=\count129
+\Field@Width=\dimen141
+\Fld@charsize=\dimen142
+\Field@toks=\toks26
+Package hyperref Info: Hyper figures OFF on input line 5137.
+Package hyperref Info: Link nesting OFF on input line 5142.
+Package hyperref Info: Hyper index ON on input line 5145.
+Package hyperref Info: backreferencing OFF on input line 5152.
+Package hyperref Info: Link coloring OFF on input line 5157.
+Package hyperref Info: Link coloring with OCG OFF on input line 5162.
+Package hyperref Info: PDF/A mode OFF on input line 5167.
+LaTeX Info: Redefining \ref on input line 5207.
+LaTeX Info: Redefining \pageref on input line 5211.
 
-(/usr/share/texmf-texlive/tex/generic/oberdiek/atbegshi.sty
-Package: atbegshi 2008/07/31 v1.9 At begin shipout hook (HO)
+(/usr/local/texlive/2010/texmf-dist/tex/generic/oberdiek/atbegshi.sty
+Package: atbegshi 2010/03/25 v1.12 At begin shipout hook (HO)
 )
-\Hy@abspage=\count168
-\c@Item=\count169
-\c@Hfootnote=\count170
+\Hy@abspage=\count130
+\c@Item=\count131
+\c@Hfootnote=\count132
 )
-*hyperref using default driver hdvips*
-(/usr/share/texmf-texlive/tex/latex/hyperref/hdvips.def
-File: hdvips.def 2009/10/09 v6.79a Hyperref driver for dvips
+* hyperref using default driver hdvips *
+(/usr/local/texlive/2010/texmf-dist/tex/latex/hyperref/hdvips.def
+File: hdvips.def 2010/06/18 v6.81g Hyperref driver for dvips
 
-(/usr/share/texmf-texlive/tex/latex/hyperref/pdfmark.def
-File: pdfmark.def 2009/10/09 v6.79a Hyperref definitions for pdfmark specials
-\pdf@docset=\toks31
-\pdf@box=\box37
-\pdf@toks=\toks32
-\pdf@defaulttoks=\toks33
-\Fld@listcount=\count171
+(/usr/local/texlive/2010/texmf-dist/tex/latex/hyperref/pdfmark.def
+File: pdfmark.def 2010/06/18 v6.81g Hyperref definitions for pdfmark specials
+\pdf@docset=\toks27
+\pdf@box=\box31
+\pdf@toks=\toks28
+\pdf@defaulttoks=\toks29
+\Fld@listcount=\count133
+\c@bookmark@seq@number=\count134
+
+(/usr/local/texlive/2010/texmf-dist/tex/latex/oberdiek/rerunfilecheck.sty
+Package: rerunfilecheck 2010/03/16 v1.6 Rerun checks for auxiliary files (HO)
+
+(/usr/local/texlive/2010/texmf-dist/tex/latex/oberdiek/atveryend.sty
+Package: atveryend 2010/03/24 v1.5 Hooks at very end of document (HO)
+Package atveryend Info: \enddocument detected (standard).
+)
+(/usr/local/texlive/2010/texmf-dist/tex/generic/oberdiek/uniquecounter.sty
+Package: uniquecounter 2009/12/18 v1.1 Provides unlimited unique counter (HO)
+)
+Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
+71.
+)
+\Hy@SectionHShift=\skip63
 ))
-(/usr/share/texmf-texlive/tex/latex/ltxmisc/ulem.sty
-\UL@box=\box38
-\UL@hyphenbox=\box39
-\UL@skip=\skip82
-\UL@hook=\toks34
-\UL@pe=\count172
-\UL@pixel=\dimen183
-\ULC@box=\box40
-Package: ulem 2000/05/26
-\ULdepth=\dimen184
+(/usr/local/texlive/2010/texmf-dist/tex/generic/ulem/ulem.sty
+\UL@box=\box32
+\UL@hyphenbox=\box33
+\UL@skip=\skip64
+\UL@hook=\toks30
+\UL@pe=\count135
+\UL@pixel=\dimen143
+\ULC@box=\box34
+Package: ulem 2010/01/21
+\ULdepth=\dimen144
 ) (./icml2012.sty
 Package: icml2012 2012/01/01 v2.0 ICML Conference Style File
 
 (./fancyhdr.sty
-\fancy@headwidth=\skip83
-\f@ncyO@elh=\skip84
-\f@ncyO@erh=\skip85
-\f@ncyO@olh=\skip86
-\f@ncyO@orh=\skip87
-\f@ncyO@elf=\skip88
-\f@ncyO@erf=\skip89
-\f@ncyO@olf=\skip90
-\f@ncyO@orf=\skip91
-) (/usr/share/texmf-texlive/tex/latex/eso-pic/eso-pic.sty
-Package: eso-pic 2006/07/14 v1.1d eso-pic (RN)
-
-(/usr/share/texmf-texlive/tex/latex/ms/everyshi.sty
-Package: everyshi 2001/05/15 v3.00 EveryShipout Package (MS)
-))
+\fancy@headwidth=\skip65
+\f@ncyO@elh=\skip66
+\f@ncyO@erh=\skip67
+\f@ncyO@olh=\skip68
+\f@ncyO@orh=\skip69
+\f@ncyO@elf=\skip70
+\f@ncyO@erf=\skip71
+\f@ncyO@olf=\skip72
+\f@ncyO@orf=\skip73
+)
+(/usr/local/texlive/2010/texmf-dist/tex/latex/eso-pic/eso-pic.sty
+Package: eso-pic 2010/06/08 v2.0b eso-pic (RN)
+)
 Package hyperref Info: Option `colorlinks' set `true' on input line 90.
-\titrun=\box41
-\captionbox=\box42
-\captionboxwid=\dimen185
-\icmlrulerbox=\box43
-\icmlrulercount=\count173
-\icmlruleroffset=\dimen186
-\cv@lineheight=\dimen187
-\cv@boxheight=\dimen188
-\cv@tmpbox=\box44
-\cv@refno=\count174
-\cv@tot=\count175
-\cv@tmpc@=\count176
-\cv@tmpc=\count177
+\titrun=\box35
+\captionbox=\box36
+\captionboxwid=\dimen145
+\icmlrulerbox=\box37
+\icmlrulercount=\count136
+\icmlruleroffset=\dimen146
+\cv@lineheight=\dimen147
+\cv@boxheight=\dimen148
+\cv@tmpbox=\box38
+\cv@refno=\count137
+\cv@tot=\count138
+\cv@tmpc@=\count139
+\cv@tmpc=\count140
 )
 (./sampling_for_bayesian_quadrature.aux)
 \openout1 = `sampling_for_bayesian_quadrature.aux'.
@@ -775,32 +572,36 @@ LaTeX Font Info:    ... okay on input line 24.
 LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 24.
 LaTeX Font Info:    Try loading font information for TS1+cmr on input line 24.
 
-(/usr/share/texmf-texlive/tex/latex/base/ts1cmr.fd
+(/usr/local/texlive/2010/texmf-dist/tex/latex/base/ts1cmr.fd
 File: ts1cmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    ... okay on input line 24.
 LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 24.
 LaTeX Font Info:    ... okay on input line 24.
+\AtBeginShipoutBox=\box39
 Package hyperref Info: Link coloring ON on input line 24.
 
-(/usr/share/texmf-texlive/tex/latex/hyperref/nameref.sty
-Package: nameref 2007/05/29 v2.31 Cross-referencing by name of section
+(/usr/local/texlive/2010/texmf-dist/tex/latex/hyperref/nameref.sty
+Package: nameref 2010/04/30 v2.40 Cross-referencing by name of section
 
-(/usr/share/texmf-texlive/tex/latex/oberdiek/refcount.sty
+(/usr/local/texlive/2010/texmf-dist/tex/latex/oberdiek/refcount.sty
 Package: refcount 2008/08/11 v3.1 Data extraction from references (HO)
 )
-\c@section@level=\count178
+(/usr/local/texlive/2010/texmf-dist/tex/generic/oberdiek/gettitlestring.sty
+Package: gettitlestring 2009/12/18 v1.3 Cleanup title references (HO)
+)
+\c@section@level=\count141
 )
 LaTeX Info: Redefining \ref on input line 24.
 LaTeX Info: Redefining \pageref on input line 24.
+LaTeX Info: Redefining \nameref on input line 24.
 
 (./sampling_for_bayesian_quadrature.out)
 (./sampling_for_bayesian_quadrature.out)
-\@outlinefile=\write7
-\openout7 = `sampling_for_bayesian_quadrature.out'.
+\@outlinefile=\write5
+\openout5 = `sampling_for_bayesian_quadrature.out'.
 
-\AtBeginShipoutBox=\box45
- ABD: EveryShipout initializing macros
+
 Overfull \hbox (5.1225pt too wide) in paragraph at lines 48--48
  [] 
  []
@@ -821,12 +622,12 @@ Underfull \hbox (badness 4779) in paragraph at lines 67--67
  []
 
 LaTeX Font Info:    Try loading font information for U+msa on input line 75.
-(/usr/share/texmf-texlive/tex/latex/amsfonts/umsa.fd
+(/usr/local/texlive/2010/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2009/06/22 v3.00 AMS symbols A
 )
 LaTeX Font Info:    Try loading font information for U+msb on input line 75.
 
-(/usr/share/texmf-texlive/tex/latex/amsfonts/umsb.fd
+(/usr/local/texlive/2010/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2009/06/22 v3.00 AMS symbols B
 )
 Underfull \hbox (badness 5970) in paragraph at lines 73--81
@@ -873,17 +674,26 @@ Overfull \hbox (8.77008pt too wide) in paragraph at lines 532--532
 [] 
  []
 
-(./sampling_for_bayesian_quadrature.bbl [5]) [6
+(./sampling_for_bayesian_quadrature.bbl [5])
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 558.
+ [6
 
 ]
-(./sampling_for_bayesian_quadrature.aux) ) 
-Here is how much of TeX's memory you used:
- 10929 strings out of 495062
- 152764 string characters out of 1182644
- 323299 words of memory out of 3000000
- 13800 multiletter control sequences out of 15000+50000
- 15315 words of font info for 57 fonts, out of 3000000 for 9000
- 28 hyphenation exceptions out of 8191
- 45i,15n,56p,837b,413s stack positions out of 5000i,500n,10000p,200000b,50000s
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 558.
 
-Output written on sampling_for_bayesian_quadrature.dvi (6 pages, 73716 bytes).
+(./sampling_for_bayesian_quadrature.aux)
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 558.
+Package rerunfilecheck Info: File `sampling_for_bayesian_quadrature.out' has no
+t changed.
+(rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
+ ) 
+Here is how much of TeX's memory you used:
+ 8002 strings out of 493748
+ 113435 string characters out of 3143569
+ 233465 words of memory out of 3000000
+ 11084 multiletter control sequences out of 15000+200000
+ 15315 words of font info for 57 fonts, out of 3000000 for 9000
+ 714 hyphenation exceptions out of 8191
+ 39i,15n,45p,837b,430s stack positions out of 5000i,500n,10000p,200000b,50000s
+
+Output written on sampling_for_bayesian_quadrature.dvi (6 pages, 73608 bytes).
