@@ -69,7 +69,6 @@ integration techniques do not make the best possible use of this valuable inform
 As well, we compare our BQ approach to standard MCMC techniques on a real scientific problem, where we demonstrate one of the key advantages of BQ: a closed-form expression for the posterior uncertainty in our integral provides a natural stopping criterion for approximate inference.}
 
 \section{Gaussian Processes}
-
 Gaussian processes (\gp s) offer a powerful method to perform Bayesian
 inference about functions \citep{GPsBook}. A \gpb is defined as a
 distribution over the functions $f: \Phi \rightarrow \mathbb{R}$ such
@@ -324,6 +323,8 @@ Again, the scales $h_f$ and $h_g$ cancel out of our mean estimate.
 %, in this case, \eqref{eq:mean_inty_fg}.
 
 \section{Linearisation}
+
+This is a likleihood $\mathcal{L}$ and its transform $\tilde{\mathcal{L}}$ $\vect{\mathcal{L}}_s$
 
 Imagine we want to evaluate the evidence $\inty{r}$, \textcolor{red}{[Why $r$? can we switch back to $f$? and make it $f(x)$?]}an integral over non-negative likelihoods, $r(\phi)$, who arguments are the parameters of the relevant model. \textcolor{red}{[Can we move this eqn into the above sentence?]}
 $$
