@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=latex 2011.10.7)  30 JAN 2012 15:03
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=latex 2011.10.7)  30 JAN 2012 20:46
 entering extended mode
  %&-line parsing enabled.
 **sampling_for_bayesian_quadrature.tex
@@ -534,28 +534,28 @@ Package hyperref Info: Option `colorlinks' set `true' on input line 90.
 (./sampling_for_bayesian_quadrature.aux)
 \openout1 = `sampling_for_bayesian_quadrature.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 30.
-LaTeX Font Info:    ... okay on input line 30.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 30.
-LaTeX Font Info:    ... okay on input line 30.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 30.
-LaTeX Font Info:    ... okay on input line 30.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 30.
-LaTeX Font Info:    ... okay on input line 30.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 30.
-LaTeX Font Info:    ... okay on input line 30.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 30.
-LaTeX Font Info:    ... okay on input line 30.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 30.
-LaTeX Font Info:    Try loading font information for TS1+cmr on input line 30.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 24.
+LaTeX Font Info:    Try loading font information for TS1+cmr on input line 24.
 
 (/usr/share/texmf-texlive/tex/latex/base/ts1cmr.fd
 File: ts1cmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    ... okay on input line 30.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 30.
-LaTeX Font Info:    ... okay on input line 30.
-Package hyperref Info: Link coloring ON on input line 30.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+Package hyperref Info: Link coloring ON on input line 24.
 
 (/usr/share/texmf-texlive/tex/latex/hyperref/nameref.sty
 Package: nameref 2007/05/29 v2.31 Cross-referencing by name of section
@@ -565,8 +565,8 @@ Package: refcount 2008/08/11 v3.1 Data extraction from references (HO)
 )
 \c@section@level=\count140
 )
-LaTeX Info: Redefining \ref on input line 30.
-LaTeX Info: Redefining \pageref on input line 30.
+LaTeX Info: Redefining \ref on input line 24.
+LaTeX Info: Redefining \pageref on input line 24.
 
 (./sampling_for_bayesian_quadrature.out)
 (./sampling_for_bayesian_quadrature.out)
@@ -575,88 +575,94 @@ LaTeX Info: Redefining \pageref on input line 30.
 
 \AtBeginShipoutBox=\box39
  ABD: EveryShipout initializing macros
-Overfull \hbox (5.1225pt too wide) in paragraph at lines 53--53
+Overfull \hbox (5.1225pt too wide) in paragraph at lines 47--47
  [] 
  []
 
 
-Underfull \hbox (badness 1264) in paragraph at lines 55--56
+Underfull \hbox (badness 1264) in paragraph at lines 49--50
 []\OT1/cmr/m/n/10 We in-tro-duce sev-eral in-no-va-tions mak-ing
  []
 
-LaTeX Font Info:    Try loading font information for U+msa on input line 72.
+LaTeX Font Info:    Try loading font information for U+msa on input line 66.
 (/usr/share/texmf-texlive/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2009/06/22 v3.00 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 72.
+LaTeX Font Info:    Try loading font information for U+msb on input line 66.
 
 (/usr/share/texmf-texlive/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2009/06/22 v3.00 AMS symbols B
 )
 
 Package natbib Warning: Citation `neal2001annealed' on page 1 undefined on inpu
-t line 79.
+t line 73.
 
 
-Underfull \hbox (badness 5970) in paragraph at lines 82--90
+Underfull \hbox (badness 5970) in paragraph at lines 76--84
 \OT1/cmr/m/n/10 to per-form Bayesian in-fer-ence about func-tions
  []
 
-
-Underfull \vbox (badness 1622) has occurred while \output is active []
-
- [1
+[1
 
 
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 153--156
+Underfull \hbox (badness 10000) in paragraph at lines 149--152
 []\OT1/cmr/m/it/10 Bayesian quadra-ture \OT1/cmr/m/n/10 ([], [];
  []
 
 
-Underfull \hbox (badness 3668) in paragraph at lines 153--156
+Underfull \hbox (badness 3668) in paragraph at lines 149--152
 []\OT1/cmr/m/n/10 , []) is a means of
  []
 
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [2]
-Overfull \hbox (0.59296pt too wide) in paragraph at lines 264--264
-[] 
+[2]
+Underfull \hbox (badness 2726) in paragraph at lines 270--306
+[]\OT1/cmr/m/n/10 Assigning a stan-dard GP prior to $\OMS/cmsy/m/n/10 L\OT1/cmr
+/m/n/10 (\OML/cmm/m/it/10 x\OT1/cmr/m/n/10 )$ would
  []
 
 
-Underfull \hbox (badness 3189) in paragraph at lines 279--281
-[]\OT1/cmr/m/n/10 Assigning a stan-dard GP prior to $\OML/cmm/m/it/10 r\OT1/cmr
-/m/n/10 (\OML/cmm/m/it/10 ^^^\OT1/cmr/m/n/10 )$ would
- []
-
-
-Underfull \hbox (badness 5741) in paragraph at lines 279--281
+Underfull \hbox (badness 5741) in paragraph at lines 270--306
 \OT1/cmr/m/n/10 ig-nore our prior in-for-ma-tion about the range
  []
 
 
-Underfull \hbox (badness 2443) in paragraph at lines 279--281
-\OT1/cmr/m/n/10 and non-negativity of $\OML/cmm/m/it/10 r\OT1/cmr/m/n/10 (\OML/
-cmm/m/it/10 ^^^\OT1/cmr/m/n/10 )$, lead-ing to patholo-
+Underfull \hbox (badness 2020) in paragraph at lines 270--306
+\OT1/cmr/m/n/10 and non-negativity of $\OMS/cmsy/m/n/10 L\OT1/cmr/m/n/10 (\OML/
+cmm/m/it/10 x\OT1/cmr/m/n/10 )$, lead-ing to patholo-
  []
 
 
-Underfull \hbox (badness 1112) in paragraph at lines 285--297
-\OT1/cmr/m/n/10 (which has well-defined in-verse $\OML/cmm/m/it/10 t[]$\OT1/cmr
-/m/n/10 ) where $\OML/cmm/m/it/10 ^^M \OT1/cmr/m/n/10 :=
- []
-
-
-Overfull \hbox (11.37209pt too wide) in paragraph at lines 320--320
+Overfull \hbox (51.29102pt too wide) in paragraph at lines 313--313
 [] 
  []
 
-[3] [4]
-Overfull \hbox (8.77008pt too wide) in paragraph at lines 479--479
+[3]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+
+Overfull \hbox (19.37845pt too wide) in paragraph at lines 400--400
+[] 
+ []
+
+
+Overfull \hbox (57.59761pt too wide) in paragraph at lines 405--405
+[] 
+ []
+
+
+Overfull \hbox (37.86803pt too wide) in paragraph at lines 422--422
+[] 
+ []
+
+
+Overfull \hbox (76.18665pt too wide) in paragraph at lines 438--438
+[] 
+ []
+
+[4]
+Overfull \hbox (87.5318pt too wide) in paragraph at lines 478--478
 [] 
  []
 
@@ -664,12 +670,19 @@ Overfull \hbox (8.77008pt too wide) in paragraph at lines 479--479
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
+Overfull \hbox (25.84604pt too wide) in paragraph at lines 493--493
+[] 
+ []
+
 (./sampling_for_bayesian_quadrature.bbl
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [5]
 Overfull \hbox (8.89828pt too wide) in paragraph at lines 15--19
 [][][][][][]\OT1/cmr/m/n/10 . 
  []
 
-[5])
+)
 
 Package natbib Warning: There were undefined citations.
 
@@ -677,12 +690,12 @@ Package natbib Warning: There were undefined citations.
 
 ] (./sampling_for_bayesian_quadrature.aux) ) 
 Here is how much of TeX's memory you used:
- 7620 strings out of 495062
- 104684 string characters out of 1182644
- 204412 words of memory out of 3000000
- 10596 multiletter control sequences out of 15000+50000
- 16421 words of font info for 62 fonts, out of 3000000 for 9000
+ 7641 strings out of 495062
+ 104885 string characters out of 1182644
+ 204439 words of memory out of 3000000
+ 10608 multiletter control sequences out of 15000+50000
+ 19811 words of font info for 74 fonts, out of 3000000 for 9000
  28 hyphenation exceptions out of 8191
- 40i,14n,52p,837b,417s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 40i,14n,52p,837b,411s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on sampling_for_bayesian_quadrature.dvi (6 pages, 71840 bytes).
+Output written on sampling_for_bayesian_quadrature.dvi (6 pages, 72652 bytes).
