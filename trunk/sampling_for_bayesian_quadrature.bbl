@@ -1,4 +1,4 @@
-\begin{thebibliography}{10}
+\begin{thebibliography}{11}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -10,6 +10,12 @@ Bentley, J.L.
 \newblock Multidimensional binary search trees used for associative searching.
 \newblock \emph{Communications of the ACM}, 18\penalty0 (9):\penalty0 509--517,
   1975.
+
+\bibitem[Neal(1993)]{NealMC}
+Neal, R.~M.
+\newblock Probabilistic inference using {M}arkov chain {M}onte {C}arlo methods.
+\newblock Technical Report CRG-TR-93-1, University of Toronto, 1993.
+\newblock URL \url{http://www.cs.toronto.edu/~R./ftp/review.pdf}.
 
 \bibitem[Nonymous(1900)]{OsborneAnon}
 Nonymous, A.

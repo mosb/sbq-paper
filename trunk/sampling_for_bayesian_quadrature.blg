@@ -2,47 +2,48 @@ This is BibTeX, Version 0.99c (TeX Live 2009/Debian)
 The top-level auxiliary file: sampling_for_bayesian_quadrature.aux
 The style file: icml2012.bst
 Database file #1: bub.bib
+Warning--I didn't find a database entry for "neal2001annealed"
 Warning--empty title in OsborneAnon
 Warning--empty school in OsborneAnon
-You've used 10 entries,
+You've used 11 entries,
             2773 wiz_defined-function locations,
-            665 strings with 6234 characters,
-and the built_in function-call counts, 4279 in all, are:
-= -- 398
-> -- 166
-< -- 13
-+ -- 58
-- -- 48
-* -- 297
-:= -- 651
-add.period$ -- 32
-call.type$ -- 10
-change.case$ -- 42
-chr.to.int$ -- 10
-cite$ -- 22
-duplicate$ -- 225
-empty$ -- 399
-format.name$ -- 66
-if$ -- 920
+            674 strings with 6420 characters,
+and the built_in function-call counts, 4575 in all, are:
+= -- 428
+> -- 176
+< -- 15
++ -- 62
+- -- 51
+* -- 315
+:= -- 704
+add.period$ -- 36
+call.type$ -- 11
+change.case$ -- 46
+chr.to.int$ -- 11
+cite$ -- 24
+duplicate$ -- 241
+empty$ -- 422
+format.name$ -- 70
+if$ -- 979
 int.to.chr$ -- 1
 int.to.str$ -- 1
 missing$ -- 10
-newline$ -- 57
-num.names$ -- 44
-pop$ -- 91
+newline$ -- 63
+num.names$ -- 48
+pop$ -- 96
 preamble$ -- 1
-purify$ -- 34
+purify$ -- 37
 quote$ -- 0
-skip$ -- 163
+skip$ -- 174
 stack$ -- 0
-substring$ -- 198
-swap$ -- 29
-text.length$ -- 3
+substring$ -- 200
+swap$ -- 30
+text.length$ -- 4
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 105
+type$ -- 116
 warning$ -- 2
-while$ -- 46
+while$ -- 49
 width$ -- 0
-write$ -- 137
-(There were 2 warnings)
+write$ -- 152
+(There were 3 warnings)
