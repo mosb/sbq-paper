@@ -91,15 +91,28 @@
 \newcommand{\sti}{_{\star,i}}
 \newcommand{\vl}{\vect{l}}
 \newcommand{\vq}{\vect{q}}
-\newcommand{\vr}{\vect{r}}
+%\newcommand{\vr}{\vect{r}}
 \newcommand{\vf}{\vect{f}}
 \newcommand{\vg}{\vect{g}}
 \newcommand{\ve}{\vect{\epsilon}}
 
+
+% Some definitions of symbols that we might want to change:
+\newcommand{\lfn}{\mathcal{L}}   % Likelihood function: Formerly r
+\newcommand{\ltfm}{\log(\mathcal{L})}  % Likelihood function transformed: Formerly \tilde{r}
+\newcommand{\var}{V}             % Variance: Formerly C
+\newcommand{\lfv}{x}             % Likelihood function variable: Formerly \phi
+\newcommand{\vlfv}{{\bf x}}             % Vector likelihood function variable: Formerly \phi
+
+
 \newcommand{\inv}{^{{\mathsmaller{-1}}}}
 \newcommand{\tl}{{\tilde{l}}}
-\newcommand{\tr}{{\tilde{r}}}
-\newcommand{\tvr}{\tilde{\vect{r}}}
+%\newcommand{\tr}{{\tilde{r}}}
+\newcommand{\tr}{{\log{\lfn}}}
+\newcommand{\tvr}{\log{\vect{\lfn}}}
+\newcommand{\vr}{\vect{\lfn}}
+
+%\newcommand{\tvr}{\tilde{\vect{r}}}
 \newcommand{\tq}{{\tilde{q}}}
 \newcommand{\tvq}{\tilde{\vect{q}}}
 

@@ -17,12 +17,6 @@
 % \usepackage[accepted]{icml2012}¡
 
 
-% Some definitions of symbols that we might want to change:
-\newcommand{\lfn}{\mathcal{L}}   % Likelihood function: Formerly r
-\newcommand{\ltfm}{\log(\mathcal{L})}  % Likelihood function transformed: Formerly \tilde{r}
-\newcommand{\var}{V}             % Variance: Formerly C
-\newcommand{\lfv}{x}             % Likelihood function variable: Formerly \psi
-
 % The \icmltitle you define below is probably too long as a header.
 % Therefore, a short form for the running title is supplied here:
 \icmltitlerunning{Sampling for Bayesian Quadrature}
@@ -52,29 +46,29 @@
 
 \begin{abstract} 
 %We describe a novel approach to quadrature for probabilistic integrals, offering a competitor to traditional Monte Carlo methods. We use a Bayesian quadrature framework \citep{BZHermiteQuadrature,BZMonteCarlo}.
-We introduce several innovations making Bayesian Quadrature methods suitable for computing model evidences, or likelihood ratios.  We demonstrate the many advantages of model-based integration over standard Markov-chain Monte Carlo approaches.
+We introduce several innovations making Bayesian Quadrature methods suitable for computing model evidences, or normalization constants.  We demonstrate the many advantages of model-based integration over standard Markov-chain Monte Carlo approaches.  These include a natural stopping criterion, an estimate of uncertainty in our integral, the ability to use active learning rather than markov chains in order to learn about the function being integrated.
 \end{abstract} 
 
 \section{Introduction}
 
-Training or evaluating any probabilistic model typically requires an integration over all possible model parameters, weighted by the likelihood.  This commmon problem has many names:  computing the model evidence, estimating the partition function, normalizing a distribution.  Typically, this task is performed using Markov-Chain Monte Carlo (MCMC) methods.  These methods have many well-known problems, (such as requiring extensive tuning, becoming stuck in local modes, and falsely appearing to converge \citep{NealMC}).  However, almost all standard approaches fall into the wide faimly of MCMC methods.
+Training or evaluating any probabilistic model typically requires an integration over model parameters, weighted by their likelihoods.  This commmon problem has many names:  computing the model evidence[cite skilling?], estimating the partition function, normalizing a distribution.  Typically, this task is performed using Markov-Chain Monte Carlo (MCMC) methods.  These methods have many well-known problems, (such as requiring extensive tuning, becoming stuck in local modes, and falsely appearing to converge \citep{NealMC}).  However, almost all standard approaches fall into the wide faimly of MCMC methods.
 
-These methods estimate the model evidence given the value of the integrand on a set of sample points, a set that is limited in size by the computational expense of evaluating the integrand. As discussed in \citep{MCUnsound}, traditional Monte Carlo integration techniques do not make the best possible use of this valuable information. An alternative is found in Bayesian quadrature \citep{BZHermiteQuadrature}, that uses these samples within a Gaussian process model to perform inference about the integrand. The analytic niceties of the Gaussian then permit inference to be performed about the integral itself, the ultimate object of our interest.
+These methods estimate the model evidence given the value of the integrand on a set of sample points, a set that is limited in size by the computational expense of evaluating the integrand. As discussed in \citep{MCUnsound}, traditional Monte Carlo integration techniques do not make the best possible use of this valuable information. An alternative is found in Bayesian quadrature \citep{BZHermiteQuadrature}, that uses function samples within a Gaussian process model to compute a closed-formed posterior over the value of the integral.
 
 Bayesian Quadrature has previously been used to infer model evidence, \citep{BZMonteCarlo}, however the approach used suffered from 3 difficulties: 
 \begin{itemize}
 \item We introduce tractable approximate inference under a log-GP.  In previous work, the GP prior used was inappropriate prior for likelihood functions, which are strictly positive and have a high dynamic range.
-\item We introduce a tractable approximation which accounts for uncertainty in hyperparameter values.  Previously, uncertainty in the quadrature hyperparameters was ignored, leading to pathologies.  
+\item We introduce a tractable approximation which accounts for uncertainty in hyperparameter values.  Previously, uncertainty in the quadrature hyperparameters was ignored, leading to pathologies.
 \item We demonstrate how to actively choose function samples in order to minimize the uncertainty in our integral.
 \end{itemize}
 As well, we compare our BQ approach to standard MCMC techniques on a real scientific problem, where we demonstrate one of the key advantages of BQ: a closed-form expression for the posterior uncertainty in our integral provides a natural stopping criterion for approximate inference.
 
 \section{Monte Carlo Approaches for Estimating $Z$}
 
-Here, we give a brief overview of the available options for computing normalization constants.
+Here, we give a brief overview of the standard methods used for computing normalization constants.
 
 \paragraph*{Simple Monte Carlo} is the simplest method.
-\paragraph*{Nested Sampling} is not as simple.
+\paragraph*{Nested Sampling} is not as simple. TODO: Investigate nested sampling.
 \paragraph*{Annealed Importance Sampling} is not as simple.
 \citep{neal2001annealed}
 
@@ -83,9 +77,9 @@ Gaussian processes (\gp s) offer a powerful method to perform Bayesian
 inference about functions \citep{GPsBook}. A \gpb is defined as a
 distribution over the functions $f: \Phi \rightarrow \mathbb{R}$ such
 that the distribution over the possible function values on any finite
-subset of $\Phi$ is multivariate Gaussian.  For a function $f(\phi)$,
+subset of $\Phi$ is multivariate Gaussian.  For a function $f(\lfv)$,
 the prior distribution over its values $\vf$ on a subset
-$\vph \subset \Phi$ are completely specified by a mean vector
+$\vlfv \subset \Phi$ are completely specified by a mean vector
 $\vmu$ and covariance matrix $K$
 \begin{align*}%\label{eq:GPDefn}
 \textstyle
@@ -101,11 +95,11 @@ structure of the function of interest, for example periodicity or
 differentiability. In this paper, we'll use Gaussian
 covariance functions,
 \begin{align} \label{eq:Gaussian_cov_fn}
-% K(\vph,\vph') & \deq \prod_{e=1}^{E} K_e\big(\phi\pha_e,\phi_e'\big)\\
+% K(\vlfv,\vlfv') & \deq \prod_{e=1}^{E} K_e\big(\phi\pha_e,\phi_e'\big)\\
 \textstyle
-K_{f}(\phi_1,\phi_2)& \deq h_f^2\,\N{\phi_1}{\phi_2}{w_{f}}.
+K_{f}(\lfv_1,\lfv_2)& \deq h_f^2\,\N{\lfv_1}{\lfv_2}{w_{f}}.
 \end{align} 
-Here $h_f$ specifies the output scale (`height') over $f$, while $w_f$ defines a (squared) input scale (`width') over $\phi$. Note that $\phi$ itself may be multi-dimensional, in which case $w_f$ must actually be a covariance matrix. \sout{Where this is true} For the remainder of the paper, we'll take $w_f$ as diagonal. 
+Here $h_f$ specifies the output scale (`height') over $f$, while $w_f$ defines a (squared) input scale (`width') over $\lfv$. Note that $\lfv$ itself may be multi-dimensional, in which case $w_f$ must actually be a covariance matrix. \sout{Where this is true} For the remainder of the paper, we'll take $w_f$ as diagonal. 
 % Our \gpb distribution is specified by various hyperparameters $\theta_e\allv
 % e=1,\,\ldots,\,E$, collectively denoted as $\vect{\theta} \deq
 % \{\theta_e\allv e=1,\,\ldots,\, E\}$.  $\vect{\theta}$ includes the mean
@@ -113,78 +107,80 @@ Here $h_f$ specifies the output scale (`height') over $f$, while $w_f$ defines a
 % function, input and output scales, amplitudes, periods, etc. as
 % needed.
 
-Let us assume we have observations $(\vph_s,\vf_s)$ and
+Let us assume we have observations $(\vlfv_s,\vf_s)$ and
 are interested in making predictions about the function
-valus $f_\star$ at input $\phi_\star$. We will assume that knowledge of function inputs such as
-$\vph_s$ and $\phi_\star$ is incorporated into $I$ (and will hence usually be hidden). With
+valus $f_\star$ at input $\lfv_\star$. We will assume that knowledge of function inputs such as
+$\vlfv_s$ and $\lfv_\star$ is incorporated into $I$ (and will hence usually be hidden). With
 this information, we have the predictive equations
 $$
 \pskinny{\vf_\star}{\vf_s} = 
 \bN{\vf_\star}
-{\meancond{f}{\vph_\star}{s}}
-{\covcond{f}{\vph_\star}{s}}\,,
+{\meancond{f}{\vlfv_\star}{s}}
+{\covcond{f}{\vlfv_\star}{s}}\,,
 $$
 where we have, for the mean $\novmean{a}{b}\deq \int a\,\pskinny{a}{b} \ud
 a$ and variance \textcolor{red}{[Since most of our variances are univariate, would it be clearer to use V instead of C?]}$\novcov{a}{b}\deq \int
 \big(a-\novmean{a}{b}\big)^2\,\pskinny{a}{b} \ud a$,
 \begin{align} 
 \textstyle
-&\meancond{f}{\phi_\star}{s}
+&\meancond{f}{\lfv_\star}{s}
 \deq \mean{f_\star}{\vf_s}
 \nonumber\\
-&= \mu_{f}(\phi_\star) + 
-K_{f}(\phi_\star,\vph_s)
-K_{f}(\vph_s,\vph_s)\inv
-\bigl(\vf_s-{\mu}_{f}(\vph_s)\bigr) \label{eq:GPMean}
+&= \mu_{f}(\lfv_\star) + 
+K_{f}(\lfv_\star,\vlfv_s)
+K_{f}(\vlfv_s,\vlfv_s)\inv
+\bigl(\vf_s-{\mu}_{f}(\vlfv_s)\bigr) \label{eq:GPMean}
 \\
-&\covcond{f}{\phi_\star}{s}
+&\covcond{f}{\lfv_\star}{s}
 \deq {\cov{f_\star}{\vf_s}} 
 \nonumber\\
-&= K_{f}(\phi_\star,\phi_\star) - 
-K_{f}(\phi_\star,\vph_s)
-K_{f}(\vph_s,\vph_s)\inv
-K_{f}(\vph_s,\phi_\star)\,. \nonumber%\label{eq:GPCov}
+&= K_{f}(\lfv_\star,\lfv_\star) - 
+K_{f}(\lfv_\star,\vlfv_s)
+K_{f}(\vlfv_s,\vlfv_s)\inv
+K_{f}(\vlfv_s,\lfv_\star)\,. \nonumber%\label{eq:GPCov}
 \end{align} 
+
+\textcolor{red}{[We need to stress that m and C are always gotten by taking expectations over possible functions.  This was a really confusing point to me.]}
 
 \section{Bayesian Quadrature} \label{sec:BQ}
 
-% Note that maximum likelihood is also subject to issues. $\p{D}{\phi,I}$, how come (known) $I$ is on the right and (known) $D$ is on the left? 
+% Note that maximum likelihood is also subject to issues. $\p{D}{\lfv,I}$, how come (known) $I$ is on the right and (known) $D$ is on the left? 
 
 \emph{Bayesian quadrature} \citep{BZHermiteQuadrature,BZMonteCarlo} is a means of
 performing Bayesian inference about the value of a potentially
 nonanalytic integral 
 \begin{equation} \label{eq:intyf}
- \inty{f} \deq \int f(\phi)\,\po{\phi}\,\ud\phi\,.
+ \inty{f} \deq \int f(\lfv)\,\po{\lfv}\,\ud\lfv\,.
 \end{equation}
-Note that we use a condensed notation; this and all integrals to follow are definite integrals over the entire domain of interest.
+%Note that we use a condensed notation; this and all integrals to follow are definite integrals over the entire domain of interest.
 We'll assume we are integrating with respect to a Gaussian
 prior
 \begin{align}\label{eq:phiprior}
 \textstyle
- \po{\phi} & \deq \N{\phi}{\nu_{\phi}}{\lambda_{\phi}} \,,
+ \po{\lfv} & \deq \N{\lfv}{\nu_{\lfv}}{\lambda_{\lfv}} \,,
 \end{align}
 although other convenient forms, or, if necessary, the use of an
 importance re-weighting trick, allow any other integral to be
-approximated \citep{OsborneAnon}. If $\phi$ is a vector, $\nu_{\phi}$ is a  vector of identical size, and $\lambda_{\phi}$ an appropriate covariance matrix.
+approximated \citep{OsborneAnon}. If $\lfv$ is a vector, $\nu_{\lfv}$ is a  vector of identical size, and $\lambda_{\lfv}$ an appropriate covariance matrix.
 
 \textcolor{red}{[I'm hoping to re-write the next two paragraphs; it's way too indirect, and I think the philosophical foundations of MCMC are a poor avenue of attack]}
-Quadrature involves evaluating $f(\phi)$ at a
-vector of sample points $\vph_s$, giving $\vf\pha_s\deq
-f(\vph_s)$. Of course, this evaluation is usually a computationally expensive
+Quadrature involves evaluating $f(\lfv)$ at a
+vector of sample points $\vlfv_s$, giving $\vf\pha_s\deq
+f(\vlfv_s)$. Of course, this evaluation is usually a computationally expensive
 operation.
-%---we clearly can't afford to evaluate $f(\phi)$ for all possible inputs $\phi$ for an unbounded domain $\Phi$. 
+%---we clearly can't afford to evaluate $f(\lfv)$ for all possible inputs $\lfv$ for an unbounded domain $\lfv$. 
 The resultant sparsity of our samples introduces uncertainty about the function $f$ between them, and hence uncertainty about the integral $\inty{f}$.
 
-As ever in the face of uncertainty, we address the estimation of the value of our integral as a problem of Bayesian inference \citep{BZNumericalAnalysis}. In considering any problem of inference, we need to be clear about both what information we have and which uncertain variables we are interested in. In our case, both the values $f(\vphS)$ and their locations $\vphS$ represent valuable pieces of knowledge. As discussed by \citet{MCUnsound}, traditional Monte Carlo, which approximates as
+As ever in the face of uncertainty, we address the estimation of the value of our integral as a problem of Bayesian inference \citep{BZNumericalAnalysis}. In considering any problem of inference, we need to be clear about both what information we have and which uncertain variables we are interested in. In our case, both the values $f(\vlfv_s)$ and their locations $\vlfv_s$ represent valuable pieces of knowledge. As discussed by \citet{MCUnsound}, traditional Monte Carlo, which approximates as
 \begin{equation} \label{eq:MC_integral_estimate}
-\inty{f} \simeq \frac{1}{\card{s}} \sum_{i=1}^{\card{s}} f(\phi_i)\,,
+\inty{f} \simeq \frac{1}{\card{s}} \sum_{i=1}^{\card{s}} f(\lfv_i)\,,
 \end{equation}
-effectively ignores the information content of $\vphS$, leading to unsatisfactory behaviour
-%\footnote{  For example, imagine that we had $\card{s}=3$, and $\phi_1 = \phi_2$. In this case, the identical value $q(\phi_1)= q(\phi_2)$ will receive $\nicefrac{2}{3}$ of the weight, whereas the equally useful $q(\phi_3)$ will receive only $\nicefrac{1}{3}$. \textcolor{red}{I'm not crazy about this argument, since the weightings are also incorporating information about the prior...} }
+effectively ignores the information content of $\vlfv_s$, leading to unsatisfactory behaviour
+%\footnote{  For example, imagine that we had $\card{s}=3$, and $\lfv_1 = \lfv_2$. In this case, the identical value $q(\lfv_1)= q(\lfv_2)$ will receive $\nicefrac{2}{3}$ of the weight, whereas the equally useful $q(\lfv_3)$ will receive only $\nicefrac{1}{3}$. \textcolor{red}{I'm not crazy about this argument, since the weightings are also incorporating information about the prior...} }
 .
 
 % As with our convention above, we will take knowledge of
-% sample locations $\vph_s$ to be implicit within $I$. However, as we don't know $f(\phi)$ for any $\phi \not \in \vphS$, we are uncertain about the function $f(\cdot)$. As a consequence, we are also uncertain about the value of the integral $\inty{f}$. As such, we possess probability distributions over both $f(\cdot)$ and $\inty{f}$. 
+% sample locations $\vlfv_s$ to be implicit within $I$. However, as we don't know $f(\lfv)$ for any $\lfv \not \in \vlfvS$, we are uncertain about the function $f(\cdot)$. As a consequence, we are also uncertain about the value of the integral $\inty{f}$. As such, we possess probability distributions over both $f(\cdot)$ and $\inty{f}$. 
 % %The resulting Bayesian network is depicted in Figure \ref{fig:BMC}.
 
 %  \begin{figure}[ht]
@@ -195,14 +191,14 @@ effectively ignores the information content of $\vphS$, leading to unsatisfactor
 % 	%\rput(I){\rput(0,-2){\GM@node{X}}}   \GM@label[angle=90]{X}{$X$}
 % 	\rput(0,2){\GM@detnode{psi}}   \GM@label[angle=-90]{psi}{$\rv{\inty{f}}$}
 % 
-% % NB \Phi is the actual value of the hyperparameters -- doesn't make any sense to write \Phi_i
+% % NB \lfv is the actual value of the hyperparameters -- doesn't make any sense to write \lfv_i
 % 
 % 	\rput(psi){\rput(1.25,-2){\GM@plate[plateLabelPos=bl]{2}{4.2}{$i'\not\in s$}}}
-% 	\rput(psi){\rput(2.5,1){\GM@node[observed=true]{phij}}}   \GM@label[angle=90]{phij}{$\rv{\phi}_{i'}$}
+% 	\rput(psi){\rput(2.5,1){\GM@node[observed=true]{phij}}}   \GM@label[angle=90]{phij}{$\rv{\lfv}_{i'}$}
 % 	\rput(phij){\rput(0,-2){\GM@detnode{qj}}}   \GM@label[angle=130]{qj}{$\rv{f}_{i'}$}
 % 
 % 	\rput(psi){\rput(-3.25,-2){\GM@plate[plateLabelPos=br]{2}{4.2}{$i \in s$}}}
-% 	\rput(psi){\rput(-2.5,1){\GM@node[observed=true]{phii}}}   \GM@label[angle=90]{phii}{$\rv{\phi}_i$}
+% 	\rput(psi){\rput(-2.5,1){\GM@node[observed=true]{phii}}}   \GM@label[angle=90]{phii}{$\rv{\lfv}_i$}
 % 	\rput(phii){\rput(0,-2){\GM@detnode[observed=true]{qi}}}   \GM@label[angle=50]{qi}{$\rv{f}_i$}
 % 
 % 	\pnode(0,0.5){mid}
@@ -235,79 +231,76 @@ Here the scales $h_f$ and $w_f$ are \emph{quadrature hyperparameters}, hyperpara
 % Many more of these will be implicitly introduced in the coming sections; we'll take this as given and incorporate them into the (hidden) context $I$. 
 % Note that it will later become apparent that our inference for $\inty{f}$ is independent of the $h_f$ quadrature hyperparameter.
 
-Note that variables over which we have a multivariate Gaussian distribution are jointly Gaussian distributed with any projections of those variables. Because integration is a projection, we can hence use our computed samples $\vf_s$ to perform analytic Gaussian process inference about the value of integrals over $f(\phi)$, such as $\inty{f}$. Our mean estimate for $\inty{f}$ given $\vf_s$ is
+Note that variables over which we have a multivariate Gaussian distribution are jointly Gaussian distributed with any projections of those variables. Because integration is a projection, we can hence use our computed samples $\vf_s$ to perform analytic Gaussian process inference about the value of integrals over $f(\lfv)$, such as $\inty{f}$. Our mean estimate for $\inty{f}$ given $\vf_s$ is
 
 \begin{align} \label{eq:mean_inty_f}
 \mean{\inty{f}}{\vf_s}
 & 
 =\iint \inty{f}\,\p{\inty{f}}{f}\p{f}{\vf_s} \ud \inty{f} \,\ud f                                                                                                                                                               \nonumber\\
 &
- =\iint \inty{f}\,\dd{\inty{f}}{\int f(\phi)\,\po{\phi}\,\ud\phi}
+ =\iint \inty{f}\,\dd{\inty{f}}{\int f(\lfv)\,\po{\lfv}\,\ud\lfv}
 \nonumber\\
 &\hspace{2.5cm}
 \N{f}{\meancondfn{f}{s}}{\covcondfn{f}{s}} \ud \inty{f} \,\ud f \nonumber\\
 &
- = \int \meancondfn{f}{s}(\phi)\,\po{\phi}\,\ud\phi\nonumber\\
+ = \int \meancondfn{f}{s}(\lfv)\,\po{\lfv}\,\ud\lfv\nonumber\\
 &
  = 
 %\N{\inty{f}}
 \mu_f + \ntT{s}{f}\, \dtt{s}{f}
-%{\varpi_{f}-\ntT{s}{f} K_{f}(\vph_s,\vph_s)\inv \nt{s}{f}}
+%{\varpi_{f}-\ntT{s}{f} K_{f}(\vlfv_s,\vlfv_s)\inv \nt{s}{f}}
 \,,
 \end{align}
-where for $\phi_i \in \vph_s$,
+where for $\lfv_i \in \vlfv_s$,
 \begin{align*}
-\fnt{\phi_i}{f} & \deq \!\int K_f(\phi_i,\phi)\po{\phi}\ud\phi
- = h_f^2\,\N{\phi_i}{\nu_{\phi}}{\lambda_{\phi}+w_{f}}\\
+\fnt{\lfv_i}{f} & \deq \!\int K_f(\lfv_i,\lfv)\po{\lfv}\ud\lfv
+ = h_f^2\,\N{\lfv_i}{\nu_{\lfv}}{\lambda_{\lfv}+w_{f}}\\
 %\intertext{and}
-\dtt{s}{f} & \deq K_{f}\bigl(\vph_s,\vph_s\bigr)\inv (\vf_s-{\mu}_{f})\,.
+\dtt{s}{f} & \deq K_{f}\bigl(\vlfv_s,\vlfv_s\bigr)\inv (\vf_s-{\mu}_{f})\,.
 \end{align*}
 Note that the form of our `best estimate' for $\inty{f}$, \eqref{eq:mean_inty_f}, is an affine combination of the samples $\vf_s$, just as for traditional quadrature or Monte Carlo techniques. Indeed, if $\mu_f$ is taken as the mean of $\vf_s$ (as is usual for \gpb inference), the second term in \eqref{eq:mean_inty_f} can be viewed as a correction factor to the Monte Carlo estimate \eqref{eq:MC_integral_estimate}. \textcolor{red}{[Since we're using a different sampling strategy than MCMC in this paper, I think the preceeding statement is kind of misleading / confusing...]}
-\sout{Note also that $h_f$ represents a simple multiplicative factor to both $\ntT{s}{f}$ and $K_{f}\bigl(\vph_s,\vph_s\bigr)$, and as such cancels out of \eqref{eq:mean_inty_f}.} 
+\sout{Note also that $h_f$ represents a simple multiplicative factor to both $\ntT{s}{f}$ and $K_{f}\bigl(\vlfv_s,\vlfv_s\bigr)$, and as such cancels out of \eqref{eq:mean_inty_f}.} 
 
 
 
-\section{Linearisation}
+\section{{\sout{Linearisation}}Modeling Likelihood Functions}
 
-This is a likleihood $\lfn$ and its transform $\ltfm$.
+We wish to evaluate the evidence $\inty{\lfn} = \int \lfn(\lfv) p(\lfv) \ud\lfv$, an integral over non-negative likelihoods, $r(\lfv)$, who arguments are the parameters of the relevant model.
 
-Imagine we want to evaluate the evidence $\inty{r}$, \textcolor{red}{[Why $r$? can we switch back to $f$? and make it $f(x)$?]}an integral over non-negative likelihoods, $r(\phi)$, who arguments are the parameters of the relevant model. \textcolor{red}{[Can we move this eqn into the above sentence?]}
-$$
-\inty{r} = \int r(\phi) p(\phi) \ud\phi
-$$
-
-Assigning a standard GP prior to $r(\phi)$ would ignore our prior information about the range and non-negativity of $r(\phi)$, leading to pathologies such as a negative evidence (as observed in \citep{BZMonteCarlo}).  A much better [citation needed, or maybe a diagram] prior would be a GP prior on $\log(f(x))$.  However, the integral under the exp of a GP is intractable.  In this section, we introduce an approximate inference method to tractably integrate under a log-GP prior.
-Firstly, we define the transformation
-\begin{align*}
-t\bigl(r(\phi)\bigr) & \deq \log\left(\nicefrac{r(\phi)}{\gamma} + 1\right)
+Assigning a standard GP prior to $\lfn(\lfv)$ would ignore our prior information about the range and non-negativity of $\lfn(\lfv)$, leading to pathologies such as a negative evidence (as observed in \citep{BZMonteCarlo}).  A much better [citation needed, or maybe a diagram.  Maybe we should mention that most likelihood functions are exps of something] prior would be a GP prior on $\log(\lfn(x))$.  However, the integral under the exp of a GP is intractable.  In this section, we introduce an approximate inference method to tractably integrate under a log-GP prior.
+%Firstly, we define the transformation
+%\begin{align*}
+\footnote{In practice, we use the transform 
+$\log\left(\nicefrac{\lfn(\lfv)}{\gamma} + 1\right)$
+where $\gamma \deq 100\, \max(\vr_s)$.  For the sake of simplicity, we omit this detail in the following derivations.}
 % \intertext{and its inverse}
-% t\inv\bigl(\tr(\phi)\bigr) & \deq \gamma \bigl(\exp \tr(\phi)-1\bigr)
-\end{align*}
+% t\inv\bigl(\tr(\lfv)\bigr) & \deq \gamma \bigl(\exp \tr(\lfv)-1\bigr)
+%\end{align*}
 % and their inverses
 % $$
-% t_q\inv\bigl(\tq(\phi)\bigr) \deq \gamma\bigl(\eta+\exp \tq(\phi)\bigr)
+% t_q\inv\bigl(\tq(\lfv)\bigr) \deq \gamma\bigl(\eta+\exp \tq(\lfv)\bigr)
 % \qquad \text{and} \qquad
-% t_q\inv\bigl(\tq(\phi)\bigr) \deq \gamma\bigl(\eta+\exp \tq(\phi)\bigr)\,,
+% t_q\inv\bigl(\tq(\lfv)\bigr) \deq \gamma\bigl(\eta+\exp \tq(\lfv)\bigr)\,,
 % $$
-(which has well-defined inverse $t\inv$) where 
-$
- \gamma \deq 100\, \max(\vr_s)
-$
-is a constant introduced for superior numerical accuracy. \textcolor{red}{Can we just pretend that our transformation is just $\log(r)$, and put a footnote mentioning what we actually use?  That way, the reader doesn't have to remember the difference between $r$ and $\tilde{r}$.  I know this would be a huge change, and it might be considered misleading, but I think it would make all the derivations way cleaner and easier to understand.}
-
-We now assign \gpb priors to the functions
-\begin{align*}
- \tr & \deq  t(r)
-\end{align*}
+%(which has well-defined inverse $t\inv$) where 
+%$
+% \gamma \deq 100\, \max(\vr_s)
+%$
+%is a constant introduced for superior numerical accuracy.
+%
+%We now assign \gpb priors to the functions
+%\begin{align*}
+% \tr & \deq  t(r)
+%\end{align*}
 % We assume that far away from our existing observations,
 % the means for $q$ and $r$ are equal to a value suitably close to
 % zero, and hence take a corresponding zero prior mean for the \gp s over $\tq$ and $\tr$. 
-with Gaussian
-covariances of the form \eqref{eq:Gaussian_cov_fn}.
+%with Gaussian
+%covariances of the form \eqref{eq:Gaussian_cov_fn}.
 %the minimum of the existing observations.
-These choices of prior distribution are motivated by the fact that
-$l$ is strictly positive and possesses a large dynamic
-range. 
+%These choices of prior distribution are motivated by the fact that
+%$l$ is strictly positive and possesses a large dynamic
+%range. 
 %
 %
 \begin{align}
@@ -315,65 +308,71 @@ range.
 % & 
 % =\iint \inty{l}\,\p{\inty{l}}{l}\p{l}{\vl_s} \ud \inty{l} \,\ud l                                                                                                                                                               \nonumber\\
 % &
-&  =\int \Bigl( \int t\inv\bigr(\tr(\phi)\bigl)\,\po{\phi}\,\ud\phi\Bigr)
+&  =\int \Bigl( \int \lfn(\lfv)\po{\lfv}\,\ud\lfv\Bigr)
 \N{\tr}{\meancondfn{\tr}{s}}{\covcondfn{\tr}{s}} \ud \tr \nonumber
 \end{align}
 
-Here the exponential in $t\inv$ ruins the linearity that yielded the analyticity in section \ref{sec:BQ}. To combat this, we perform inference for $\inty{r}$ directly as a functional of $\tr$.
+Here the exponential ruins the linearity that yielded the analyticity in section \ref{sec:BQ}. To combat this, we perform inference for $\inty{\lfn}$ directly as a functional of $\tr$.
 %
-\begin{align*}
- \psi[\tr] \deq \inty{r} & = \gamma\Bigl(\int  \exp \tr(\phi) p(\phi) \ud \phi-1\Bigr)\\
-\pderiv{}{\tr(\phi)}\psi[\tr] & = \gamma \exp \tr(\phi) p(\phi)
-\end{align*}
+\begin{align}
+ \psi[\tr] \deq \inty{\lfn} & = \int \exp ( \tr(\lfv)) p(\lfv) \ud \lfv\\
+  						    & = \int \lfn(\lfv) p(\lfv) \ud \lfv\\
+\pderiv{}{\tr(\lfv)}\psi[\tr] & = \exp (\tr(\lfv)) = \lfn
+\end{align}
 
-We use another \gpb for $\psi$, with the affine covariance
+We use another \gpb for $\psi$, \textcolor{red}{[we have a GP for it, but then we assume it's linear? I don't understand this part]}. with the affine covariance
 \begin{equation*}
  K_\psi(\tr,\tr')
 % \deq 
 %  K_\psi\bigl((\tvq\pha_c,\tvr\pha_c),(\tvq'_c,\tvr'_c)\bigr)
 \deq
-\int\tr(\phi) \tr'(\phi) \ud \phi
+\int\tr(\lfv) \tr'(\lfv) \ud \lfv
 + \omega^2
 \end{equation*}
-reflecting the assumption that $\psi$ is, as desired, affine in $\tr$. With this covariance, and given observations
-$\psi_0 \deq \psi(\tr_0)$, $\pderiv{\psi_0}{\tr(\phi)} \deq \pderiv{\psi}{\tr(\phi)}(\tr_0)$ (whose values we'll return to later), we have the \emph{linearisation} approximation
+reflecting the assumption that $\psi$ is, as desired, affine in $\tr$. \textcolor{red}{[previous statement is super confusing]} With this covariance, and given observations
+$\psi_0 \deq \psi(\tr_0)$, $\pderiv{\psi_0}{\tr(\lfv)} \deq \pderiv{\psi}{\tr(\lfv)}(\tr_0)$ (whose values we'll return to later), \textcolor{red}{[Why do you mention the covariance and observations before introducing the linearization?]}we make the \emph{linearisation} approximation
 \begin{multline}\label{eq:linearisation}
-\novmean{\psi[\tr]}{\psi_0,\pderiv{\psi_0}{\tq(\phi)}, \tr} 
+\novmean{\psi[\tr]}{\psi_0,\pderiv{\psi_0}{\tq(\lfv)}, \tr} 
 = \psi_0+\\
-\int \pderiv{\psi_0}{\tr(\phi)}\bigl(\tr(\phi)-\tr_0(\phi)\bigr)\ud\phi\,.
+\int \pderiv{\psi_0}{\tr(\lfv)}\bigl(\tr(\lfv)-\tr_0(\lfv)\bigr)\ud\lfv\,.
 \end{multline}
 
-We are going to perform this linearisation of $\psi(\tq,\tr)$ around the point defined by $\tr_0 \deq t(m_{r|s})$. $m_{r|s}$ is the \gpb conditional mean (as per \eqref{eq:GPMean}) for $r$ given observations $r(\vph_s)$. For this \gpb (over the non-log space), we take zero prior means and Gaussian
-covariances of the form \eqref{eq:Gaussian_cov_fn}. With appropriate selections of input scales $w_r$ for such covariances, and defining
+\textcolor{red}{[let's talk a bit about what the functional looks like without taking the linearization approximation maybe?]}
+We are going to perform this linearisation of $\psi(\tr)$ around the point defined by $\tr_0 \deq \log (m_{r|s})$.
+
+We are going to introduce a separate GP model over $\lfn$, the non-log space.  Then $m_{\lfn|s}$ is the \gpb conditional mean (as per \eqref{eq:GPMean}) for $\lfn$ given observations $\lfn(\vlfv_s)$. For this \gpb (over the non-log space), we take zero prior means and Gaussian
+covariances of the form \eqref{eq:Gaussian_cov_fn}. {\sout{With appropriate selections of input scales $w_r$ for such covariances, and defining}}
 \begin{align*}
-\Delta & \deq m_{\tilde{r}|s} - t(m_{r|s})\,,
+\Delta & \deq m_{\tr |s} - \log(m_{r|s})\,,
 \end{align*}
-(the differences between the \gpb means over our transformed quantities and the transformed \gpb means over original quantities) we have
-\begin{align}\label{eq:mt_sim_tm}
-\Delta \simeq 0\,,
-\end{align}
-\textcolor{red}{[I found this statement confusing, it looks like we're planning to ignore $\Delta$ instead of giving it a full treatment.]}
+\textcolor{red}{[You know, until I did the notation change, I never understood that $\Delta$ was defined on the logs, not on the untransformed quantities.]} the differences between the \gpb means over our transformed quantities and the transformed \gpb means over original quantities. \textcolor{red}{[I'd like to insert here my figure 2]}%we have
+%\begin{align}\label{eq:mt_sim_tm}
+%\Delta \simeq 0\,,
+%\end{align}
+%\textcolor{red}{[I found this statement confusing, it looks like we're planning to ignore $\Delta$ instead of giving it a full treatment.]}
 That is, $\tr_0$ is close to the peaks of our Gaussians over $\tr$, rendering our linearisation appropriate. The choice of this point is motivated by the fact that for it, our integrals become tractable.
 
-Our linearisation corresponds to giving our \gpb over $\psi$ observations at $\tr_0=t(m_{r|s})$ of both the functional itself,
+Our linearisation corresponds to giving our \gpb over $\psi$ observations \textcolor{red}{[Again, I'm confused by the language about GPs, seems like we're just assuming our functional is a hyperplane.]} at $\tr_0= \log (m_{r|s})$ of both the functional itself,
 \begin{align}
 \psi_0 & \deq \psi[\tr_0]
 = 
 {\mean{\inty{r}}{\vr_s}} \label{eq:rho_0}
 \intertext{along with its functional derivatives}
-\pderiv{\psi_0}{\tr(\phi)} & \deq \pderiv{\psi}{\tr(\phi)}[\tr_0]
- = \bigl(\mean{r(\phi)}{\vr_s}+\gamma\bigr)\,\po{\phi}
+\pderiv{\psi_0}{\tr(\lfv)} & \deq \pderiv{\psi}{\tr(\lfv)}[\tr_0]
+ = \mean{r(\lfv)}{\vr_s}\,\po{\lfv}
 \nonumber
 \end{align}
+\textcolor{red}{[is that $p(x)$ supposed to be there?  seems fishy...]}
 As with any linearisation approximation, \eqref{eq:linearisation} gives the value at the selected point $\tr_0$, plus a correction factor modelling the influence of the first derivatives. 
-These correction factor contains a further non-analytic integral, over $\phi$. Fortunately, they're not too far away from being analytic; almost all terms with dependence on $\phi$ within those integrals are Gaussian. The exception is the $t_r(m_{r|s})$ terms within $\Delta$. As such, we perform another stage of Bayesian quadrature by treating $\Delta$ as an unknown function of $\phi$.
-For this function we take Gaussian process priors with zero prior mean and Gaussian covariance \eqref{eq:Gaussian_cov_fn}. We must now choose sample points $\vph_c$ at which to evaluate our $\Delta$ function. 
-Note that we do not need to evaluate $r(\phi_c)$ in order to compute $\Delta(\phi_c)$.
-% Unfortunately, it is impractical to resolve this decision problem in the same manner as the selection of $\vphS$, our ultimate goal (a topic that receives our full attention in Section \ref{sec:SBQ})).
-$\vph_c$ should firstly include $\vph_s$, at which points we know that $\delta$ is equal to zero. Note firstly that a simple heuristic for determining the `best' samples (in the sense of samples with which to fit a \gp) is to select those samples at extrema. Note that the peaks and troughs of $\delta$ occur at points far-removed from $\vph_s$, but no further away than a few input scales. This is where the transformed mean for $r$ is liable to differ most from the mean of the transformed variable (and the appropriate $\Delta$ extremised). That is, we would like to select $\vph_c$ as points as far away from all points in $\vph_s$ as possible, while still remaining within a few input scales. 
-%For convenience, we define the allowable region to be the box defined by the least upper bound of $\vph_s$ plus three input scales and the greatest lower bound minus three input scales. 
-Finding $\vph_c$ hence requires solving the largest empty sphere problem, which we can solve with the use of a Voronoi diagram \citep{Voronoi, shamos1975closest, okabe1997locational}. 
-Where this requires computation in excess of that afforded by our allowance, we instead construct a \acro{kd}-tree \citep{bentley1975multidimensional} for our $\vph_s$, and select $\vph_c$ as the centres of the hyper-rectangles defined by the splitting
+
+%This correction factor contains a further non-analytic integral, over $\lfv$. Fortunately, it's not too far away from being analytic; almost all terms with dependence on $\lfv$ within those integrals are Gaussian. The exception is the $t_r(m_{r|s})$ terms within $\Delta$. As such, we perform another stage of Bayesian quadrature by treating $\Delta$ as an unknown function of $\lfv$.
+For this function we take Gaussian process priors with zero prior mean and Gaussian covariance \eqref{eq:Gaussian_cov_fn}. We must now choose sample points $\vlfv_c$ at which to evaluate our $\Delta$ function. 
+Note that we do not need to evaluate $r(\lfv_c)$ in order to compute $\Delta(\lfv_c)$.
+% Unfortunately, it is impractical to resolve this decision problem in the same manner as the selection of $\vlfvS$, our ultimate goal (a topic that receives our full attention in Section \ref{sec:SBQ})).
+$\vlfv_c$ should firstly include $\vlfv_s$, at which points we know that $\delta$ is equal to zero. Note firstly that a simple heuristic for determining the `best' samples (in the sense of samples with which to fit a \gp) is to select those samples at extrema. Note that the peaks and troughs of $\delta$ occur at points far-removed from $\vlfv_s$, but no further away than a few input scales. This is where the transformed mean for $r$ is liable to differ most from the mean of the transformed variable (and the appropriate $\Delta$ extremised). That is, we would like to select $\vlfv_c$ as points as far away from all points in $\vlfv_s$ as possible, while still remaining within a few input scales. 
+%For convenience, we define the allowable region to be the box defined by the least upper bound of $\vlfv_s$ plus three input scales and the greatest lower bound minus three input scales. 
+Finding $\vlfv_c$ hence requires solving the largest empty sphere problem, which we can solve with the use of a Voronoi diagram \citep{Voronoi, shamos1975closest, okabe1997locational}. 
+Where this requires computation in excess of that afforded by our allowance, we instead construct a \acro{kd}-tree \citep{bentley1975multidimensional} for our $\vlfv_s$, and select $\vlfv_c$ as the centres of the hyper-rectangles defined by the splitting
 hyperplanes of the tree.
 
 Note that our choice of $\tr_0$ allowed us to resolve the integrals required. For future notational convenience, we assume that if we have an observation of $\psi_0$, we will also have observations of its functional derivatives.
@@ -384,7 +383,7 @@ Note that our choice of $\tr_0$ allowed us to resolve the integrals required. Fo
 \p{\tr}{\tvr_s}\, \ud \tr 
 \nonumber\\
 & = \mean{\psi[\tr]}{\psi_0,m_{\tr|s}} \nonumber\\
-& = \mean{\inty{r}}{\vr_s} + \iint \bigl(\mean{r(\phi)}{\vr_s}+\gamma\bigr)\,\Delta(\phi)\,\po{\phi}\ud\phi
+& = \mean{\inty{r}}{\vr_s} + \iint \bigl(\mean{r(\lfv)}{\vr_s}+\gamma\bigr)\,\Delta(\lfv)\,\po{\lfv}\ud\lfv
 \nonumber\\
 & = \mean{\inty{r}}{\vr_s} + \mean{\inty{r \Delta}}{\vr_s} + \gamma\, \mean{\inty{ \Delta}}{\vr_s}
 \label{eq:mean_ev}
@@ -392,7 +391,7 @@ Note that our choice of $\tr_0$ allowed us to resolve the integrals required. Fo
 
 \section{Sampling for Bayesian Quadrature}
 
-We aim to select samples $\phi_s$ so as to minimise the uncertainty in the evidence. We expect such samples to be useful not just for estimating the evidence, but also for any other related expectations, such as would be required to perform prediction using the model.
+We aim to select samples $\lfv_s$ so as to minimise the uncertainty in the evidence. We expect such samples to be useful not just for estimating the evidence, but also for any other related expectations, such as would be required to perform prediction using the model.
 
 The variance in the evidence is
 \begin{align*}
@@ -401,8 +400,8 @@ The variance in the evidence is
 \end{align*}
 To resolve the first term, define a new functional
 \begin{align*}
- \chi[\tr] \deq \inty{r}^2 & = \gamma^2\bigl(\int  \exp \tr(\phi) p(\phi) \ud \phi-1\bigr)^2\\
-\pderiv{}{\tr(\phi)}\chi[\tr] & = 2\gamma \exp \tr(\phi) p(\phi) \bigl(\int  \exp \tr(\phi) p(\phi) \ud \phi-1\bigr)
+ \chi[\tr] \deq \inty{r}^2 & = \gamma^2\bigl(\int  \exp \tr(\lfv) p(\lfv) \ud \lfv-1\bigr)^2\\
+\pderiv{}{\tr(\lfv)}\chi[\tr] & = 2\gamma \exp \tr(\lfv) p(\lfv) \bigl(\int  \exp \tr(\lfv) p(\lfv) \ud \lfv-1\bigr)
 \end{align*}
 which we again linearise around $\tr_0$. Hence, as per the above
 \begin{align*}
@@ -431,13 +430,13 @@ where
 \end{align*}
 
 
-Consider adding a new sample at $\phi_a$. The expected variance in our evidence after doing so is
+Consider adding a new sample at $\lfv_a$. The expected variance in our evidence after doing so is
 \begin{align}
 & \bigl\langle \cov{\langle r\rangle}{\chi_0,\psi_0,\tvr_{s,a}}\mid \chi_0,\psi_0,\tvr_{s}\bigr\rangle\nonumber\\
 & = \mean{\inty{r}^2}{\chi_0,\tvr_s}  - 
 \int\mean{\inty{r}}{\psi_0,\tvr_{a,s}}^2\p{\tr_a}{\tvr_s}\ud\tr_a\,.\label{eqn:exp_var}
 \end{align}
-The first term is independent of the selection of $\phi_a$ and hence can be safely ignored. Noting that $\int \exp(c\, \tr_a)\, \N{\tr_a;m, \sigma^2} \ud\tr_a = \exp(c\, m + \nicefrac{1}{2}\, c^2 \sigma^2)$, the second term can be resolved analytically for any trial $\phi_a$ (we omit the laborious details of doing so). With this expression, we now select the $\phi_a$ that minimises the second term using a numerical optimisation technique. 
+The first term is independent of the selection of $\lfv_a$ and hence can be safely ignored. Noting that $\int \exp(c\, \tr_a)\, \N{\tr_a;m, \sigma^2} \ud\tr_a = \exp(c\, m + \nicefrac{1}{2}\, c^2 \sigma^2)$, the second term can be resolved analytically for any trial $\lfv_a$ (we omit the laborious details of doing so). With this expression, we now select the $\lfv_a$ that minimises the second term using a numerical optimisation technique. 
 
 \section{Marginalising quadrature hyperparameters}
 
@@ -497,9 +496,14 @@ where
 \tilde{m}_a & \deq \mean{\tr_a}{\tvr_s,m_\theta}\\
 \tilde{C}_a & \deq \cov{\tr_a}{\tvr_s,m_\theta}\,.
 \end{align*}
-As with \eqref{eqn:exp_var}, \eqref{eqn:exp_var_wtheta} can be evaluated analytically, and minimised to determine the optimal $\phi_a$.
+As with \eqref{eqn:exp_var}, \eqref{eqn:exp_var_wtheta} can be evaluated analytically, and minimised to determine the optimal $\lfv_a$.
 Hence our variance for $\tr_a$ has been inflated due to our consideration of the influence of hyperparameters, which we expect to promote additional exploration, as desired.
 
+\section{Experiments}
+
+\section{Concluseions}
+
+\section{Acknowledgements}
 
 \bibliography{bub}
 \bibliographystyle{icml2012}
