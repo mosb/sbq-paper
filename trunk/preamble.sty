@@ -41,6 +41,14 @@
 % 
 % \DeclareCaptionLabelFormat{continued}{Continued #1 #2}
 % \captionsetup[ContinuedFloat]{labelformat=continued}
+
+% Some definitions of symbols that we might want to change:
+\newcommand{\lfn}{\ell}   % Likelihood function: Formerly r
+\newcommand{\ltfm}{\log(\ell)}  % Likelihood function transformed: Formerly \tilde{r}
+\newcommand{\var}{V}             % Variance: Formerly C
+\newcommand{\lfv}{x}             % Likelihood function variable: Formerly \phi
+\newcommand{\vlfv}{{\bf x}}             % Vector likelihood function variable: Formerly \phi
+
 \newcommand{\acro}[1]{\textsc{#1}}
 % The 'F', as in 'pF', is for 'Full'
 \newcommand{\vect}[1]{\boldsymbol{#1}}
@@ -61,22 +69,22 @@
 \newcommand{\pF}[3]{p\!\left(\,#1\!=\!#2\;\middle\vert\;#3\,\right)} 
 \newcommand{\mean}[2]{{m}\!\left(#1\middle\vert#2\right)}
 \newcommand{\novmean}[2]{{m}\!\left(#1\middle\vert#2\right)}
-\newcommand{\novcov}[2]{{C}\!\left(#1\middle\vert#2\right)}
-\newcommand{\cov}[2]{{C}\!\left(#1\middle\vert#2\right)} 
+\newcommand{\novcov}[2]{\var\!\left(#1\middle\vert#2\right)}
+\newcommand{\cov}[2]{\var\!\left(#1\middle\vert#2\right)} 
 \newcommand{\pskinny}[2]{p\!\left(#1\;\middle\vert\;#2\right)}
 \newcommand{\meanskinny}[2]{{m}\!\left(#1\middle\vert#2\right)}
-\newcommand{\covskinny}[2]{{C}\!\left(#1\middle\vert#2\right)} 
+\newcommand{\covskinny}[2]{\var\!\left(#1\middle\vert#2\right)} 
 
 \newcommand{\secm}[2]{{S}\!\left(#1\!\;\middle\vert\;\!#2\right)} 
 
 \newcommand{\novmeancond}[3]{m^{#1}_{#2|#3}}
-\newcommand{\novcovcond}[3]{C^{#1}_{#2|#3}}
+\newcommand{\novcovcond}[3]{\var^{#1}_{#2|#3}}
 \newcommand{\meanast}[2]{m^{#1}_{*|#2}}
 \newcommand{\meancond}[3]{{m}_{#1|#3}(#2)}
-\newcommand{\covcond}[3]{{C}_{#1|#3}(#2)}
+\newcommand{\covcond}[3]{\var_{#1|#3}(#2)}
 \newcommand{\allv}{{\vect{:}}}
 \newcommand{\meancondfn}[2]{{m}_{#1|#2}}
-\newcommand{\covcondfn}[2]{{C}_{#1|#2}}
+\newcommand{\covcondfn}[2]{\var_{#1|#2}}
 
 %\newcommand{\inty}[1]{\textstyle{\int}\!#1}
 \newcommand{\inty}[1]{\langle #1 \rangle}
@@ -97,12 +105,7 @@
 \newcommand{\ve}{\vect{\epsilon}}
 
 
-% Some definitions of symbols that we might want to change:
-\newcommand{\lfn}{\mathcal{L}}   % Likelihood function: Formerly r
-\newcommand{\ltfm}{\log(\mathcal{L})}  % Likelihood function transformed: Formerly \tilde{r}
-\newcommand{\var}{V}             % Variance: Formerly C
-\newcommand{\lfv}{x}             % Likelihood function variable: Formerly \phi
-\newcommand{\vlfv}{{\bf x}}             % Vector likelihood function variable: Formerly \phi
+
 
 
 \newcommand{\inv}{^{{\mathsmaller{-1}}}}
@@ -120,7 +123,7 @@
 \newcommand{\Ci}[2]{C_i(y_{#1}|I_{#2})}
 
 \newcommand{\meanopt}[3]{\vect{m}_{#1}(\vy_{#2}|I_{#3})}
-\newcommand{\covopt}[3]{\mat{C}_{#1}(\vy_{#2}|I_{#3})}
+\newcommand{\covopt}[3]{\var_{#1}(\vy_{#2}|I_{#3})}
 \newcommand{\Lossi}[2]{\text{V}_i(\,x_{#1}\,|\,I_{#2}\,)}
 \newcommand{\Loss}[3]{\Lambda_{#1}(\,x_{#2}\,|\,I_{#3}\,)}
 \newcommand{\Lossd}[3]{\Lambda'_{#1}(\,x_{#2}\,|\,I'_{#3}\,)}
