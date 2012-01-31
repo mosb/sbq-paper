@@ -339,10 +339,10 @@ for $\psi$, forcing $\psi$ to be, as desired, affine in $\tr$.
 Before proceeding, we introduce a separate \gpb model over $\lfn$, the non-log space.  Then $m_{\lfn|s}$ is the \gpb conditional mean (as per \eqref{eq:GPMean}) for $\lfn$ given observations $\lfn(\vlfv_s)$. For this \gpb (over the non-log space), we take zero prior means and Gaussian
 covariances of the form \eqref{eq:Gaussian_cov_fn}. 
 
-We perform the linearisation of $\psi(\tr)$ around the point defined by $\tr_0 \deq \log (m_{\lfn|s})$. We make the definitions 
+We perform the linearisation of $\psi[\tr]$ around the point defined by $\tr_0 \deq \log (m_{\lfn|s})$. We make the definitions 
 $\psi_0 \deq \psi[\tr_0]$, $\pderiv{\psi_0}{\tr(\lfv)} \deq \pderiv{\psi}{\tr(\lfv)}[\tr_0]$, giving us
 \begin{multline}\label{eq:linearisation}
-\novmean{\psi[\tr]}{\psi_0,\pderiv{\psi_0}{\tq(\lfv)}, \tr} 
+\novmean{\psi[\tr]}{\psi_0,\pderiv{\psi_0}{\tq(\lfv)}} 
 = \psi_0+\\
 \int \pderiv{\psi_0}{\tr(\lfv)}\bigl(\tr(\lfv)-\tr_0(\lfv)\bigr)\ud\lfv\,.
 \end{multline}
