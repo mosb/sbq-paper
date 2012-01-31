@@ -13,9 +13,10 @@
 \usepackage[normalem]{ulem}  % for strikethrough
 \usepackage{color} % for comments to each other
 \usepackage{comment}
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
 \usepackage{icml2012} 
 % \usepackage[accepted]{icml2012}¡
-
 
 % The \icmltitle you define below is probably too long as a header.
 % Therefore, a short form for the running title is supplied here:
@@ -501,7 +502,17 @@ Hence our variance for $\tr_a$ has been inflated due to our consideration of the
 
 \section{Experiments}
 
-\section{Concluseions}
+\begin{figure}
+	\centering
+	\newlength\fheight 
+	\newlength\fwidth 
+	\setlength\fheight{6cm} 
+	\setlength\fwidth{6cm}
+	\input{figures/myfile.tikz}
+\end{figure}
+
+
+\section{Conclusions}
 
 \section{Acknowledgements}
 
