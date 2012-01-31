@@ -1,4 +1,4 @@
-\begin{thebibliography}{11}
+\begin{thebibliography}{12}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -16,6 +16,12 @@ Neal, R.~M.
 \newblock Probabilistic inference using {M}arkov chain {M}onte {C}arlo methods.
 \newblock Technical Report CRG-TR-93-1, University of Toronto, 1993.
 \newblock URL \url{http://www.cs.toronto.edu/~R./ftp/review.pdf}.
+
+\bibitem[Neal(2001)]{neal2001annealed}
+Neal, R.M.
+\newblock Annealed importance sampling.
+\newblock \emph{Statistics and Computing}, 11\penalty0 (2):\penalty0 125--139,
+  2001.
 
 \bibitem[Nonymous(1900)]{OsborneAnon}
 Nonymous, A.
