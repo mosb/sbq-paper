@@ -14,9 +14,11 @@
 \usepackage{color} % for comments to each other
 \usepackage{comment}
 \usepackage{pgfplots}
-% Mike says: the command below caused me compile errors
-%\pgfplotsset{compat=newest}
-\usepackage{icml2012} 
+\usepackage{icml2012}
+
+\newlength\fheight  % For tikz figures
+\newlength\fwidth 
+
 % \usepackage[accepted]{icml2012}¡
 
 % The \icmltitle you define below is probably too long as a header.
@@ -516,34 +518,39 @@ Hence our variance for $\tr_a$ has been inflated due to our consideration of the
 \section{Experiments}
 
 \begin{figure}
-	\centering
-	\newlength\fheight 
-	\newlength\fwidth 
-	\setlength\fheight{6cm} 
-	\setlength\fwidth{6cm}
-	\input{figures/myfile.tikz}
+\centering
+\begin{tabular}{cc}
+	\setlength\fheight{2.5cm} 
+	\setlength\fwidth{2.5cm}
+	\input{figures/integrands/sanity_easy_1d.tikz} &
+	\setlength\fheight{2.5cm} 
+	\setlength\fwidth{2.5cm}
+	\input{figures/integrands/sanity_hard_1d.tikz} \\ 
+	\setlength\fheight{2.5cm} 
+	\setlength\fwidth{2.5cm}
+	\input{figures/integrands/sanity_hard_1d_exp.tikz} &
+	\setlength\fheight{2.5cm} 
+	\setlength\fwidth{2.5cm}
+	\input{figures/integrands/two_humps_1d.tikz}
+\end{tabular}
+\caption{The one-dimensional integrands in our test suite.  Green lines are priors, blue lines likelihoods, and red lines are posteriors.}
+\label{fig:1d_problems}
 \end{figure}
 
+\begin{figure}
+\centering
+\includegraphics[width=0.45\textwidth]{figures/integrands/funnel.eps}
+\caption{Radford Neal's funnel problem in 2 dimensions.}
+\label{fig:funnel}
+\end{figure}
 
 \section{Conclusions}
 
-\section{Acknowledgements}
+\section*{Acknowledgements}
 
 \bibliography{bub}
 \bibliographystyle{icml2012}
 
 \end{document} 
-
-
-% This document was modified from the file originally made available by
-% Pat Langley and Andrea Danyluk for ICML-2K. This version was
-% created by Lise Getoor and Tobias Scheffer, it was slightly modified  
-% from the 2010 version by Thorsten Joachims & Johannes Fuernkranz, 
-% slightly modified from the 2009 version by Kiri Wagstaff and 
-% Sam Roweis's 2008 version, which is slightly modified from 
-% Prasad Tadepalli's 2007 version which is a lightly 
-% changed version of the previous year's version by Andrew Moore, 
-% which was in turn edited from those of Kristian Kersting and 
-% Codrina Lauth. Alex Smola contributed to the algorithmic style files.  
 
 
