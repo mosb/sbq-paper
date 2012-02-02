@@ -1,0 +1,67 @@
+% This file was created by matlab2tikz v0.1.4.
+% Copyright (c) 2008--2011, Nico Schlömer <nico.schloemer@gmail.com>
+% All rights reserved.
+% 
+\begin{tikzpicture}
+
+% defining custom colors
+\definecolor{mycolor1}{rgb}{1,0.1,0.1}
+\definecolor{mycolor2}{rgb}{0.1,1,0.1}
+\definecolor{mycolor3}{rgb}{0.1,0.1,1}
+\definecolor{mycolor4}{rgb}{0.4,0.4,0.1}
+
+
+\begin{axis}[%
+scale only axis,
+width=\fwidth,
+height=\fheight,
+xmin=0, xmax=250,
+ymin=0, ymax=3.5,
+xlabel={Number of samples},
+ylabel={Squared Distance to True Value},
+title={$\text{sanity easy }1d$},
+axis on top,
+legend entries={SMC,AIS,BMC,SBQ},
+legend style={nodes=right}]
+\addplot [
+color=mycolor1,
+only marks,
+mark=*,
+mark options={solid}
+]
+coordinates{
+ (10,0.0104118)(20,0.0878559)(30,0.000230373)(40,0.0404657)(50,2.49412e-05)(100,0.0266959)(150,0.0138616)(200,0.0107615)(250,0.00431612) 
+};
+
+\addplot [
+color=mycolor2,
+only marks,
+mark=*,
+mark options={solid}
+]
+coordinates{
+ (10,3.10822)(20,1.34249)(30,0.844347)(40,0.213341)(50,0.716871)(100,0.140222)(150,0.016806)(200,0.536118)(250,0.619462) 
+};
+
+\addplot [
+color=mycolor3,
+only marks,
+mark=*,
+mark options={solid}
+]
+coordinates{
+ (10,0.00293745)(20,2.18209e-06)(30,0.000143611)(40,0.000117224)(50,3.16441e-05)(100,5.33406e-05)(150,5.97936e-05)(200,5.49156e-05)(250,1.2364e-05) 
+};
+
+\addplot [
+color=mycolor4,
+only marks,
+mark=*,
+mark options={solid}
+]
+coordinates{
+ (10,0.0555376)(20,0.00847849)(30,0.000235055)(40,1.20365e-05)(50,1.23536e-06)(100,8.73288e-09)(150,7.45518e-11)(200,1.82588e-09)(250,3.81355e-08) 
+};
+
+\end{axis}
+\end{tikzpicture}
