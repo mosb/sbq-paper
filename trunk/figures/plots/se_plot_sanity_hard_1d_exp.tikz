@@ -8,26 +8,23 @@
 \definecolor{mycolor1}{rgb}{1,0.1,0.1}
 \definecolor{mycolor2}{rgb}{0.1,1,0.1}
 \definecolor{mycolor3}{rgb}{0.1,0.1,1}
-\definecolor{mycolor4}{rgb}{0.4,0.4,0.1}
 
 
-\begin{axis}[%
+\begin{semilogyaxis}[%
 scale only axis,
 width=\fwidth,
 height=\fheight,
 xmin=0, xmax=250,
-ymin=0, ymax=0.35,
+ymin=1e-07, ymax=1,
+yminorticks=true,
 xlabel={Number of samples},
 ylabel={Squared Distance to True Value},
 title={$\text{sanity hard }1\text{d exp}$},
-axis on top,
-legend entries={SMC,AIS,BMC,SBQ},
-legend style={nodes=right}]
+axis on top]
 \addplot [
 color=mycolor1,
-only marks,
-mark=*,
-mark options={solid}
+solid,
+line width=1.0pt
 ]
 coordinates{
  (10,0.000246691)(20,0.000212972)(30,3.87873e-06)(40,8.9128e-05)(50,7.66159e-06)(100,5.14942e-05)(150,2.12309e-05)(200,9.0923e-06)(250,1.84757e-07) 
@@ -35,9 +32,8 @@ coordinates{
 
 \addplot [
 color=mycolor2,
-only marks,
-mark=*,
-mark options={solid}
+solid,
+line width=1.0pt
 ]
 coordinates{
  (10,6.62018e-05)(20,7.07954e-05)(30,3.07871e-06)(40,1.72179e-05)(50,5.86857e-06)(100,4.73968e-05)(150,2.32427e-06)(200,6.00641e-05)(250,2.15644e-05) 
@@ -45,23 +41,12 @@ coordinates{
 
 \addplot [
 color=mycolor3,
-only marks,
-mark=*,
-mark options={solid}
+solid,
+line width=1.0pt
 ]
 coordinates{
- (10,0.300586)(20,0.011282)(30,0.0449936)(40,0.0413063)(50,0.0395686)(100,0.0163234)(150,0.000663734)(200,0.00024872)(250,0.000216227) 
+ (10,0.33868)(20,0.0118118)(30,0.0482497)(40,0.0445171)(50,0.0427283)(100,0.0168447)(150,0.000667059)(200,0.000249391)(250,0.000216899) 
 };
 
-\addplot [
-color=mycolor4,
-only marks,
-mark=*,
-mark options={solid}
-]
-coordinates{
- (10,0.0151019)(20,0.00981457)(30,0.000176503)(40,0.00946982)(50,0.00947076)(100,0.00104681)(150,0.00238714)(200,0.00818355)(250,0.00794726) 
-};
-
-\end{axis}
+\end{semilogyaxis}
 \end{tikzpicture}
