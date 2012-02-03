@@ -1,0 +1,66 @@
+% This file was created by matlab2tikz v0.1.4.
+% Copyright (c) 2008--2011, Nico Schlömer <nico.schloemer@gmail.com>
+% All rights reserved.
+% 
+\begin{tikzpicture}
+
+% defining custom colors
+\definecolor{mycolor1}{rgb}{1,0.1,0.1}
+\definecolor{mycolor2}{rgb}{1,0.316228,0.316228}
+\definecolor{mycolor3}{rgb}{0.1,1,0.1}
+\definecolor{mycolor4}{rgb}{0.316228,1,0.316228}
+\definecolor{mycolor5}{rgb}{0.1,0.1,1}
+\definecolor{mycolor6}{rgb}{0.316228,0.316228,1}
+
+
+\begin{axis}[%
+scale only axis,
+width=\fwidth,
+height=\fheight,
+xmin=0, xmax=250,
+ymin=-100, ymax=0,
+xlabel={Number of samples},
+ylabel={log evidence},
+title={$\text{sanity easy }4d$},
+axis on top]
+\addplot [fill=mycolor1,opacity=1.000000e-01,draw=none] coordinates{ (10,-4.60133)(20,-2.17861)(30,-2.29111)(40,-1.5927)(50,-2.62717)(100,-2.90738)(150,-3.31162)(200,-3.53345)(250,-3.57076)(250,-5.32089)(200,-5.54178)(150,-5.64297)(100,-5.66493)(50,-6.1112)(40,-6.2051)(30,-6.9955)(20,-6.6013)(10,-8.21984)};
+\addplot [
+color=mycolor2,
+solid,
+line width=1.0pt
+]
+coordinates{
+ (10,-6.41058)(20,-4.38996)(30,-4.64331)(40,-3.8989)(50,-4.36919)(100,-4.28615)(150,-4.4773)(200,-4.53762)(250,-4.44582) 
+};
+
+\addplot [fill=mycolor3,opacity=1.000000e-01,draw=none] coordinates{ (10,-8.79794)(20,-5.8801)(30,-4.36031)(40,-3.91037)(50,-4.09053)(100,-5.35558)(150,-4.63829)(200,-3.79027)(250,-3.92311)(250,-3.9665)(200,-3.8755)(150,-4.74168)(100,-5.52242)(50,-4.44976)(40,-4.40043)(30,-4.90091)(20,-6.16598)(10,-9.31472)};
+\addplot [
+color=mycolor4,
+solid,
+line width=1.0pt
+]
+coordinates{
+ (10,-9.05633)(20,-6.02304)(30,-4.63061)(40,-4.1554)(50,-4.27014)(100,-5.439)(150,-4.68998)(200,-3.83288)(250,-3.9448) 
+};
+
+\addplot [fill=mycolor5,opacity=1.000000e-01,draw=none] coordinates{ (10,-64.0268)(20,-4.92488)(30,-3.02263)(40,-2.88467)(50,-3.04595)(100,-3.41266)(150,-3.83576)(200,-3.81117)(250,-3.87807)(250,-5.55991)(200,-5.96451)(150,-5.69225)(100,-5.4251)(50,-5.74415)(40,-5.86784)(30,-5.76432)(20,-9.13066)(10,-92.0987)};
+\addplot [
+color=mycolor6,
+solid,
+line width=1.0pt
+]
+coordinates{
+ (10,-78.0628)(20,-7.02777)(30,-4.39347)(40,-4.37626)(50,-4.39505)(100,-4.41888)(150,-4.76401)(200,-4.88784)(250,-4.71899) 
+};
+
+\addplot [
+color=black,
+solid,
+line width=1.0pt
+]
+coordinates{
+ (10,-4.513)(20,-4.513)(30,-4.513)(40,-4.513)(50,-4.513)(100,-4.513)(150,-4.513)(200,-4.513)(250,-4.513) 
+};
+
+\end{axis}
+\end{tikzpicture}
