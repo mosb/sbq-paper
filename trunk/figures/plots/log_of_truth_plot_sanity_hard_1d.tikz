@@ -8,6 +8,7 @@
 \definecolor{mycolor1}{rgb}{1,0.1,0.1}
 \definecolor{mycolor2}{rgb}{0.1,1,0.1}
 \definecolor{mycolor3}{rgb}{0.1,0.1,1}
+\definecolor{mycolor4}{rgb}{0.4,0.4,0.1}
 
 
 \begin{axis}[%
@@ -45,6 +46,15 @@ line width=1.0pt
 ]
 coordinates{
  (10,-2.00057)(20,-0.758662)(30,-0.82937)(40,-0.404377)(50,-1.97758)(100,2.39835)(150,-0.141863)(200,-4.42765)(250,-3.01752) 
+};
+
+\addplot [
+color=mycolor4,
+solid,
+line width=1.0pt
+]
+coordinates{
+ (10,-0.936309)(20,-1.47922)(30,-1.63267)(40,-0.80049)(50,-1.59263)(100,-1.50959)(150,-1.87574)(200,-2.11491)(250,-1.90712) 
 };
 
 \end{axis}

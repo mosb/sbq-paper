@@ -8,6 +8,9 @@
 \definecolor{mycolor1}{rgb}{1,0.316228,0.316228}
 \definecolor{mycolor2}{rgb}{0.316228,1,0.316228}
 \definecolor{mycolor3}{rgb}{0.316228,0.316228,1}
+\definecolor{mycolor4}{rgb}{0.632456,0.632456,0.316228}
+\definecolor{mycolor5}{rgb}{0.316228,1,1}
+\definecolor{mycolor6}{rgb}{0.948683,0.948683,0.948683}
 
 
 \begin{axis}[%
@@ -17,7 +20,7 @@ height=\fheight,
 xmin=0, xmax=2,
 ymin=0, ymax=2,
 axis on top,
-legend entries={SMC,AIS,BMC,True value},
+legend entries={SMC,AIS,BMC,SBQ,SBQ GPML,BQ GPML AIS,True value},
 legend style={nodes=right}]
 \addplot [
 color=mycolor1,
@@ -39,6 +42,33 @@ coordinates{
 
 \addplot [
 color=mycolor3,
+solid,
+line width=1.0pt
+]
+coordinates{
+ (1,1) 
+};
+
+\addplot [
+color=mycolor4,
+solid,
+line width=1.0pt
+]
+coordinates{
+ (1,1) 
+};
+
+\addplot [
+color=mycolor5,
+solid,
+line width=1.0pt
+]
+coordinates{
+ (1,1) 
+};
+
+\addplot [
+color=mycolor6,
 solid,
 line width=1.0pt
 ]

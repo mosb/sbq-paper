@@ -11,6 +11,8 @@
 \definecolor{mycolor4}{rgb}{0.316228,1,0.316228}
 \definecolor{mycolor5}{rgb}{0.1,0.1,1}
 \definecolor{mycolor6}{rgb}{0.316228,0.316228,1}
+\definecolor{mycolor7}{rgb}{0.4,0.4,0.1}
+\definecolor{mycolor8}{rgb}{0.632456,0.632456,0.316228}
 
 
 \begin{axis}[%
@@ -18,7 +20,7 @@ scale only axis,
 width=\fwidth,
 height=\fheight,
 xmin=0, xmax=250,
-ymin=-1.4, ymax=0.2,
+ymin=-8, ymax=8,
 xlabel={Number of samples},
 ylabel={log evidence},
 title={$\text{sanity hard }1d$},
@@ -51,6 +53,16 @@ line width=1.0pt
 ]
 coordinates{
  (10,-0.648261)(20,-0.277313)(30,-0.287443)(40,-0.253176)(50,-0.378913)(100,-0.0395209)(150,-0.0416909)(200,-0.119223)(250,-0.0432391) 
+};
+
+\addplot [fill=mycolor7,opacity=1.000000e-01,draw=none] coordinates{ (10,2.09659)(20,3.58155)(30,4.1605)(40,1.83284)(50,3.98777)(100,3.67921)(150,5.25646)(200,6.68517)(250,5.44322)(250,-5.29552)(200,-6.53642)(150,-5.15293)(100,-3.53155)(50,-3.84994)(40,-1.70404)(30,-3.99551)(20,-3.41021)(10,-1.95749)};
+\addplot [
+color=mycolor8,
+solid,
+line width=1.0pt
+]
+coordinates{
+ (10,0.0695512)(20,0.0856679)(30,0.0824982)(40,0.0643969)(50,0.0689119)(100,0.0738325)(150,0.051767)(200,0.0743775)(250,0.0738524) 
 };
 
 \addplot [
