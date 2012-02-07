@@ -1,8 +1,37 @@
-% This is just a file to put sections of tex that I tentatively wanted to remove from the paper.
+\documentclass{article}
+\usepackage{preamble}
+%\usepackage{subfig}
+\newcommand{\dblspace}{\setlength{\baselineskip}{0.8cm}}
+\renewcommand{\pskinny}[2]{p\big(#1|#2\big)}
+\usepackage{graphicx} % For figures
+\usepackage{subfigure} 
+\usepackage{natbib}   % For citations
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{hyperref}
+\newcommand{\theHalgorithm}{\arabic{algorithm}}
+\usepackage[normalem]{ulem}  % for strikethrough
+\usepackage{color} % for comments to each other
+\usepackage{comment}
+\usepackage{pgfplots}
+%\usepackage{icml2012}
 
-\iffalse
-\sout{
-For our later use, consider now the more general integral over the product of two functions, $f$ and $g$,} \textcolor{red}{Do we need the rest of this section for anything? I suppose it comes up implicitly in eqn 10, but I'm not sure it's necessary...}
+\newlength\fheight  % For tikz figures
+\newlength\fwidth 
+
+% \usepackage[accepted]{icml2012}¡
+
+% The \icmltitle you define below is probably too long as a header.
+% Therefore, a short form for the running title is supplied here:
+%\icmltitlerunning{Sampling for Bayesian Quadrature}
+\title{Appendix: Sampling for Bayesian Quadrature}
+
+\begin{document} 
+%\twocolumn[
+
+
+\section{Covariance of products of functions}
+For our later use, consider now the more general integral over the product of two functions, $f$ and $g$,
 $$\inty{f g} \deq \int f(\phi)\,g(\phi)\,\po{\phi}\,\ud\phi\,,$$ 
 for which, given independent \gp s (with constant mean and Gaussian covariance) and function observations $\vf_{s} \deq f(\vph_{s})$ and  $\vg_{t} \deq g(\vph_{t})$, we have
 % \begin{align} \label{eq:mean_inty_fg}
@@ -70,4 +99,5 @@ Here we have overloaded the definition of $\Ot$; its two definitions can be clea
 Again, the scales $h_f$ and $h_g$ cancel out of our mean estimate.
 %, in this case, \eqref{eq:mean_inty_fg}.
 
-\fi  % Commenting out product of functions section
+
+\end{document} 

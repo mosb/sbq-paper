@@ -8,6 +8,7 @@
 \definecolor{mycolor1}{rgb}{1,0.1,0.1}
 \definecolor{mycolor2}{rgb}{0.1,1,0.1}
 \definecolor{mycolor3}{rgb}{0.1,0.1,1}
+\definecolor{mycolor4}{rgb}{0.4,0.4,0.1}
 
 
 \begin{semilogyaxis}[%
@@ -46,6 +47,15 @@ line width=1.0pt
 ]
 coordinates{
  (10,5409.57)(20,6.32406)(30,0.0142866)(40,0.0186989)(50,0.0139124)(100,0.00885948)(150,0.0630041)(200,0.140505)(250,0.042432) 
+};
+
+\addplot [
+color=mycolor4,
+solid,
+line width=1.0pt
+]
+coordinates{
+ (10,5.16248)(20,6.06806)(30,2.47582)(40,3.47959)(50,6.63048)(100,27.5975)(150,10.4318)(200,10.8423)(250,3.53846) 
 };
 
 \end{semilogyaxis}
