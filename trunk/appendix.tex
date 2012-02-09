@@ -100,4 +100,80 @@ Again, the scales $h_f$ and $h_g$ cancel out of our mean estimate.
 %, in this case, \eqref{eq:mean_inty_fg}.
 
 
+\section{Uncertainty about the posterior mean does not change the mean estimate of $\lfn$}
+With these assumptions, we have
+\begin{align*}
+& \mean{\inty{\lfn}}{\psi_0,\tvr_s} \\
+& \deq \iint \mean{\psi[\tr]}{\psi_0,\tr}
+\p{\tr}{\tvr_s, \theta}\, \p{\theta}{\tvr_s}\ud \tr\,\ud \theta\\
+& = \iint \mean{\psi[\tr]}{\psi_0,\tr} \N{\tr}{m_{\tr|s,\theta}}{C_{\tr|s,\theta}}
+\\
+& \hspace{5cm}\N{\theta}{m_\theta}{C_\theta}\ud \tr\,\ud \theta
+\\
+& \simeq \iint \mean{\psi[\tr]}{\psi_0,\tr} 
+\\
+& \hspace{2cm}\N{\tr}
+{m_{\tr|s,m_\theta}+\pderiv{m_{\tr|s,\theta}}{\theta}(\theta-m_\theta)}
+{C_{\tr|s,m_\theta}}
+\\
+& \hspace{4cm}
+\N{\theta}{m_\theta}{C_\theta}\ud \tr\,\ud \theta
+\\
+& = \iint \mean{\psi[\tr]}{\psi_0,\tr} \\
+& \hspace{1cm}\N{\tr}
+{m_{\tr|s,m_\theta}}
+{C_{\tr|s,m_\theta}+\pderiv{m_{\tr|s,\theta}}{\theta}C_\theta\pderiv{m\tra_{\tr|s,\theta}}{\theta}}
+\ud \tr
+\\
+& = \mean{\psi[\tr]}{\psi_0,m_{\tr|s,m_\theta}}\,,
+\end{align*}
+which is identical to \eqref{eq:mean_ev}
+
+\section{Graphical model of GP}
+
+% As with our convention above, we will take knowledge of
+% sample locations $\vlfv_s$ to be implicit within $I$. However, as we don't know $f(\lfv)$ for any $\lfv \not \in \vlfvS$, we are uncertain about the function $f(\cdot)$. As a consequence, we are also uncertain about the value of the integral $\inty{f}$. As such, we possess probability distributions over both $f(\cdot)$ and $\inty{f}$. 
+% %The resulting Bayesian network is depicted in Figure \ref{fig:BMC}.
+
+%  \begin{figure}[ht]
+% \hspace{-1cm}
+% 	\begin{pspicture}(-5,0)(5,4.25)%
+% 	%\showgrid
+% 	\GM@Inode{0}{3.5}{1}%	
+% 	%\rput(I){\rput(0,-2){\GM@node{X}}}   \GM@label[angle=90]{X}{$X$}
+% 	\rput(0,2){\GM@detnode{psi}}   \GM@label[angle=-90]{psi}{$\rv{\inty{f}}$}
+% 
+% % NB \lfv is the actual value of the hyperparameters -- doesn't make any sense to write \lfv_i
+% 
+% 	\rput(psi){\rput(1.25,-2){\GM@plate[plateLabelPos=bl]{2}{4.2}{$i'\not\in s$}}}
+% 	\rput(psi){\rput(2.5,1){\GM@node[observed=true]{phij}}}   \GM@label[angle=90]{phij}{$\rv{\lfv}_{i'}$}
+% 	\rput(phij){\rput(0,-2){\GM@detnode{qj}}}   \GM@label[angle=130]{qj}{$\rv{f}_{i'}$}
+% 
+% 	\rput(psi){\rput(-3.25,-2){\GM@plate[plateLabelPos=br]{2}{4.2}{$i \in s$}}}
+% 	\rput(psi){\rput(-2.5,1){\GM@node[observed=true]{phii}}}   \GM@label[angle=90]{phii}{$\rv{\lfv}_i$}
+% 	\rput(phii){\rput(0,-2){\GM@detnode[observed=true]{qi}}}   \GM@label[angle=50]{qi}{$\rv{f}_i$}
+% 
+% 	\pnode(0,0.5){mid}
+% 
+% 	%\ncline[arrows=->]{phi}{X}
+% 
+% 
+% 	\ncline[arrows=->]{phij}{qj}
+% 	\ncline[arrows=->]{qj}{psi}
+% 	\ncline[arrows=->]{phij}{psi}
+% 
+% 	\ncline[arrows=->]{phii}{qi}
+% 	\ncline[arrows=->]{qi}{psi}
+% 	\ncline[arrows=->]{phii}{psi}
+% 
+% 	\ncarc{qj}{qi}
+% 	\nccircle[angleA=-90]{qj}{0.5}
+% 	\nccircle[angleA=90]{qi}{0.5}
+% 
+% 	\end{pspicture}%
+% \caption{Bayesian network for Bayesian Quadrature.}
+% \label{fig:BMC}
+% \end{figure}
+
+
 \end{document} 
