@@ -90,12 +90,12 @@ Convergence diagnostics exist to indicate if a Markov chain is failing to 'mix',
 
 [Note: I plan to merge this section with one of the two following sections, I'm just not sure which one yet] An alternative approach to evaluating $Z$ is to posit a distribution over likelihood functions, and update that distribution based on information observed about the likelihood function.
 
-\begin{figure}
-\centering
-%\includegraphics[width=0.48\textwidth]{figures/log_gp_diff.eps}
-\caption{An illustration of model-based integration, or Bayesian Quadrature.  We compute the expected are underneath Gaussian process posterior, conditioned on sampled values of the true likelihood function.  Obtaining samples about uncertain regions allows us to reduce our uncertainty about the area under the function.  }
-\label{fig:model_based}
-\end{figure}
+% \begin{figure}
+% \centering
+% %\includegraphics[width=0.48\textwidth]{figures/log_gp_diff.eps}
+% \caption{An illustration of model-based integration, or Bayesian Quadrature.  We compute the expected are underneath Gaussian process posterior, conditioned on sampled values of the true likelihood function.  Obtaining samples about uncertain regions allows us to reduce our uncertainty about the area under the function.  }
+% \label{fig:model_based}
+% \end{figure}
 
 Using a model-based approach, the issue of convergence is solved naturally:  Our posterior variance over $Z$ indicates our remaining uncertainty about the quantity we care about.  This statistic is typically only reliable if we are able to integrate over all unknown quantities.  This is typically intractable, however by approximately integrating out lengthscales in section ?? we go some ways towards fixing this problem.  The results in section ?? indicate that our posterior variance is reasonably well-calibrated.
 
@@ -127,26 +127,28 @@ $$
 {\meancond{f}{\vlfv_\star}{s}}
 {\covcond{f}{\vlfv_\star}{s}}\,,
 $$
-where we have, for the mean $\novmean{a}{b}\deq \int a\,\pskinny{a}{b} \ud
-a$ and variance $\novcov{a}{b}\deq \int
-\big(a-\novmean{a}{b}\big)^2\,\pskinny{a}{b} \ud a$,
+where we have, for the mean $m$,
 \begin{align} 
 \textstyle
 &\meancond{f}{\lfv_\star}{s}
 \deq \mean{f_\star}{\vf_s}
 \nonumber\\
-&= \mu_{f}(\lfv_\star) + 
+&= \mu_{f}(\lfv_\star)\!+\!
+K_{f}(\lfv_\star,\vlfv_s)
+K_{f}(\vlfv_s,\vlfv_s)\inv\!
+\bigl(\vf_s\!-\!{\mu}_{f}(\vlfv_s)\bigr)\label{eq:GPMean}
+\intertext{covariance $C$,}
+&C_{f|s}(\lfv_\star, \lfv'_\star)
+\deq C(f_\star,f'_\star|\vf_s) 
+\nonumber\\
+&= K_{f}(\lfv_\star,\lfv'_\star) - 
 K_{f}(\lfv_\star,\vlfv_s)
 K_{f}(\vlfv_s,\vlfv_s)\inv
-\bigl(\vf_s-{\mu}_{f}(\vlfv_s)\bigr) \label{eq:GPMean}
-\\
+K_{f}(\vlfv_s,\lfv'_\star)\,, \nonumber%\label{eq:GPCov}
+\intertext{and variance $V$,}
 &\covcond{f}{\lfv_\star}{s}
 \deq {\cov{f_\star}{\vf_s}} 
-\nonumber\\
-&= K_{f}(\lfv_\star,\lfv_\star) - 
-K_{f}(\lfv_\star,\vlfv_s)
-K_{f}(\vlfv_s,\vlfv_s)\inv
-K_{f}(\vlfv_s,\lfv_\star)\,. \nonumber%\label{eq:GPCov}
+\deq C_{f|s}(\lfv_\star, \lfv_\star).\nonumber
 \end{align} 
 
 \section{Bayesian Quadrature} \label{sec:BQ}
@@ -221,23 +223,23 @@ In the following three sections, we will expand upon the improvements this paper
 We wish to evaluate the evidence $\inty{\lfn} = \int \lfn(\lfv) p(\lfv) \ud\lfv$, an integral over non-negative likelihoods, $\lfn(\lfv)$, whose arguments are the parameters of the relevant model.
 
 
-\begin{figure}
-\centering
-%\includegraphics[width=0.48\textwidth]{figures/log_gp_diff.eps}
-\caption{The lengthscale of a GP fitted to the log-likelihood function will typically be much longer than that of a GP fit to the likelihood function.  A GP with a long lengthscale will generalize better to distant parts of the function, and will have a posterior more concentrated around the true evidence. }
-\label{fig:log_is_better}
-\end{figure}
+% \begin{figure}
+% \centering
+% %\includegraphics[width=0.48\textwidth]{figures/log_gp_diff.eps}
+% \caption{The lengthscale of a GP fitted to the log-likelihood function will typically be much longer than that of a GP fit to the likelihood function.  A GP with a long lengthscale will generalize better to distant parts of the function, and will have a posterior more concentrated around the true evidence. }
+% \label{fig:log_is_better}
+% \end{figure}
 
 Assigning a standard \gpb prior to $\lfn(\lfv)$ would ignore our prior information about the range and non-negativity of $\lfn(\lfv)$, leading to pathologies such as a negative evidence (as observed in \citet{BZMonteCarlo}).  A much better prior would be a \gpb prior on $\log(\lfn(x))$.  However, the integral under the exp of a \gpb is intractable.  In this section, we apply the approximate inference method of \citep{BQR} to tractably integrate under a log-\gpb prior\footnote{In practice, we use the transform 
 $\log\left(\nicefrac{\lfn(\lfv)}{\gamma} + 1\right)$
 where $\gamma = (e-1)^{-1}$.  This give better resolution of some numerical issues, and allows us to assume the transformed quantity has zero mean. For the sake of simplicity, we omit this detail in the following derivations.}.
 
-\begin{figure}
-\centering
-\includegraphics[width=0.48\textwidth]{figures/log_gp_diff.eps}
-\caption{An illustration of our method of finding the integral under the exp of a Gaussian process. For all \gp s, we plot only the relevant posterior means.}
-\label{fig:integrate_hypers}
-\end{figure}
+% \begin{figure}
+% \centering
+% \includegraphics[width=0.48\textwidth]{figures/log_gp_diff.eps}
+% \caption{An illustration of our method of finding the integral under the exp of a Gaussian process. For all \gp s, we plot only the relevant posterior means.}
+% \label{fig:integrate_hypers}
+% \end{figure}
 
 %Firstly, we define the transformation
 %\begin{align*}
@@ -369,12 +371,12 @@ $\vlfv_c$ should firstly include $\vlfv_s$, at which points we know that $\delta
 Given these samples, we can now marginalise \eqref{eq:mean_ev1} over $\Delta$ to give
 \begin{align}
  \mean{\inty{\lfn}}{\psi_0,\tvr_s,\Delta_c} =
-\mean{\inty{\lfn}}{\vr_s} + C\,,
+\mean{\inty{\lfn}}{\vr_s} + \corrn \,,
 \label{eq:mean_ev2}
 \end{align}
 where the correction factor is
 \begin{align*}
- C \deq \mean{\inty{\lfn \Delta}}{\vr_s, \Delta_c}\,.
+ \corrn \deq \mean{\inty{\lfn \Delta}}{\vr_s, \Delta_c}\,.
 \end{align*}
 As $\Delta$ is small, we expect $C$ to also be small.
 
@@ -386,64 +388,55 @@ Surprisingly, the posterior variance of a GP model with fixed hyperparameters do
 
 However, because we place our GP model on the log-likelihood, our variance depends crucially on the values of the log-likelihoods observed. 
 
-\begin{figure}
-\centering
-\includegraphics[width=0.48\textwidth]{figures/eue.eps}
-\caption{An example the expected uncertainty in the evidence after observing the likelihood function at that location.}
-\label{fig:eue}
-\end{figure}
-
-\begin{figure}
-\centering
-\includegraphics[width=0.48\textwidth]{figures/active_learning.eps}
-\caption{An example of the posterior over likelihood functions converging as new samples are selected.}
-\label{fig:active_learning}
-\end{figure}
+% \begin{figure}
+% \centering
+% \includegraphics[width=0.48\textwidth]{figures/eue.eps}
+% \caption{An example the expected uncertainty in the evidence after observing the likelihood function at that location.}
+% \label{fig:eue}
+% \end{figure}
+% 
+% \begin{figure}
+% \centering
+% \includegraphics[width=0.48\textwidth]{figures/active_learning.eps}
+% \caption{An example of the posterior over likelihood functions converging as new samples are selected.}
+% \label{fig:active_learning}
+% \end{figure}
 
 The variance in the evidence is
 \begin{align*}
 & \cov{\inty{\lfn}}{\psi_0,\tvr_s,\Delta_c}\\ 
-& = \int \psi^2 \delta{\psi - \mean{\inty{\lfn}}{\psi_0,\tvr_s,\Delta_c}
-\p{\inty{\lfn}}{\tvr_s} \ud\inty{\lfn}\\
-& - \mean{\inty{\lfn}}{\psi_0,\tvr_s,\Delta_c}^2\,.
+& = \secm{\inty{\lfn}}{\psi_0,\tvr_s} - \mean{\inty{\lfn}}{\psi_0,\tvr_s,\Delta_c}^2\,,
 \end{align*}
-To resolve the first term, define a new functional
+where the second moment is 
 \begin{align*}
- \chi[\tr] \deq \inty{\lfn}^2 & = \gamma^2\bigl(\int  \exp \tr(\lfv) p(\lfv) \ud \lfv-1\bigr)^2\\
-\pderiv{}{\tr(\lfv)}\chi[\tr] & = 2\gamma \exp \tr(\lfv) p(\lfv) \bigl(\int  \exp \tr(\lfv) p(\lfv) \ud \lfv-1\bigr)
-\end{align*}
-which we again linearise around $\tr_0$. Hence, as per the above
-\begin{align*}
-& \cov{\inty{\lfn}}{\chi_0,\psi_0,\tvr_{s}} = \mean{\inty{\lfn}^2}{\chi_0,\tvr_s} - \mean{\inty{\lfn}}{\psi_0,\tvr_s}^2
-% & =  (\mean{\inty{\lfn}}{\vr_s})^2 \\
-% & \qquad + 2\mean{\inty{\lfn}}{\vr_s}
-% \bigl(\mean{\inty{\lfn \Delta}}{\vr_s} + \gamma\, \mean{\inty{\Delta}}{\vr_s}\bigr)
-% \\
-% & \qquad - \bigl(
-% \mean{\inty{\lfn}}{\vr_s} + \mean{\inty{\lfn \Delta}}{\vr_s} + \gamma\, \mean{\inty{ \Delta}}{\vr_s}
-% \bigr)^2
-% & = \mean{\inty{\lfn}}{\vr_s}
-% \bigl(\mean{\inty{\lfn \Delta}}{\vr_s} + \gamma\, \mean{\inty{\Delta}}{\vr_s}\bigr)
-% \\
-% & \qquad - \bigl( \mean{\inty{\lfn \Delta}}{\vr_s} + \gamma\, \mean{\inty{ \Delta}}{\vr_s}
-% \bigr)^2
-% \,.
+& \secm{\inty{\lfn}}{\psi_0,\tvr_s}  \\
+& \deq \int \psi^2 
+\delta\bigl(\psi - \mean{\psi[\tr]}{\psi_0}\bigr)
+\p{\tr}{\tvr_s}
+\ud\psi \ud\tr\\
+& = \int \mean{\psi[\tr]}{\psi_0}^2
+\N{\tr}{\meancondfn{\tr}{s}}{\covcondfn{\tr}{s}}
+ \ud\tr\\
+& = \mean{\inty{\lfn\,C_{\lfn|s}\,\lfn}}{\tvr_s}+
+\bigl(\mean{\inty{\lfn\, \tr}}{\tvr_s}
+ \\
+& \hspace{1cm} + 
+\mean{\inty{\lfn}}{\tvr_s} - \mean{\inty{\lfn\, \tr_0}}{\tvr_s}\bigr)^2,
 \end{align*}
 where
 \begin{align*}
-&\mean{\inty{\lfn}^2}{\chi_0,\tvr_s} \\
-& = \mean{\chi[\tr]}{\chi_0,m_{\tr|s}} \\
-& = (\mean{\inty{\lfn}}{\vr_s})^2 \\
-& \hspace{1cm} + 2\mean{\inty{\lfn}}{\vr_s}
-\bigl(\mean{\inty{\lfn \Delta}}{\vr_s} + \gamma\, \mean{\inty{\Delta}}{\vr_s}\bigr)
+  &\mean{\inty{\lfn\,C_{f|s}\,\lfn}}{\tvr_s} \\ &\deq
+ \iint m_{\lfn|s}(\lfv) C_{\lfn|s}(\lfv,\lfv') m_{\lfn|s}(\lfv') \ud \lfv \ud\lfv',
 \end{align*}
-
+which is expressible in closed form, although space precludes us from doing so.
 
 Consider adding a new sample at $\lfv_a$. The expected variance in our evidence after doing so is
 \begin{align}
-& \bigl\langle \cov{\inty{\lfn}}{\chi_0,\psi_0,\tvr_{s,a}}\mid \chi_0,\psi_0,\tvr_{s}\bigr\rangle\nonumber\\
-& = \mean{\inty{\lfn}^2}{\chi_0,\tvr_s}  - 
-\int\mean{\inty{\lfn}}{\psi_0,\tvr_{a,s}}^2\p{\tr_a}{\tvr_s}\ud\tr_a\,.\label{eqn:exp_var}
+&\bigl\langle \cov{\inty{\lfn}}{\psi_0,\tvr_{s,a}}\mid \psi_0,\tvr_{s}\bigr\rangle 
+\nonumber\\
+& = \secm{\inty{\lfn}}{\psi_0,\tvr_s} 
+- \int\mean{\inty{\lfn}}{\psi_0,\tvr_{a,s},\Delta_c}^2\nonumber\\
+& \hspace{3.8cm} \p{\tr_a}{\tvr_s}\ud\tr_a\,.\label{eqn:exp_var}
 \end{align}
 The first term is independent of the selection of $\lfv_a$ and hence can be safely ignored. Noting that $\int \exp(c\, \tr_a)\, \N{\tr_a;m, \sigma^2} \ud\tr_a = \exp(c\, m + \nicefrac{1}{2}\, c^2 \sigma^2)$, the second term can be resolved analytically for any trial $\lfv_a$ (we omit the laborious details of doing so). With this expression, we now select the $\lfv_a$ that minimises the second term using a numerical optimisation technique. 
 
@@ -451,12 +444,12 @@ The first term is independent of the selection of $\lfv_a$ and hence can be safe
 
 Hitherto, we have taken the maximum likelihood values $m_\theta$ for the quadrature hyperparameters $\theta$ of the quadrature-\gpb used to model the integrand. Once we have very many samples, this approximation seems reasonable: with lots of data, we can be almost certain about the values of the quadrature hyperparameters. However, in the process of taking samples, we'd like to acknowledge the influence new samples may have on our beliefs about the quadrature-hyperparameters. We'd expect this would further promote exploration, particularly early on, so as to firm up our beliefs about the quadrature-hyperparameters. The quadrature-hyperparameters of most interest are the input scales $w_r$; these hyperparameters can have a very dramatic influence on our fit to a function.
 
-\begin{figure}
-\centering
-\includegraphics[width=0.48\textwidth]{figures/integrate_lengthscales.eps}
-\caption{A demo of the effect of integrating hyperparameters on the marginal posterior variance.}
-\label{fig:integrate_hypers}
-\end{figure}
+% \begin{figure}
+% \centering
+% \includegraphics[width=0.48\textwidth]{figures/integrate_lengthscales.eps}
+% \caption{A demo of the effect of integrating hyperparameters on the marginal posterior variance.}
+% \label{fig:integrate_hypers}
+% \end{figure}
 
 Unfortunately, the dependence of our predictions upon these input scales is complex, ruling out analytic results. However, any approximation we make is likely to improve upon our existing assumption that the posterior for all quadrature-hyperparameters is a delta function! Our approach will be to assume that
 \begin{itemize}
@@ -539,74 +532,74 @@ we recreated the hyperparamter integration problem from \citep{BZMonteCarlo}.
 
 \paragraph{Evaluation}
 
-\begin{figure}
-\centering
-\begin{tabular}{ccc}
-	\hspace{-.5cm}
-	\setlength\fheight{2cm} 
-	\setlength\fwidth{2cm}
-	\input{figures/integrands/easy_1d.tikz} &
-	\hspace{-.5cm}
-	\setlength\fheight{2cm} 
-	\setlength\fwidth{2cm}
-	\input{figures/integrands/bumpy_1d_exp.tikz} 
-	\hspace{-.5cm}	
-	\setlength\fheight{2cm} 
-	\setlength\fwidth{2cm}
-	\input{figures/integrands/two_humps_1d.tikz}
-\end{tabular}
-\caption{The one-dimensional integrands in our test suite.  Green lines are priors, blue lines likelihoods, and red lines are posteriors.}
-\label{fig:1d_problems}
-\end{figure}
-
-%\begin{figure}
-%\centering
-%\includegraphics[width=0.45\textwidth]{figures/integrands/funnel.eps}
-%\caption{Radford Neal's funnel problem in 2 dimensions.}
-%\label{fig:funnel}
-%\end{figure}
-
-%\begin{minipage}[t][0.45\paperheight][t]{0.45\paperwidth}
-%    \input{tables/times_taken.tex}
-%\end{minipage}
-
-%\input{tables/truth_prob.tex}
-%\input{tables/se.tex}
-
-\begin{figure}
-	\centering
-	\setlength\fheight{4cm} 
-	\setlength\fwidth{4cm}
-	\input{figures/plots/legend.tikz}
-\end{figure}
-
-\begin{figure}
-	\centering
-	\setlength\fheight{4cm} 
-	\setlength\fwidth{4cm}
-	\input{figures/plots/se_plot_easy_1d.tikz}
-\end{figure}
-
-%\begin{figure}
-%	\centering
-%	\setlength\fheight{4cm} 
-%	\setlength\fwidth{4cm}
-%	\input{figures/plots/se_plot_sanity_hard_1d.tikz} 
-%\end{figure}
-
-%\begin{figure}
-%	\centering
-%	\setlength\fheight{4cm} 
-%	\setlength\fwidth{4cm}
-%	\input{figures/plots/varplot_sanity_easy_1d.tikz} 
-%\end{figure}
-
-\begin{figure}
-	\centering
-	\setlength\fheight{4cm} 
-	\setlength\fwidth{4cm}
-	\input{figures/plots/varplot_easy_1d.tikz}
-\end{figure}
+% \begin{figure}
+% \centering
+% \begin{tabular}{ccc}
+% 	\hspace{-.5cm}
+% 	\setlength\fheight{2cm} 
+% 	\setlength\fwidth{2cm}
+% 	\input{figures/integrands/easy_1d.tikz} &
+% 	\hspace{-.5cm}
+% 	\setlength\fheight{2cm} 
+% 	\setlength\fwidth{2cm}
+% 	\input{figures/integrands/bumpy_1d_exp.tikz} 
+% 	\hspace{-.5cm}	
+% 	\setlength\fheight{2cm} 
+% 	\setlength\fwidth{2cm}
+% 	\input{figures/integrands/two_humps_1d.tikz}
+% \end{tabular}
+% \caption{The one-dimensional integrands in our test suite.  Green lines are priors, blue lines likelihoods, and red lines are posteriors.}
+% \label{fig:1d_problems}
+% \end{figure}
+% 
+% %\begin{figure}
+% %\centering
+% %\includegraphics[width=0.45\textwidth]{figures/integrands/funnel.eps}
+% %\caption{Radford Neal's funnel problem in 2 dimensions.}
+% %\label{fig:funnel}
+% %\end{figure}
+% 
+% %\begin{minipage}[t][0.45\paperheight][t]{0.45\paperwidth}
+% %    \input{tables/times_taken.tex}
+% %\end{minipage}
+% 
+% %\input{tables/truth_prob.tex}
+% %\input{tables/se.tex}
+% 
+% \begin{figure}
+% 	\centering
+% 	\setlength\fheight{4cm} 
+% 	\setlength\fwidth{4cm}
+% 	\input{figures/plots/legend.tikz}
+% \end{figure}
+% 
+% \begin{figure}
+% 	\centering
+% 	\setlength\fheight{4cm} 
+% 	\setlength\fwidth{4cm}
+% 	\input{figures/plots/se_plot_easy_1d.tikz}
+% \end{figure}
+% 
+% %\begin{figure}
+% %	\centering
+% %	\setlength\fheight{4cm} 
+% %	\setlength\fwidth{4cm}
+% %	\input{figures/plots/se_plot_sanity_hard_1d.tikz} 
+% %\end{figure}
+% 
+% %\begin{figure}
+% %	\centering
+% %	\setlength\fheight{4cm} 
+% %	\setlength\fwidth{4cm}
+% %	\input{figures/plots/varplot_sanity_easy_1d.tikz} 
+% %\end{figure}
+% 
+% \begin{figure}
+% 	\centering
+% 	\setlength\fheight{4cm} 
+% 	\setlength\fwidth{4cm}
+% 	\input{figures/plots/varplot_easy_1d.tikz}
+% \end{figure}
 
 \section{Discussion}
 

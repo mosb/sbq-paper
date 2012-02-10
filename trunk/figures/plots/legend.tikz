@@ -6,23 +6,23 @@
 % 
 \begin{tikzpicture}
 
-% defining custom colors
-\definecolor{mycolor1}{rgb}{1,0.316227766016838,0.316227766016838}
-\definecolor{mycolor2}{rgb}{0.316227766016838,1,0.316227766016838}
-\definecolor{mycolor3}{rgb}{0.316227766016838,0.316227766016838,1}
-\definecolor{mycolor4}{rgb}{0.632455532033676,0.632455532033676,0.316227766016838}
-\definecolor{mycolor5}{rgb}{0.316227766016838,1,1}
-\definecolor{mycolor6}{rgb}{0.948683298050514,0.316227766016838,0.948683298050514}
-
-
-\begin{axis}[%
-xmin=0, xmax=2,
-ymin=0, ymax=2,
-scale only axis,
-width=\fwidth,
-height=\fheight,
-axis on top,
-legend entries={SMC,AIS,BMC,SBQ,SBQ GPML,BQ GPML AIS,True value},
-legend style={nodes=right}]
-\end{axis}
+% % defining custom colors
+% \definecolor{mycolor1}{rgb}{1,0.316227766016838,0.316227766016838}
+% \definecolor{mycolor2}{rgb}{0.316227766016838,1,0.316227766016838}
+% \definecolor{mycolor3}{rgb}{0.316227766016838,0.316227766016838,1}
+% \definecolor{mycolor4}{rgb}{0.632455532033676,0.632455532033676,0.316227766016838}
+% \definecolor{mycolor5}{rgb}{0.316227766016838,1,1}
+% \definecolor{mycolor6}{rgb}{0.948683298050514,0.316227766016838,0.948683298050514}
+% 
+% 
+% \begin{axis}[%
+% xmin=0, xmax=2,
+% ymin=0, ymax=2,
+% scale only axis,
+% width=\fwidth,
+% height=\fheight,
+% axis on top,
+% legend entries={SMC,AIS,BMC,SBQ,SBQ GPML,BQ GPML AIS,True value},
+% legend style={nodes=right}]
+% \end{axis}
 \end{tikzpicture}
