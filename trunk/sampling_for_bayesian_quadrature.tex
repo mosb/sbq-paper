@@ -61,7 +61,7 @@ These randomized methods estimate the model evidence $Z$ given the value of the 
 
 Bayesian Quadrature has previously been used to infer model evidence, \citep{BZMonteCarlo}.  However the approach used there suffered from 3 difficulties which are overcome in this paper: 
 \begin{itemize}
-\item In previous work, the \gpb prior used was inappropriate prior for likelihood functions, which are strictly positive and have a high dynamic range.  We introduce tractable approximate inference under a log-GP.
+\item In previous work, the \gpb prior used was inappropriate prior for likelihood functions, which are strictly positive and have a high dynamic range.  We introduce tractable approximate inference under a log-\gp.
 
 \item Previously, uncertainty in the quadrature hyperparameters was ignored, leading to pathologies.  We introduce a tractable approximation which accounts for uncertainty in hyperparameter values.  
 
@@ -103,7 +103,7 @@ Having a reliable indicator that our estimate has converged to the truth is vita
 
 \section{Gaussian Processes}
 Gaussian processes (\gp s) offer a powerful method to perform Bayesian inference about functions \citep{GPsBook}. A \gpb is defined as a distribution over the functions $f: \Phi \rightarrow \mathbb{R}$ such that the distribution over the possible function values on any finite subset of $\Phi$ is multivariate Gaussian.  For a function $f(\lfv)$, the prior distribution over its values $\vf$ on a subset $\vlfv \subset \Phi$ are completely specified by a mean vector $\vmu$ and covariance matrix $K$
-\begin{align*}%\label{eq:GPDefn}
+\begin{align*}%\label{eq:\gpbDefn}
 \textstyle
  &\p{\vf}{I} \deq \N{\vf}{\vmu_{f}}{K_{f}}\\
  &\deq\frac{1}{\sqrt{\det{2\pi K_{f}}}}\,\exp \big(-\frac{1}{2}\,(\vf-\vmu_{f})\tra\,K_{f}\inv\,(\vf-\vmu_{f})\big),
@@ -144,7 +144,7 @@ K_{f}(\vlfv_s,\vlfv_s)\inv\!
 &= K_{f}(\lfv_\star,\lfv'_\star) - 
 K_{f}(\lfv_\star,\vlfv_s)
 K_{f}(\vlfv_s,\vlfv_s)\inv
-K_{f}(\vlfv_s,\lfv'_\star)\,, \nonumber%\label{eq:GPCov}
+K_{f}(\vlfv_s,\lfv'_\star)\,, \nonumber%\label{eq:\gpbCov}
 \intertext{and variance $V$,}
 &\covcond{f}{\lfv_\star}{s}
 \deq {\cov{f_\star}{\vf_s}} 
@@ -226,7 +226,7 @@ We wish to evaluate the evidence $\inty{\lfn} = \int \lfn(\lfv) p(\lfv) \ud\lfv$
 % \begin{figure}
 % \centering
 % %\includegraphics[width=0.48\textwidth]{figures/log_gp_diff.eps}
-% \caption{The lengthscale of a GP fitted to the log-likelihood function will typically be much longer than that of a GP fit to the likelihood function.  A GP with a long lengthscale will generalize better to distant parts of the function, and will have a posterior more concentrated around the true evidence. }
+% \caption{The lengthscale of a \gpb fitted to the log-likelihood function will typically be much longer than that of a \gpb fit to the likelihood function.  A \gpb with a long lengthscale will generalize better to distant parts of the function, and will have a posterior more concentrated around the true evidence. }
 % \label{fig:log_is_better}
 % \end{figure}
 
@@ -384,9 +384,9 @@ As $\Delta$ is small, we expect $C$ to also be small.
 \section{Sampling for Bayesian Quadrature}
 
 We aim to select samples $\lfv_s$ so as to minimise the \textit{expected} uncertainty in the evidence after seeing our next sample.\footnote{We also expect such samples to be useful not just for estimating the evidence, but also for any other related expectations, such as would be required to perform prediction using the model.}
-Surprisingly, the posterior variance of a GP model with fixed hyperparameters does not depend on the function values at sampled locations all all; only the location of those samples matters. Hence active learning is pointless, and the optimal sampling design can be found in advance \cite{minka2000dqr}.
+Surprisingly, the posterior variance of a \gpb model with fixed hyperparameters does not depend on the function values at sampled locations all all; only the location of those samples matters. Hence active learning is pointless, and the optimal sampling design can be found in advance \cite{minka2000dqr}.
 
-However, because we place our GP model on the log-likelihood, our variance depends crucially on the values of the log-likelihoods observed. 
+However, because we place our \gpb model on the log-likelihood, our variance depends crucially on the values of the log-likelihoods observed. We will assume that our integral is jointly Gaussian with the log of the likelihood, meaning that large likelihoods will lead to a large variance for the integral (even holding hyperparameters fixed). Were the integral and likelihood joint Gaussian, as in Section \ref{sec:BQ}, the variance of the integral would be independent of the magnitude of the likelihood observations.
 
 % \begin{figure}
 % \centering
@@ -423,7 +423,7 @@ where the second moment is
 & \hspace{1cm} + 
 \mean{\inty{\lfn}}{\tvr_s} - \mean{\inty{\lfn\, \tr_0}}{\tvr_s}\bigr)^2,
 \end{align*}
-where
+and
 \begin{align*}
   &\mean{\inty{\lfn\,C_{f|s}\,\lfn}}{\tvr_s} \\ &\deq
  \iint m_{\lfn|s}(\lfv) C_{\lfn|s}(\lfv,\lfv') m_{\lfn|s}(\lfv') \ud \lfv \ud\lfv',
@@ -455,7 +455,7 @@ Unfortunately, the dependence of our predictions upon these input scales is comp
 \begin{itemize}
  \item that the posterior for $\theta$ is Gaussian with mean equal to the maximum likelihood value $m_\theta$, essentially assuming that our prior is very broad. 
 \item The Gaussian's covariance matrix $C_\theta$ is taken as diagonal. For quadrature hyperparameters other than the input scales, we take the appropriate diagonal elements as infinitesimally small, such that our posterior for these parameters is a delta function. For the the diagonal elements corresponding to $w_r$, we use [To be determined]
-%the squared input scales $w_s$ of another \gp, fitted to the likelihood $s(w_r)$ of the input scales $w_r$. \textcolor{red}{[Neat idea, but I can think of simple examples where the lengthscale is short but the mass is spread out; it seems to me that it'd be better to first fit a GP, then fit a Gaussian to the \gpb posterior.]}
+%the squared input scales $w_s$ of another \gp, fitted to the likelihood $s(w_r)$ of the input scales $w_r$. \textcolor{red}{[Neat idea, but I can think of simple examples where the lengthscale is short but the mass is spread out; it seems to me that it'd be better to first fit a \gpb, then fit a Gaussian to the \gpb posterior.]}
 \item that our predictions for $\tr_a$ have a mean which is linear in $w_r$ around the maximum likelihood values, and a variance which is essentially constant.  
 \end{itemize}
  
@@ -607,7 +607,7 @@ Adjusting the number of candidate points allows one to trade off between computa
 
 While we used an active learning scheme in this paper, Bayesian Quadrature can be used on samples generated by any method.
 
-\paragraph{Future Work}There are many ways to improve the GP model used to model likelihood functions.  First and foremost, the Gaussian kernel used in this paper has very weak generalization abilities.  Allowing a richer class of kernels will allow the GP model to shrink its posterior much more quickly.  For example, log-likelihood functions typically take the form of a sum of many terms, each depending only on a small number of variables.  This prior information could easily be incorporated into the GP, presumably allowing the SBQ algorithm to form concentrated posterior distributions over high-dimensional likelihoods.
+\paragraph{Future Work}There are many ways to improve the \gpb model used to model likelihood functions.  First and foremost, the Gaussian kernel used in this paper has very weak generalization abilities.  Allowing a richer class of kernels will allow the \gpb model to shrink its posterior much more quickly.  For example, log-likelihood functions typically take the form of a sum of many terms, each depending only on a small number of variables.  This prior information could easily be incorporated into the \gpb, presumably allowing the SBQ algorithm to form concentrated posterior distributions over high-dimensional likelihoods.
 
 The methods developed here can be applied without modification to discrete domains.
 
