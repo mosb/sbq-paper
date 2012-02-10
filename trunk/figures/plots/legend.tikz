@@ -1,89 +1,28 @@
 % This file was created by matlab2tikz v0.1.4.
-% Copyright (c) 2008--2011, Nico Schlömer <nico.schloemer@gmail.com>
+% Copyright (c) 2008--2012, Nico Schlömer <nico.schloemer@gmail.com>
 % All rights reserved.
+% 
+% 
 % 
 \begin{tikzpicture}
 
 % defining custom colors
-\definecolor{mycolor1}{rgb}{1,0.316228,0.316228}
-\definecolor{mycolor2}{rgb}{0.316228,1,0.316228}
-\definecolor{mycolor3}{rgb}{0.316228,0.316228,1}
-\definecolor{mycolor4}{rgb}{0.632456,0.632456,0.316228}
-\definecolor{mycolor5}{rgb}{0.316228,1,1}
-\definecolor{mycolor6}{rgb}{0.948683,0.948683,0.948683}
+\definecolor{mycolor1}{rgb}{1,0.316227766016838,0.316227766016838}
+\definecolor{mycolor2}{rgb}{0.316227766016838,1,0.316227766016838}
+\definecolor{mycolor3}{rgb}{0.316227766016838,0.316227766016838,1}
+\definecolor{mycolor4}{rgb}{0.632455532033676,0.632455532033676,0.316227766016838}
+\definecolor{mycolor5}{rgb}{0.316227766016838,1,1}
+\definecolor{mycolor6}{rgb}{0.948683298050514,0.316227766016838,0.948683298050514}
 
 
 \begin{axis}[%
+xmin=0, xmax=2,
+ymin=0, ymax=2,
 scale only axis,
 width=\fwidth,
 height=\fheight,
-xmin=0, xmax=2,
-ymin=0, ymax=2,
 axis on top,
 legend entries={SMC,AIS,BMC,SBQ,SBQ GPML,BQ GPML AIS,True value},
 legend style={nodes=right}]
-\addplot [
-color=mycolor1,
-solid,
-line width=1.0pt
-]
-coordinates{
- (1,1) 
-};
-
-\addplot [
-color=mycolor2,
-solid,
-line width=1.0pt
-]
-coordinates{
- (1,1) 
-};
-
-\addplot [
-color=mycolor3,
-solid,
-line width=1.0pt
-]
-coordinates{
- (1,1) 
-};
-
-\addplot [
-color=mycolor4,
-solid,
-line width=1.0pt
-]
-coordinates{
- (1,1) 
-};
-
-\addplot [
-color=mycolor5,
-solid,
-line width=1.0pt
-]
-coordinates{
- (1,1) 
-};
-
-\addplot [
-color=mycolor6,
-solid,
-line width=1.0pt
-]
-coordinates{
- (1,1) 
-};
-
-\addplot [
-color=black,
-solid,
-line width=1.0pt
-]
-coordinates{
- (1,1) 
-};
-
 \end{axis}
 \end{tikzpicture}
