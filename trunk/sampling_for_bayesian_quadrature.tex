@@ -166,7 +166,7 @@ We'll assume we are integrating with respect to a Gaussian prior
 although other convenient forms, or, if necessary, the use of an importance re-weighting trick, allow any other integral to be approximated \citep{OsborneAnon}. If $\lfv$ is a vector, $\nu_{\lfv}$ is a  vector of identical size, and $\lambda_{\lfv}$ an appropriate covariance matrix.
 
 %\textcolor{red}{[I'm hoping to re-write the next two paragraphs; it's way too indirect, and I think the philosophical foundations of MCMC are a poor avenue of attack]}
-Quadrature involves evaluating $f(\lfv)$ at a vector of sample points $\vlfv_s$, giving $\vf\pha_s\deq f(\vlfv_s)$. Of course, this evaluation is usually a computationally expensive operation. The resultant sparsity of our samples introduces uncertainty about the function $f$ between them, and hence uncertainty about the integral $\inty{f}$.
+Quadrature involves evaluating $f(\lfv)$ at a vector of sample points $\vlfv_s$, giving $\vf\pha_s\deq f(\vlfv_s)$. Of course, this evaluation is often a computationally expensive operation. The resultant sparsity of our samples introduces uncertainty about the function $f$ between them, and hence uncertainty about the integral $\inty{f}$.
 
 %As ever in the face of uncertainty, we address the estimation of the value of our integral as a problem of Bayesian inference \citep{BZNumericalAnalysis}. 
 
@@ -182,7 +182,7 @@ We choose for $f$ a \gpb prior with mean $\mu_f$ and the Gaussian covariance fun
 % Many more of these will be implicitly introduced in the coming sections; we'll take this as given and incorporate them into the (hidden) context $I$. 
 % Note that it will later become apparent that our inference for $\inty{f}$ is independent of the $h_f$ quadrature hyperparameter.
 
-Note that variables over which we have a multivariate Gaussian distribution are jointly Gaussian distributed with any projections of those variables. Because integration is a projection, we can hence use our computed samples $\vf_s$ to perform analytic Gaussian process inference about the value of integrals over $f(\lfv)$, such as $\inty{f}$. Our mean estimate for $\inty{f}$ given $\vf_s$ is
+Note that variables over which we have a multivariate Gaussian distribution are jointly Gaussian distributed with any affine transformations of those variables. Because integration is affine, we can hence use our computed samples $\vf_s$ to perform analytic Gaussian process inference about the value of integrals over $f(\lfv)$, such as $\inty{f}$. Our mean estimate for $\inty{f}$ given $\vf_s$ is
 %
 \begin{align} \label{eq:mean_inty_f}
 \mean{\inty{f}}{\vf_s}
@@ -228,14 +228,14 @@ We wish to evaluate the evidence $\inty{\lfn} = \int \lfn(\lfv) p(\lfv) \ud\lfv$
 \label{fig:log_is_better}
 \end{figure}
 
-Assigning a standard \gpb prior to $\lfn(\lfv)$ would ignore our prior information about the range and non-negativity of $\lfn(\lfv)$, leading to pathologies such as a negative evidence (as observed in \citep{BZMonteCarlo}).  A much better prior would be a \gpb prior on $\log(\lfn(x))$.  However, the integral under the exp of a \gpb is intractable.  In this section, we introduce an approximate inference method to tractably integrate under a log-\gpb prior\footnote{In practice, we use the transform 
+Assigning a standard \gpb prior to $\lfn(\lfv)$ would ignore our prior information about the range and non-negativity of $\lfn(\lfv)$, leading to pathologies such as a negative evidence (as observed in \citet{BZMonteCarlo}).  A much better prior would be a \gpb prior on $\log(\lfn(x))$.  However, the integral under the exp of a \gpb is intractable.  In this section, we apply the approximate inference method of \citep{BQR} to tractably integrate under a log-\gpb prior\footnote{In practice, we use the transform 
 $\log\left(\nicefrac{\lfn(\lfv)}{\gamma} + 1\right)$
-where $\gamma \deq 100\, \max(\vr_s)$.  This give better resolution of some numerical issues, and allows us to assume the transformed quantity has zero mean. For the sake of simplicity, we omit this detail in the following derivations.}.
+where $\gamma = (e-1)^{-1}$.  This give better resolution of some numerical issues, and allows us to assume the transformed quantity has zero mean. For the sake of simplicity, we omit this detail in the following derivations.}.
 
 \begin{figure}
 \centering
 \includegraphics[width=0.48\textwidth]{figures/log_gp_diff.eps}
-\caption{An illustration of our method of finding the integral under the exp of a Gaussian process.}
+\caption{An illustration of our method of finding the integral under the exp of a Gaussian process. For all \gp s, we plot only the relevant posterior means.}
 \label{fig:integrate_hypers}
 \end{figure}
 
@@ -272,24 +272,24 @@ where $\gamma \deq 100\, \max(\vr_s)$.  This give better resolution of some nume
 %range. 
 %
 %
-\begin{align}
+\begin{multline}\label{eq:minty_l}
 \mean{\inty{\lfn}}{\vr_s}
 % & 
 % =\iint \inty{l}\,\p{\inty{l}}{l}\p{l}{\vl_s} \ud \inty{l} \,\ud l                                                                                                                                                               \nonumber\\
 % &
-&  =\int \Bigl( \int \lfn(\lfv)\po{\lfv}\,\ud\lfv\Bigr)
-\N{\tr}{\meancondfn{\tr}{s}}{\covcondfn{\tr}{s}} \ud \tr \nonumber
-\end{align}
+ =\int \Bigl( \int \exp\bigl(\tr(\lfv)\bigr)\lfn(\lfv)\po{\lfv}\,\ud\lfv\Bigr)\\
+\N{\tr}{\meancondfn{\tr}{s}}{\covcondfn{\tr}{s}} \ud \tr
+\end{multline}
 
 Here the exponential ruins the linearity that yielded the analyticity in section \ref{sec:BQ}. To combat this, we perform inference for $\inty{\lfn}$ directly as a functional of $\tr$.
 %
-\begin{align}
- \psi[\tr] \deq \inty{\lfn} & = \int \exp ( \tr(\lfv)) p(\lfv) \ud \lfv\\
+\begin{align*}
+ \psi[\tr] \deq \inty{\lfn} & = \int \exp \bigl( \tr(\lfv)\bigr) p(\lfv) \ud \lfv\\
   						    & = \int \lfn(\lfv) p(\lfv) \ud \lfv\\
-\pderiv{}{\tr(\lfv)}\psi[\tr] & = \exp (\tr(\lfv)) p(\lfv)  = \lfn(\lfv) p(\lfv) 
-\end{align}
+\pderiv{}{\tr(\lfv)}\psi[\tr] & = \exp \bigl( \tr(\lfv)\bigr) p(\lfv)  = \lfn(\lfv) p(\lfv) 
+\end{align*}
 
-We make a \emph{linearisation} approximation\footnote{Note that this linearisation is equivalent to taking another \gpb for $\psi$. with the affine covariance
+We now make a \emph{linearisation} approximation\footnote{Note that this linearisation is equivalent to taking another \gpb for $\psi$. with the affine covariance
 \begin{equation*}
  K_\psi(\tr,\tr')
 % \deq 
@@ -300,19 +300,32 @@ We make a \emph{linearisation} approximation\footnote{Note that this linearisati
 \end{equation*}
 } 
 for $\psi$, forcing $\psi$ to be, as desired, affine in $\tr$. 
-%\textcolor{red}{[let's talk a bit about what the functional looks like without taking the linearization approximation maybe?]}
+Note that \eqref{eq:minty_l} consists of the product of $\psi[\tr]$ and a \gpb for $\tr$; the latter, due to the light tails of the Gaussian, effectively permits only a small range of $\tr$ functions. Over this narrow region, it is reasonable to assume that $\psi[\tr]$ does not vary too dramatically, and can be approximated as linear. 
 
 Before proceeding, we introduce a separate \gpb model over $\lfn$, the non-log space.  Then $m_{\lfn|s}$ is the \gpb conditional mean (as per \eqref{eq:GPMean}) for $\lfn$ given observations $\lfn(\vlfv_s)$. For this \gpb (over the non-log space), we take zero prior means and Gaussian
 covariances of the form \eqref{eq:Gaussian_cov_fn}. 
 
 We perform the linearisation of $\psi[\tr]$ around the point defined by $\tr_0 \deq \log (m_{\lfn|s})$. We make the definitions 
-$\psi_0 \deq \psi[\tr_0]$, $\pderiv{\psi_0}{\tr(\lfv)} \deq \pderiv{\psi}{\tr(\lfv)}[\tr_0]$, giving us
+$\psi_0 \deq \psi[\tr_0]$, $\pderiv{\psi_0}{\tr(\lfv)} \deq \pderiv{\psi}{\tr(\lfv)}[\tr_0]$, giving us the convenient mean
 \begin{multline}\label{eq:linearisation}
 \novmean{\psi[\tr]}{\psi_0,\pderiv{\psi_0}{\tq(\lfv)}} 
 = \psi_0+\\
 \int \pderiv{\psi_0}{\tr(\lfv)}\bigl(\tr(\lfv)-\tr_0(\lfv)\bigr)\ud\lfv\,.
 \end{multline}
 
+% Our linearisation corresponds to giving our \gpb over $\psi$ observations
+% at $\tr_0= \log (m_{r|s})$ of both the functional itself,
+That is, we can now write
+\begin{align*}
+\psi_0 & = \psi[\tr_0]
+= 
+{\mean{\inty{\lfn}}{\vr_s}}
+\intertext{along with the functional derivative}
+\pderiv{\psi_0}{\tr(\lfv)} & = \pderiv{\psi}{\tr(\lfv)}[\tr_0]
+ = \mean{\lfn(\lfv)}{\vr_s}\,\po{\lfv}
+\nonumber
+\end{align*}
+Note that $\psi_0$ and its functional derivatives are analytic; our choice of $\tr_0$ permitted us to resolve the necessary integrals.
 
 We now define
 \begin{align*}
@@ -326,33 +339,8 @@ the difference between the \gpb means over our log-transformed quantities and th
 %\Delta \simeq 0\,,
 %\end{align}
 %\textcolor{red}{[I found this statement confusing, it looks like we're planning to ignore $\Delta$ instead of giving it a full treatment.]}
-We expect $\Delta$ to be small for the narrow range of $\tr$ functions permitted by our Gaussian over $\tr$. This implies that
- $\tr_0$ is close to the peaks of our Gaussians over $\tr$, rendering our linearisation appropriate. The choice of $\tr_0$ is motivated by the fact that for it, our integrals become tractable.
-
-% Our linearisation corresponds to giving our \gpb over $\psi$ observations
-% at $\tr_0= \log (m_{r|s})$ of both the functional itself,
-That is, we can now write
-\begin{align}
-\psi_0 & = \psi[\tr_0]
-= 
-{\mean{\inty{\lfn}}{\vr_s}} \label{eq:rho_0}
-\intertext{along with the functional derivative}
-\pderiv{\psi_0}{\tr(\lfv)} & = \pderiv{\psi}{\tr(\lfv)}[\tr_0]
- = \mean{r(\lfv)}{\vr_s}\,\po{\lfv}
-\nonumber
-\end{align}
-As with any linearisation approximation, \eqref{eq:linearisation} gives the value at the selected point $\tr_0$, plus a correction factor modelling the influence of the first derivatives. This correction factor, 
-$\int \pderiv{\psi_0}{\tr(\lfv)}\Delta(\lfv)\ud\lfv$,
-contains a further non-analytic integral, due to the $t_r(m_{r|s})$ term within $\Delta$. As such, we perform another stage of Bayesian quadrature by treating $\Delta$ as an unknown function of $\lfv$.
-
-For this function we take Gaussian process priors with zero prior mean and Gaussian covariance \eqref{eq:Gaussian_cov_fn}. We must now choose sample points $\vlfv_c$ at which to evaluate our $\Delta$ function. 
-Note that we do not need to evaluate $\lfn(\lfv_c)$ in order to compute $\Delta(\lfv_c)$.
-% Unfortunately, it is impractical to resolve this decision problem in the same manner as the selection of $\vlfvS$, our ultimate goal (a topic that receives our full attention in Section \ref{sec:SBQ})).
-$\vlfv_c$ should firstly include $\vlfv_s$, at which points we know that $\delta$ is equal to zero. Note firstly that a simple heuristic for determining the `best' samples (in the sense of samples with which to fit a \gp) is to select those samples at extrema. Note that the peaks and troughs of $\delta$ occur at points far-removed from $\vlfv_s$, but no further away than a few input scales. This is where the transformed mean for $r$ is liable to differ most from the mean of the transformed variable (and the appropriate $\Delta$ extremised). That is, we would like to select $\vlfv_c$ as points as far away from all points in $\vlfv_s$ as possible, while still remaining within a few input scales. 
-%For convenience, we define the allowable region to be the box defined by the least upper bound of $\vlfv_s$ plus three input scales and the greatest lower bound minus three input scales. 
-Finding $\vlfv_c$ hence requires solving the largest empty sphere problem, which we can solve with the use of a Voronoi diagram \citep{Voronoi, shamos1975closest, okabe1997locational}. 
-Where this requires computation in excess of that afforded by our allowance, we instead construct a \acro{kd}-tree \citep{bentley1975multidimensional} for our $\vlfv_s$, and select $\vlfv_c$ as the centres of the hyper-rectangles defined by the splitting
-hyperplanes of the tree.
+We expect $\Delta(\lfv)$ to be everywhere small relative to the magnitude of $\tr(\phi)$ (see Figure \ref{fig:integrate_hypers}. This implies that
+ $\tr_0$ is close to the peaks of our Gaussian over $\tr$, rendering our linearisation appropriate. 
 
 For future notational convenience, we assume that if we condition on $\psi_0$, we will condition on its functional derivatives. This allows us to write our mean for  $\inty{\lfn}$
 %
@@ -361,23 +349,42 @@ For future notational convenience, we assume that if we condition on $\psi_0$, w
 & \deq \int \mean{\psi[\tr]}{\psi_0,\tr}
 \p{\tr}{\tvr_s}\, \ud \tr 
 \nonumber\\
-& = \mean{\psi[\tr]}{\psi_0,m_{\tr|s}} \nonumber\\
+& = \mean{\psi[m_{\tr|s}]}{\psi_0,m_{\tr|s}} \nonumber\\
 & = \mean{\inty{\lfn}}{\vr_s} + \iint \mean{\lfn(\lfv)}{\vr_s}\,
-\mean{\Delta(\lfv)}{\Delta_c}\,\po{\lfv}\ud\lfv
-\nonumber\\
-& = \mean{\inty{\lfn}}{\vr_s} + \mean{\inty{r \Delta}}{\vr_s, \Delta_c}
-\label{eq:mean_ev}
+\Delta(\lfv)\,\po{\lfv}\ud\lfv
+\label{eq:mean_ev1}
 \end{align}
 
+As with any linearisation approximation, \eqref{eq:mean_ev1} gives the value at the selected point $\tr_0$, plus a correction factor modelling the influence of the first derivatives. This correction factor, 
+$\int \mean{\lfn(\lfv)}{\vr_s}\,
+\Delta(\lfv)\,\po{\lfv}\ud\lfv$,
+contains a further non-analytic integral, due to the $\tr_0$ term within $\Delta$. As such, we perform another stage of Bayesian quadrature by treating $\Delta$ as an unknown function of $\lfv$.
 
+
+For this function we take Gaussian process priors with zero prior mean and Gaussian covariance \eqref{eq:Gaussian_cov_fn}. We must now choose sample points $\vlfv_c$ at which to evaluate our $\Delta$ function. 
+Note that we do not need to evaluate $\lfn(\lfv_c)$ in order to compute $\Delta(\lfv_c)$.
+% Unfortunately, it is impractical to resolve this decision problem in the same manner as the selection of $\vlfvS$, our ultimate goal (a topic that receives our full attention in Section \ref{sec:SBQ})).
+$\vlfv_c$ should firstly include $\vlfv_s$, at which points we know that $\delta$ is equal to zero. Following \cite{BQR}, we select the remainder of $\vlfv_c$  as the  vertices of a Voronoi diagram \citep{okabe1997locational}, where we expect $\delta$ to be extremised. 
+
+Given these samples, we can now marginalise \eqref{eq:mean_ev1} over $\Delta$ to give
+\begin{align}
+ \mean{\inty{\lfn}}{\psi_0,\tvr_s,\Delta_c} =
+\mean{\inty{\lfn}}{\vr_s} + C\,,
+\label{eq:mean_ev2}
+\end{align}
+where the correction factor is
+\begin{align*}
+ C \deq \mean{\inty{\lfn \Delta}}{\vr_s, \Delta_c}\,.
+\end{align*}
+As $\Delta$ is small, we expect $C$ to also be small.
 
 
 \section{Sampling for Bayesian Quadrature}
 
-We aim to select samples $\lfv_s$ so as to minimise the \textit{expected} uncertainty in the evidence after seeing our next sample.  \footnote{We also expect such samples to be useful not just for estimating the evidence, but also for any other related expectations, such as would be required to perform prediction using the model.}
-Surprisingly, the posterior variance of a GP model with fixed hyperparameters does not depend on the function values at sampled locations all all; only the location of those samples matters.  Hence active learning is pointless, and the optimal sampling design can be found in advance \cite{minka2000dqr}.
+We aim to select samples $\lfv_s$ so as to minimise the \textit{expected} uncertainty in the evidence after seeing our next sample.\footnote{We also expect such samples to be useful not just for estimating the evidence, but also for any other related expectations, such as would be required to perform prediction using the model.}
+Surprisingly, the posterior variance of a GP model with fixed hyperparameters does not depend on the function values at sampled locations all all; only the location of those samples matters. Hence active learning is pointless, and the optimal sampling design can be found in advance \cite{minka2000dqr}.
 
-However, because we place our GP model on the log-likelihood, as well as approximately integrate out quadrature lengthscales (see section blah), the location of the samples significantly changes the 
+However, because we place our GP model on the log-likelihood, our variance depends crucially on the values of the log-likelihoods observed. 
 
 \begin{figure}
 \centering
@@ -395,8 +402,10 @@ However, because we place our GP model on the log-likelihood, as well as approxi
 
 The variance in the evidence is
 \begin{align*}
-\cov{\inty{\lfn}}{\tvr_{s}}
-& = \int \inty{\lfn}^2 \p{\inty{\lfn}}{\tvr_s} \ud\inty{\lfn}- \mean{\inty{\lfn}}{\tvr_s}^2\,.
+& \cov{\inty{\lfn}}{\psi_0,\tvr_s,\Delta_c}\\ 
+& = \int \psi^2 \delta{\psi - \mean{\inty{\lfn}}{\psi_0,\tvr_s,\Delta_c}
+\p{\inty{\lfn}}{\tvr_s} \ud\inty{\lfn}\\
+& - \mean{\inty{\lfn}}{\psi_0,\tvr_s,\Delta_c}^2\,.
 \end{align*}
 To resolve the first term, define a new functional
 \begin{align*}
@@ -408,15 +417,15 @@ which we again linearise around $\tr_0$. Hence, as per the above
 & \cov{\inty{\lfn}}{\chi_0,\psi_0,\tvr_{s}} = \mean{\inty{\lfn}^2}{\chi_0,\tvr_s} - \mean{\inty{\lfn}}{\psi_0,\tvr_s}^2
 % & =  (\mean{\inty{\lfn}}{\vr_s})^2 \\
 % & \qquad + 2\mean{\inty{\lfn}}{\vr_s}
-% \bigl(\mean{\inty{r \Delta}}{\vr_s} + \gamma\, \mean{\inty{\Delta}}{\vr_s}\bigr)
+% \bigl(\mean{\inty{\lfn \Delta}}{\vr_s} + \gamma\, \mean{\inty{\Delta}}{\vr_s}\bigr)
 % \\
 % & \qquad - \bigl(
-% \mean{\inty{\lfn}}{\vr_s} + \mean{\inty{r \Delta}}{\vr_s} + \gamma\, \mean{\inty{ \Delta}}{\vr_s}
+% \mean{\inty{\lfn}}{\vr_s} + \mean{\inty{\lfn \Delta}}{\vr_s} + \gamma\, \mean{\inty{ \Delta}}{\vr_s}
 % \bigr)^2
 % & = \mean{\inty{\lfn}}{\vr_s}
-% \bigl(\mean{\inty{r \Delta}}{\vr_s} + \gamma\, \mean{\inty{\Delta}}{\vr_s}\bigr)
+% \bigl(\mean{\inty{\lfn \Delta}}{\vr_s} + \gamma\, \mean{\inty{\Delta}}{\vr_s}\bigr)
 % \\
-% & \qquad - \bigl( \mean{\inty{r \Delta}}{\vr_s} + \gamma\, \mean{\inty{ \Delta}}{\vr_s}
+% & \qquad - \bigl( \mean{\inty{\lfn \Delta}}{\vr_s} + \gamma\, \mean{\inty{ \Delta}}{\vr_s}
 % \bigr)^2
 % \,.
 \end{align*}
@@ -426,7 +435,7 @@ where
 & = \mean{\chi[\tr]}{\chi_0,m_{\tr|s}} \\
 & = (\mean{\inty{\lfn}}{\vr_s})^2 \\
 & \hspace{1cm} + 2\mean{\inty{\lfn}}{\vr_s}
-\bigl(\mean{\inty{r \Delta}}{\vr_s} + \gamma\, \mean{\inty{\Delta}}{\vr_s}\bigr)
+\bigl(\mean{\inty{\lfn \Delta}}{\vr_s} + \gamma\, \mean{\inty{\Delta}}{\vr_s}\bigr)
 \end{align*}
 
 
