@@ -176,4 +176,18 @@ which is identical to \eqref{eq:mean_ev}
 % \end{figure}
 
 
+\section{Modeling Likelihood Functions}
+
+\begin{align}
+& \mean{\inty{\lfn}}{\psi_0,\tvr_s} \nonumber\\
+& \deq \int \mean{\psi[\tr]}{\psi_0,\tr}
+\p{\tr}{\tvr_s}\, \ud \tr 
+\nonumber\\
+& = \mean{\psi[\tr]}{\psi_0,m_{\tr|s}} \nonumber\\
+& = \mean{\inty{\lfn}}{\vr_s} + \iint \bigl(\mean{r(\lfv)}{\vr_s}+\gamma\bigr)\,\Delta(\lfv)\,\po{\lfv}\ud\lfv
+\nonumber\\
+& = \mean{\inty{\lfn}}{\vr_s} + \mean{\inty{r \Delta}}{\vr_s} + \gamma\, \mean{\inty{ \Delta}}{\vr_s}
+\label{eq:mean_ev}
+\end{align}
+
 \end{document} 
