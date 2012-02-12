@@ -19,7 +19,7 @@
 \newlength\fheight  % For tikz figures
 \newlength\fwidth 
 
-% \usepackage[accepted]{icml2012}
+% \usepackage[accepted]{icml2012}¡
 
 % The \icmltitle you define below is probably too long as a header.
 % Therefore, a short form for the running title is supplied here:
@@ -195,7 +195,7 @@ Note that variables over which we have a multivariate Gaussian distribution are 
  =\iint \inty{f}\,\dd{\inty{f}}{\int f(\lfv)\,\po{\lfv}\,\ud\lfv}
 \nonumber\\
 &\hspace{2.5cm}
-\N{f}{\meancondfn{f}{s}}{\covcondfn{f}{s}} \ud \inty{f} \,\ud f \nonumber\\
+\N{f}{\meancondfn{f}{s}}{C_{f|s}} \ud \inty{f} \,\ud f \nonumber\\
 &
  = \int \meancondfn{f}{s}(\lfv)\,\po{\lfv}\,\ud\lfv\nonumber\\
 &
@@ -283,7 +283,7 @@ where $\gamma = (e-1)^{-1}$.  This give better resolution of some numerical issu
 % =\iint \inty{l}\,\p{\inty{l}}{l}\p{l}{\vl_s} \ud \inty{l} \,\ud l                                                                                                                                                               \nonumber\\
 % &
  =\int \Bigl( \int \exp\bigl(\tr(\lfv)\bigr)\lfn(\lfv)\po{\lfv}\,\ud\lfv\Bigr)\\
-\N{\tr}{\meancondfn{\tr}{s}}{\covcondfn{\tr}{s}} \ud \tr
+\N{\tr}{\meancondfn{\tr}{s}}{C_{\tr|s}} \ud \tr
 \end{multline}
 
 Here the exponential ruins the linearity that yielded the analyticity in section \ref{sec:BQ}. To combat this, we perform inference for $\inty{\lfn}$ directly as a functional of $\tr$.
@@ -425,18 +425,15 @@ where the second moment is
 \p{\tr}{\tvr_s}
 \ud\psi \ud\tr\\
 & = \int \mean{\psi[\tr]}{\psi_0}^2
-\N{\tr}{\meancondfn{\tr}{s}}{\covcondfn{\tr}{s}}
+\N{\tr}{\meancondfn{\tr}{s}}{C_{\tr|s}}
  \ud\tr\\
-& = \mean{\inty{\lfn\,C_{\lfn|s}\,\lfn}}{\tvr_s}+
-\bigl(\mean{\inty{\lfn\, \tr}}{\tvr_s}
- \\
-& \hspace{1cm} + 
-\mean{\inty{\lfn}}{\tvr_s} - \mean{\inty{\lfn\, \tr_0}}{\tvr_s}\bigr)^2,
+& = \mean{\inty{\lfn\,C_{\tr|s}\,\lfn}}{\tvr_s}+
+\mean{\inty{\lfn}}{\psi_0,\tvr_s,\Delta_c}^2,
 \end{align*}
 and
 \begin{align*}
-  &\mean{\inty{\lfn\,C_{f|s}\,\lfn}}{\tvr_s} \\ &\deq
- \iint m_{\lfn|s}(\lfv) C_{\lfn|s}(\lfv,\lfv') m_{\lfn|s}(\lfv') \ud \lfv \ud\lfv',
+  &\mean{\inty{\lfn\,C_{\tr|s}\,\lfn}}{\tvr_s} \\ &\deq
+ \iint m_{\lfn|s}(\lfv) C_{\tr|s}(\lfv,\lfv') m_{\lfn|s}(\lfv') \ud \lfv \ud\lfv',
 \end{align*}
 which is expressible in closed form, although space precludes us from doing so.
 
@@ -448,7 +445,7 @@ Consider adding a new sample at $\lfv_a$. The expected variance in our evidence 
 - \int\mean{\inty{\lfn}}{\psi_0,\tvr_{a,s},\Delta_c}^2\nonumber\\
 & \hspace{3.8cm} \p{\tr_a}{\tvr_s}\ud\tr_a\,.\label{eqn:exp_var}
 \end{align}
-The first term is independent of the selection of $\lfv_a$ and hence can be safely ignored. Noting that $\int \exp(c\, z)\, \N{z}{m}{\sigma^2} \ud z = \exp(c\, m + \nicefrac{1}{2}\, c^2 \sigma^2)$, the second term can be resolved analytically for any trial $\lfv_a$ (we omit the laborious details of doing so). With this expression, we now select the $\lfv_a$ that minimises the second term using a numerical optimisation technique. 
+The first term is independent of the selection of $\lfv_a$ and hence can be safely ignored. Noting that $\int \exp(c\, \tr_a)\, \N{\tr_a;m, \sigma^2} \ud\tr_a = \exp(c\, m + \nicefrac{1}{2}\, c^2 \sigma^2)$, the second term can be resolved analytically for any trial $\lfv_a$ (we omit the laborious details of doing so). With this expression, we now select the $\lfv_a$ that minimises the second term using a numerical optimisation technique. 
 
 \section{Marginalising quadrature hyperparameters}
 
@@ -464,7 +461,7 @@ Hitherto, we have taken the maximum likelihood values $m_\theta$ for the quadrat
 Unfortunately, the dependence of our predictions upon these input scales is complex, ruling out analytic results. However, any approximation we make is likely to improve upon our existing assumption that the posterior for all quadrature-hyperparameters is a delta function! Our approach will be to assume that
 \begin{itemize}
  \item that the posterior for $\theta$ is Gaussian with mean equal to the maximum likelihood value $m_\theta$, essentially assuming that our prior is very broad. 
-\item The Gaussian's covariance matrix $C_\theta$ is taken as diagonal. For quadrature hyperparameters other than the input scales, we take the appropriate diagonal elements as infinitesimally small, such that our posterior for these parameters is a delta function. For the the diagonal elements corresponding to $w_r$, we use the Laplace approximation.
+\item The Gaussian's covariance matrix $C_\theta$ is taken as diagonal. For quadrature hyperparameters other than the input scales, we take the appropriate diagonal elements as infinitesimally small, such that our posterior for these parameters is a delta function. For the the diagonal elements corresponding to $w_r$, we use [To be determined]
 %the squared input scales $w_s$ of another \gp, fitted to the likelihood $s(w_r)$ of the input scales $w_r$. \textcolor{red}{[Neat idea, but I can think of simple examples where the lengthscale is short but the mass is spread out; it seems to me that it'd be better to first fit a \gpb, then fit a Gaussian to the \gpb posterior.]}
 \item that our predictions for $\tr_a$ have a mean which is linear in $w_r$ around the maximum likelihood values, and a variance which is essentially constant.  
 \end{itemize}
@@ -529,7 +526,7 @@ We chose a set of problems which would demonstrate the strengths and weakness of
 
 we recreated the hyperparamter integration problem from \citep{BZMonteCarlo}.
 
-\input{tables/integrands.tex}
+[insert table of problem names and descriptions]
 
 \paragraph{Methods}
 
