@@ -235,6 +235,8 @@ Assigning a standard \gpb prior to $\lfn(\lfv)$ would ignore our prior informati
 $\log\left(\nicefrac{\lfn(\lfv)}{\gamma} + 1\right)$
 where $\gamma = (e-1)^{-1}$.  This give better resolution of some numerical issues, and allows us to assume the transformed quantity has zero mean. For the sake of simplicity, we omit this detail in the following derivations.}.
 
+
+
 % \begin{figure}
 % \centering
 % \includegraphics[width=0.48\textwidth]{figures/log_gp_diff.eps}
@@ -389,25 +391,23 @@ Surprisingly, the posterior variance of a \gpb model with fixed hyperparameters 
 
 However, because we place our \gpb model on the log-likelihood, our variance depends crucially on the values of the log-likelihoods observed. We will assume that our integral is jointly Gaussian with the log of the likelihood, meaning that large likelihoods will lead to a large variance for the integral (even holding hyperparameters fixed). Were the integral and likelihood joint Gaussian, as in Section \ref{sec:BQ}, the variance of the integral would be independent of the magnitude of the likelihood observations.
 
-% \begin{figure}
-% \centering
+ \begin{figure}
+ \centering
 % \includegraphics[width=0.48\textwidth]{figures/eue.eps}
-% \caption{An example the expected uncertainty in the evidence after observing the likelihood function at that location.}
-% \label{fig:eue}
-% \end{figure}
-% 
-% \begin{figure}
-% \centering
-% \includegraphics[width=0.48\textwidth]{figures/active_learning.eps}
-% \caption{An example of the posterior over likelihood functions converging as new samples are selected.}
-% \label{fig:active_learning}
-% \end{figure}
+ \caption{An example the expected uncertainty in the evidence after observing the likelihood function at that location.}
+ \label{fig:eue}
+ \end{figure}
+ 
+\begin{figure}
+\centering
+%\includegraphics[width=0.48\textwidth]{figures/active_learning.eps}
+\caption{An example of the posterior over likelihood functions converging as new samples are selected.}
+\label{fig:active_learning}
+\end{figure}
 
 \begin{figure}
 \centering
-\setlength\fheight{4cm}
-\setlength\fwidth{5cm}
-\input{figures/plots/sampleplot_two_spikes_1d.tikz}
+%\psfragfig{figures/plots/sampleplot_two_spikes_1d}
 \caption{An the location of samples chosen by different methods.}
 \label{fig:sample_paths}
 \end{figure}
@@ -454,12 +454,12 @@ The first term is independent of the selection of $\lfv_a$ and hence can be safe
 
 Hitherto, we have taken the maximum likelihood values $m_\theta$ for the quadrature hyperparameters $\theta$ of the quadrature-\gpb used to model the integrand. Once we have very many samples, this approximation seems reasonable: with lots of data, we can be almost certain about the values of the quadrature hyperparameters. However, in the process of taking samples, we'd like to acknowledge the influence new samples may have on our beliefs about the quadrature-hyperparameters. We'd expect this would further promote exploration, particularly early on, so as to firm up our beliefs about the quadrature-hyperparameters. The quadrature-hyperparameters of most interest are the input scales $w_r$; these hyperparameters can have a very dramatic influence on our fit to a function.
 
-% \begin{figure}
-% \centering
-% \includegraphics[width=0.48\textwidth]{figures/integrate_lengthscales.eps}
-% \caption{A demo of the effect of integrating hyperparameters on the marginal posterior variance.}
-% \label{fig:integrate_hypers}
-% \end{figure}
+\begin{figure}
+\centering
+%\includegraphics[width=0.48\textwidth]{figures/int_hypers.eps}
+\caption{A demo of the effect of integrating hyperparameters on the marginal posterior variance.}
+\label{fig:integrate_hypers}
+\end{figure}
 
 Unfortunately, the dependence of our predictions upon these input scales is complex, ruling out analytic results. However, any approximation we make is likely to improve upon our existing assumption that the posterior for all quadrature-hyperparameters is a delta function! Our approach will be to assume that
 \begin{itemize}
@@ -576,40 +576,23 @@ we recreated the hyperparamter integration problem from \citep{BZMonteCarlo}.
 % %\input{tables/truth_prob.tex}
 % %\input{tables/se.tex}
 % 
-% \begin{figure}
-% 	\centering
-% 	\setlength\fheight{4cm} 
-% 	\setlength\fwidth{4cm}
-% 	\input{figures/plots/legend.tikz}
-% \end{figure}
-% 
-% \begin{figure}
-% 	\centering
-% 	\setlength\fheight{4cm} 
-% 	\setlength\fwidth{4cm}
-% 	\input{figures/plots/se_plot_easy_1d.tikz}
-% \end{figure}
-% 
-% %\begin{figure}
-% %	\centering
-% %	\setlength\fheight{4cm} 
-% %	\setlength\fwidth{4cm}
-% %	\input{figures/plots/se_plot_sanity_hard_1d.tikz} 
-% %\end{figure}
-% 
-% %\begin{figure}
-% %	\centering
-% %	\setlength\fheight{4cm} 
-% %	\setlength\fwidth{4cm}
-% %	\input{figures/plots/varplot_sanity_easy_1d.tikz} 
-% %\end{figure}
-% 
-% \begin{figure}
-% 	\centering
-% 	\setlength\fheight{4cm} 
-% 	\setlength\fwidth{4cm}
-% 	\input{figures/plots/varplot_easy_1d.tikz}
-% \end{figure}
+%\begin{figure}
+%	\centering
+%	\psfragfig{figures/plots/legend}
+%\end{figure}
+
+%\begin{figure}
+%	\centering
+%	\psfragfig[width=8cm,height=4cm]{figures/plots/log_of_truth_plot_simple}
+%\end{figure}
+
+%\begin{figure}
+%	\centering
+%	\psfragfig[width=8cm,height=6cm]{figures/plots/varplot_easy_4d}
+%\end{figure}
+
+
+
 
 \section{Discussion}
 
