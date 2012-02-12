@@ -27,7 +27,10 @@
 
 \begin{document} 
 \twocolumn[
-\icmltitle{Sampling for Bayesian Quadrature\\or\\Actively Learning Normalization Constants\\or\\Doubly Bayesian Quadrature: The BBQ Algorithm\\or\\Model-based Estimation of Model Evidences}
+\icmltitle{Model-based Active Learning of Normalization Constants
+\\or\\
+Doubly-Bayesian Quadrature for Estimating Model Evidence}
+%Sampling for Bayesian Quadrature\\or\\Actively Learning Normalization Constants\\or\\Doubly Bayesian Quadrature: The BBQ Algorithm\\or\\
 
 % It is OKAY to include author information, even for blind
 % submissions: the style file will automatically remove it for you
@@ -50,7 +53,7 @@
 
 \begin{abstract} 
 %We describe a novel approach to quadrature for probabilistic integrals, offering a competitor to traditional Monte Carlo methods. We use a Bayesian quadrature framework \citep{BZHermiteQuadrature,BZMonteCarlo}.
-We introduce several innovations making Bayesian Quadrature methods suitable for computing model evidences, or normalization constants.  We demonstrate the many advantages of model-based integration over standard Markov-chain Monte Carlo approaches.  These include: a natural stopping criterion, an estimate of uncertainty in our integral, and the ability to use active learning to select our samples rather than monte carlo methods.
+We introduce several innovations making Bayesian Quadrature methods suitable for computing model evidences, or normalization constants.  We demonstrate the many advantages of model-based integration over standard Markov-chain Monte Carlo approaches.  These include: sample efficiency, a natural stopping criterion, an estimate of uncertainty in our integral, and the ability to use active learning to select our samples rather than monte carlo methods.
 \end{abstract} 
 
 \section{Introduction}
@@ -71,17 +74,15 @@ As well, we compare our BQ approach to standard MCMC techniques on a real scient
 
 \section{Monte Carlo Approaches for Estimating $Z$}
 
-Here, we give a brief overview of the standard methods used for computing normalization constants.  For the remainder of the paper, we will assume that we are able to draw samples from 
+%Here, we give a brief overview of the standard methods used for computing normalization constants.  For the remainder of the paper, we will assume that we are able to draw samples from 
 
 \paragraph*{Simple Monte Carlo} is the simplest monte carlo method.  In this procedure, one generates samples $s_1 \dots s_N$ from the prior distribution.  Then we estimate $Z$ by $$\hat{Z} = \frac{1}{N} \sum_{n=1}^{N} \lfn(s_n).$$  An estimate of the variance of $\hat{Z}$ is given by the standard error of $\lfn({\bf s})$
 
-\paragraph*{Nested Sampling} is not as simple. [TODO: Investigate nested sampling.] \cite{skilling2004nested}
+%\paragraph*{Annealed Importance Sampling} \citep{neal2001annealed} is a popular thermodynamic integration method which 
 
-\paragraph*{Annealed Importance Sampling} is not as simple.
+There exist several other standard methods for computing partition functions, such as annealed importance sampling (AIS) \citep{neal2001annealed}, nested sampling\cite{skilling2004nested} and bridge sampling.  For a review, see \cite{chen2000monte}.  In this paper we 
 
-\citep{neal2001annealed}
-
-One of the main difficulties with using MCMC methods in practice is that, aside from Gibbs sampling, most methods have at least a handful of parameters which are typically set by hand.
+One of the main difficulties with using MCMC methods in practice is that most methods have at least a handful of parameters which are typically set by hand.
 
 \paragraph{Convergence}
 Convergence diagnostics exist to indicate if a Markov chain is failing to 'mix', or explore the entire integrand.  However, these methods are known to have failure modes in which the chain does not mix, however the diagnostics fail to indicate there is a problem \citep{NealMC} [need more citations].
@@ -534,7 +535,7 @@ we recreated the hyperparamter integration problem from \citep{BZMonteCarlo}.
 
 \begin{itemize}
 \item Simple Monte Carlo (SMC)
-\item Annealed Importance Sampling (AIS) - the temperature schedule was linear as in \citep{BZMonteCarlo}, and the proposal width was adjusted to attain approximately 50\% acceptance rate.  Note that this is a bit of extra 'tender loving care'.
+\item Annealed Importance Sampling (AIS).  The inverse temperature schedule was linear as in \citep{BZMonteCarlo}, and the proposal width was adjusted to attain approximately a 50\% acceptance rate.
 \item Bayesian Monte Carlo (BMC) - the algorithm used in \citep{BZMonteCarlo}, in which samples were chosen from a AIS chain.
 \item Sequential Bayesian Quadrature (SBQ)
 \end{itemize}
