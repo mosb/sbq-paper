@@ -22,7 +22,7 @@ scale only axis,
 width=\fwidth,
 height=\fheight,
 axis on top,
-legend entries={SMC,AIS,BMC,SBQ,SBQ GPML,BQ GPML AIS,True value},
+legend entries={SMC,AIS,BMC,SBQ,SBQ GPML,BQ AIS,True value},
 legend style={nodes=right}]
 \end{axis}
 \end{tikzpicture}
