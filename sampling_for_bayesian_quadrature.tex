@@ -289,8 +289,9 @@ Here the exponential ruins the linearity that yielded the analyticity in section
 %
 \begin{align*}
  Z[\tr] \deq \inty{\lfn} & = \int \exp \bigl( \tr(\lfv)\bigr) p(\lfv) \ud \lfv\\
-  						    & = \int \lfn(\lfv) p(\lfv) \ud \lfv\\
-\pderiv{}{\tr(\lfv)}Z[\tr] & = \exp \bigl( \tr(\lfv)\bigr) p(\lfv)  = \lfn(\lfv) p(\lfv)\,.
+  						    %& = \int \lfn(\lfv) p(\lfv) \ud \lfv\\
+\pderiv{}{\tr(\lfv)}Z[\tr] & = \exp \bigl( \tr(\lfv)\bigr) p(\lfv) % = \lfn(\lfv) p(\lfv)
+\,.
 \end{align*}
 
 We now make a \emph{linearisation} approximation\footnote{Note that this linearisation is equivalent to taking another \gpb for $Z$. with the affine covariance
@@ -329,24 +330,22 @@ Z_0 & = Z[\tr_0]
  = \mean{\lfn(\lfv)}{\vr_s}\,\po{\lfv}
 \nonumber
 \end{align*}
-Note that $Z_0$ and its functional derivatives are analytic; our choice of $\tr_0$ permitted us to resolve the necessary integrals.
-
-We now define
+Note that $Z_0$ and its functional derivatives are analytic; our choice of $\tr_0$ permitted us to resolve the necessary integrals. We now define
 \begin{align*}
-\Delta & \deq m_{\tr |s} - \log(m_{r|s}) = m_{\tr |s}  - \tr_0 \,,
+\Delta & \deq m_{\tr |s} - \log(m_{l|s}) = m_{\tr |s}  - \tr_0 \,,
 \end{align*}
 %\textcolor{red}{[You know, until I did the notation change, I never understood that $\Delta$ was defined on the logs, not on the untransformed quantities.]} 
-the difference between the \gpb means over our log-transformed quantities and the transformed \gpb means over original quantities. 
+the difference between the \gpb mean over our log-transformed likelihood and the transformed \gpb mean over the original likelihood. 
 %\textcolor{red}{[I'd like to insert here my figure 2]}. 
 %we have
 %\begin{align}\label{eq:mt_sim_tm}
 %\Delta \simeq 0\,,
 %\end{align}
 %\textcolor{red}{[I found this statement confusing, it looks like we're planning to ignore $\Delta$ instead of giving it a full treatment.]}
-We expect $\Delta(\lfv)$ to be everywhere small relative to the magnitude of $\tr(\phi)$ (see Figure \ref{fig:integrate_hypers}. This implies that
+We expect $\Delta(\lfv)$ to be everywhere small relative to the magnitude of $\tr(\phi)$ (see Figure \ref{fig:integrate_hypers}). This implies that
  $\tr_0$ is close to the peaks of our Gaussian over $\tr$, rendering our linearisation appropriate. 
 
-For future notational convenience, we assume that if we condition on $Z_0$, we will condition on its functional derivatives. This allows us to write our mean for  $\inty{\lfn}$
+For future notational convenience, we assume that if we condition on $Z_0$, we will also condition on its functional derivatives. This allows us to write our mean for  $\inty{\lfn}$
 %
 \begin{align}
 & \mean{\inty{\lfn}}{Z_0,\tvr_s} \nonumber\\
@@ -382,8 +381,79 @@ where the correction factor is
 \end{align*}
 As $\Delta$ is small, we expect $C$ to also be small.
 
+\section{Marginalising quadrature hyperparameters}
 
-\section{Sampling for Bayesian Quadrature}
+Hitherto, we have taken the maximum likelihood values $m_\theta$ for the quadrature hyperparameters $\theta$ of the quadrature-\gpb used to model the integrand. Once we have very many samples, this approximation seems reasonable: with lots of data, we can be almost certain about the values of the quadrature hyperparameters. However, we want to consider actively selecting samples, guided by our beliefs about the integrand: we require this process to be robust even when we have only few samples. 
+
+
+\begin{figure}
+\centering
+\includegraphics[width=0.48\textwidth]{figures/int_hypers.eps}
+\caption{A demo of the effect of integrating hyperparameters on the marginal posterior variance.}
+\label{fig:integrate_hypers}
+\end{figure}
+
+The quadrature-hyperparameters of most interest are the input scales $w_l$; these hyperparameters can have a very dramatic influence on our fit to a function. Unfortunately, the dependence of our predictions upon these input scales is complex, ruling out analytic results. However, any approximation we make is likely to improve upon our existing assumption that the posterior for all quadrature-hyperparameters is a delta function! We make the following assumptions.
+\begin{itemize}
+ \item We assume that the posterior for $\theta$ is Gaussian with mean equal to the maximum likelihood value $m_\theta$, equivalent to assuming that our prior is very broad. 
+\item The Gaussian's covariance matrix $C_\theta$ is taken as diagonal. For quadrature hyperparameters other than the input scales, we take the appropriate diagonal elements as infinitesimally small, such that our posterior for these parameters is a delta function. For the the diagonal elements corresponding to $w_l$, we use a Laplace approximation.
+%the squared input scales $w_s$ of another \gp, fitted to the likelihood $s(w_r)$ of the input scales $w_r$. \textcolor{red}{[Neat idea, but I can think of simple examples where the lengthscale is short but the mass is spread out; it seems to me that it'd be better to first fit a \gpb, then fit a Gaussian to the \gpb posterior.]}
+\item that our predictions for $\tr_a$ have a mean which is linear in $w_r$ around the maximum likelihood values, and a variance which is essentially constant.  
+\end{itemize}
+ 
+The implication of these assumptions is that the posterior mean over our functions remains the same.
+ % David sez: I moved this to the appendix.
+%With these assumptions, we have
+%\begin{align*}
+%& \mean{\inty{\lfn}}{Z_0,\tvr_s} \\
+%& \deq \iint \mean{Z[\tr]}{Z_0,\tr}
+%\p{\tr}{\tvr_s, \theta}\, \p{\theta}{\tvr_s}\ud \tr\,\ud \theta\\
+%& = \iint \mean{Z[\tr]}{Z_0,\tr} \N{\tr}{m_{\tr|s,\theta}}{C_{\tr|s,\theta}}
+%\\
+%& \hspace{5cm}\N{\theta}{m_\theta}{C_\theta}\ud \tr\,\ud \theta
+%\\
+%& \simeq \iint \mean{Z[\tr]}{Z_0,\tr} 
+%\\
+%& \hspace{2cm}\N{\tr}
+%{m_{\tr|s,m_\theta}+\pderiv{m_{\tr|s,\theta}}{\theta}(\theta-m_\theta)}
+%{C_{\tr|s,m_\theta}}
+%\\
+%& \hspace{4cm}
+%\N{\theta}{m_\theta}{C_\theta}\ud \tr\,\ud \theta
+%\\
+%& = \iint \mean{Z[\tr]}{Z_0,\tr} \\
+%& \hspace{1cm}\N{\tr}
+%{m_{\tr|s,m_\theta}}
+%{C_{\tr|s,m_\theta}+\pderiv{m_{\tr|s,\theta}}{\theta}C_\theta\pderiv{m\tra_{\tr|s,\theta}}{\theta}}
+%\ud \tr
+%\\
+%& = \mean{Z[\tr]}{Z_0,m_{\tr|s,m_\theta}}\,,
+%\end{align*}
+%which is identical to \eqref{eq:mean_ev} (note that we had previously just implicitly assumed that $\theta=m_\theta$). 
+However, for the expected variance after adding a sample, we have
+\begin{align}\label{eqn:exp_var_wtheta}
+& \bigl\langle \cov{\inty{\lfn}}{\chi_0,Z_0,\tvr_{s,a}}\mid \chi_0,Z_0,\tvr_{s}\bigr\rangle
+\nonumber\\
+& =  \mean{\chi[\tr]}{\chi_0,m_{\tr|s,m_\theta}}  - 
+\int\mean{\inty{\lfn}}{Z_0,\tvr_{a,s}}^2
+\nonumber\\
+& \hspace{2cm}
+\times\N{\tr_a}
+{\tilde{m}_a }
+{\tilde{C}_a +\pderiv{\tilde{m}_a}{\theta}C_\theta\pderiv{\tilde{m}\tra_a}{\theta}}
+\ud\tr_a\,.
+\end{align}
+where
+\begin{align*}
+\tilde{m}_a & \deq \mean{\tr_a}{\tvr_s,m_\theta}\\
+\tilde{C}_a & \deq \cov{\tr_a}{\tvr_s,m_\theta}\,.
+\end{align*}
+As with \eqref{eqn:exp_var}, \eqref{eqn:exp_var_wtheta} can be evaluated analytically, and minimised to determine the optimal $\lfv_a$.
+Hence our variance for $\tr_a$ has been inflated due to our consideration of the influence of hyperparameters (See Figure \ref{fig:integrate_hypers}), which we expect to promote additional exploration, as desired.
+
+\section{Doubly Bayesian Quadrature}
+
+we'd like to acknowledge the influence new samples may have on our beliefs about the quadrature-hyperparameters. We'd expect this would further promote exploration, particularly early on, so as to firm up our beliefs about the quadrature-hyperparameters. 
 
 We aim to select samples $\lfv_s$ so as to minimise the \textit{expected} uncertainty in the evidence after seeing our next sample.\footnote{We also expect such samples to be useful not just for estimating the evidence, but also for any other related expectations, such as would be required to perform prediction using the model.}
 Surprisingly, the posterior variance of a \gpb model with fixed hyperparameters does not depend on the function values at sampled locations all all; only the location of those samples matters. Hence active learning is pointless, and the optimal sampling design can be found in advance \cite{minka2000dqr}.
@@ -446,74 +516,6 @@ Consider adding a new sample at $\lfv_a$. The expected variance in our evidence 
 \end{align}
 The first term is independent of the selection of $\lfv_a$ and hence can be safely ignored. Noting that $\int \exp(c\, \tr_a)\, \N{\tr_a;m, \sigma^2} \ud\tr_a = \exp(c\, m + \nicefrac{1}{2}\, c^2 \sigma^2)$, the second term can be resolved analytically for any trial $\lfv_a$ (we omit the laborious details of doing so). With this expression, we now select the $\lfv_a$ that minimises the second term using a numerical optimisation technique. 
 
-\section{Marginalising quadrature hyperparameters}
-
-Hitherto, we have taken the maximum likelihood values $m_\theta$ for the quadrature hyperparameters $\theta$ of the quadrature-\gpb used to model the integrand. Once we have very many samples, this approximation seems reasonable: with lots of data, we can be almost certain about the values of the quadrature hyperparameters. However, in the process of taking samples, we'd like to acknowledge the influence new samples may have on our beliefs about the quadrature-hyperparameters. We'd expect this would further promote exploration, particularly early on, so as to firm up our beliefs about the quadrature-hyperparameters. The quadrature-hyperparameters of most interest are the input scales $w_r$; these hyperparameters can have a very dramatic influence on our fit to a function.
-
-\begin{figure}
-\centering
-\includegraphics[width=0.48\textwidth]{figures/int_hypers.eps}
-\caption{A demo of the effect of integrating hyperparameters on the marginal posterior variance.}
-\label{fig:integrate_hypers}
-\end{figure}
-
-Unfortunately, the dependence of our predictions upon these input scales is complex, ruling out analytic results. However, any approximation we make is likely to improve upon our existing assumption that the posterior for all quadrature-hyperparameters is a delta function! Our approach will be to assume that
-\begin{itemize}
- \item that the posterior for $\theta$ is Gaussian with mean equal to the maximum likelihood value $m_\theta$, essentially assuming that our prior is very broad. 
-\item The Gaussian's covariance matrix $C_\theta$ is taken as diagonal. For quadrature hyperparameters other than the input scales, we take the appropriate diagonal elements as infinitesimally small, such that our posterior for these parameters is a delta function. For the the diagonal elements corresponding to $w_r$, we use [To be determined]
-%the squared input scales $w_s$ of another \gp, fitted to the likelihood $s(w_r)$ of the input scales $w_r$. \textcolor{red}{[Neat idea, but I can think of simple examples where the lengthscale is short but the mass is spread out; it seems to me that it'd be better to first fit a \gpb, then fit a Gaussian to the \gpb posterior.]}
-\item that our predictions for $\tr_a$ have a mean which is linear in $w_r$ around the maximum likelihood values, and a variance which is essentially constant.  
-\end{itemize}
- 
-The implication of these assumptions is that the posterior mean over our functions remains the same.
- % David sez: I moved this to the appendix.
-%With these assumptions, we have
-%\begin{align*}
-%& \mean{\inty{\lfn}}{Z_0,\tvr_s} \\
-%& \deq \iint \mean{Z[\tr]}{Z_0,\tr}
-%\p{\tr}{\tvr_s, \theta}\, \p{\theta}{\tvr_s}\ud \tr\,\ud \theta\\
-%& = \iint \mean{Z[\tr]}{Z_0,\tr} \N{\tr}{m_{\tr|s,\theta}}{C_{\tr|s,\theta}}
-%\\
-%& \hspace{5cm}\N{\theta}{m_\theta}{C_\theta}\ud \tr\,\ud \theta
-%\\
-%& \simeq \iint \mean{Z[\tr]}{Z_0,\tr} 
-%\\
-%& \hspace{2cm}\N{\tr}
-%{m_{\tr|s,m_\theta}+\pderiv{m_{\tr|s,\theta}}{\theta}(\theta-m_\theta)}
-%{C_{\tr|s,m_\theta}}
-%\\
-%& \hspace{4cm}
-%\N{\theta}{m_\theta}{C_\theta}\ud \tr\,\ud \theta
-%\\
-%& = \iint \mean{Z[\tr]}{Z_0,\tr} \\
-%& \hspace{1cm}\N{\tr}
-%{m_{\tr|s,m_\theta}}
-%{C_{\tr|s,m_\theta}+\pderiv{m_{\tr|s,\theta}}{\theta}C_\theta\pderiv{m\tra_{\tr|s,\theta}}{\theta}}
-%\ud \tr
-%\\
-%& = \mean{Z[\tr]}{Z_0,m_{\tr|s,m_\theta}}\,,
-%\end{align*}
-%which is identical to \eqref{eq:mean_ev} (note that we had previously just implicitly assumed that $\theta=m_\theta$). 
-However, for the expected variance after adding a sample, we have
-\begin{align}\label{eqn:exp_var_wtheta}
-& \bigl\langle \cov{\inty{\lfn}}{\chi_0,Z_0,\tvr_{s,a}}\mid \chi_0,Z_0,\tvr_{s}\bigr\rangle
-\nonumber\\
-& =  \mean{\chi[\tr]}{\chi_0,m_{\tr|s,m_\theta}}  - 
-\int\mean{\inty{\lfn}}{Z_0,\tvr_{a,s}}^2
-\nonumber\\
-& \hspace{2cm}
-\times\N{\tr_a}
-{\tilde{m}_a }
-{\tilde{C}_a +\pderiv{\tilde{m}_a}{\theta}C_\theta\pderiv{\tilde{m}\tra_a}{\theta}}
-\ud\tr_a\,.
-\end{align}
-where
-\begin{align*}
-\tilde{m}_a & \deq \mean{\tr_a}{\tvr_s,m_\theta}\\
-\tilde{C}_a & \deq \cov{\tr_a}{\tvr_s,m_\theta}\,.
-\end{align*}
-As with \eqref{eqn:exp_var}, \eqref{eqn:exp_var_wtheta} can be evaluated analytically, and minimised to determine the optimal $\lfv_a$.
-Hence our variance for $\tr_a$ has been inflated due to our consideration of the influence of hyperparameters (See Figure \ref{fig:integrate_hypers}), which we expect to promote additional exploration, as desired.
 
 \section{Experiments}
 
