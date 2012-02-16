@@ -91,12 +91,12 @@ Convergence diagnostics exist to indicate if a Markov chain is failing to 'mix',
 
 [Note: I plan to merge this section with one of the two following sections, I'm just not sure which one yet] An alternative approach to evaluating $Z$ is to posit a distribution over likelihood functions, and update that distribution based on information observed about the likelihood function.
 
-% \begin{figure}
-% \centering
-% %\includegraphics[width=0.48\textwidth]{figures/log_gp_diff.eps}
-% \caption{An illustration of model-based integration, or Bayesian Quadrature.  We compute the expected are underneath Gaussian process posterior, conditioned on sampled values of the true likelihood function.  Obtaining samples about uncertain regions allows us to reduce our uncertainty about the area under the function.  }
-% \label{fig:model_based}
-% \end{figure}
+ \begin{figure}
+ \centering
+% \includegraphics[width=0.48\textwidth]{figures/log_gp_diff.eps}
+ \caption{An illustration of model-based integration, or Bayesian Quadrature.  We compute the expected are underneath Gaussian process posterior, conditioned on sampled values of the true likelihood function.  Obtaining samples about uncertain regions allows us to reduce our uncertainty about the area under the function.  }
+ \label{fig:model_based}
+ \end{figure}
 
 Using a model-based approach, the issue of convergence is solved naturally:  Our posterior variance over $Z$ indicates our remaining uncertainty about the quantity we care about.  This statistic is typically only reliable if we are able to integrate over all unknown quantities.  This is typically intractable, however by approximately integrating out lengthscales in section ?? we go some ways towards fixing this problem.  The results in section ?? indicate that our posterior variance is reasonably well-calibrated.
 
@@ -224,12 +224,13 @@ In the following three sections, we will expand upon the improvements this paper
 We wish to evaluate the evidence $\inty{\lfn} = \int \lfn(\lfv) p(\lfv) \ud\lfv$, an integral over non-negative likelihoods, $\lfn(\lfv)$, whose arguments are the parameters of the relevant model.
 
 
-% \begin{figure}
-% \centering
-% %\includegraphics[width=0.48\textwidth]{figures/log_gp_diff.eps}
-% \caption{The lengthscale of a \gpb fitted to the log-likelihood function will typically be much longer than that of a \gpb fit to the likelihood function.  A \gpb with a long lengthscale will generalize better to distant parts of the function, and will have a posterior more concentrated around the true evidence. }
-% \label{fig:log_is_better}
-% \end{figure}
+ \begin{figure}
+ \centering
+ \includegraphics[width=0.2\textwidth]{figures/gp_un.eps}
+  \includegraphics[width=0.2\textwidth]{figures/gp_log.eps}
+ \caption{The lengthscale of a \gpb fitted to the log-likelihood function will typically be much longer than that of a \gpb fit to the likelihood function.  A \gpb with a long lengthscale will generalize better to distant parts of the function, and will have a posterior more concentrated around the true evidence. }
+ \label{fig:log_is_better}
+ \end{figure}
 
 Assigning a standard \gpb prior to $\lfn(\lfv)$ would ignore our prior information about the range and non-negativity of $\lfn(\lfv)$, leading to pathologies such as a negative evidence (as observed in \citet{BZMonteCarlo}).  A much better prior would be a \gpb prior on $\log(\lfn(x))$.  However, the integral under the exp of a \gpb is intractable.  In this section, we apply the approximate inference method of \citep{BQR} to tractably integrate under a log-\gpb prior\footnote{In practice, we use the transform 
 $\log\left(\nicefrac{\lfn(\lfv)}{\gamma} + 1\right)$
@@ -237,12 +238,12 @@ where $\gamma = (e-1)^{-1}$.  This give better resolution of some numerical issu
 
 
 
-% \begin{figure}
-% \centering
-% \includegraphics[width=0.48\textwidth]{figures/log_gp_diff.eps}
-% \caption{An illustration of our method of finding the integral under the exp of a Gaussian process. For all \gp s, we plot only the relevant posterior means.}
-% \label{fig:integrate_hypers}
-% \end{figure}
+ \begin{figure}
+ \centering
+ \includegraphics[width=0.48\textwidth]{figures/log_gp_diff.eps}
+ \caption{An illustration of our method of finding the integral under the exp of a Gaussian process. For all \gp s, we plot only the relevant posterior means.}
+ \label{fig:integrate_hypers}
+ \end{figure}
 
 %Firstly, we define the transformation
 %\begin{align*}
@@ -393,21 +394,21 @@ However, because we place our \gpb model on the log-likelihood, our variance dep
 
  \begin{figure}
  \centering
-% \includegraphics[width=0.48\textwidth]{figures/eue.eps}
+ \includegraphics[width=0.48\textwidth]{figures/eue.eps}
  \caption{An example the expected uncertainty in the evidence after observing the likelihood function at that location.}
  \label{fig:eue}
  \end{figure}
  
 \begin{figure}
 \centering
-%\includegraphics[width=0.48\textwidth]{figures/active_learning.eps}
+\includegraphics[width=0.48\textwidth]{figures/active_learning.eps}
 \caption{An example of the posterior over likelihood functions converging as new samples are selected.}
 \label{fig:active_learning}
 \end{figure}
 
 \begin{figure}
 \centering
-%\psfragfig{figures/plots/sampleplot_two_spikes_1d}
+\psfragfig{figures/plots/sampleplot_two_spikes_1d}
 \caption{An the location of samples chosen by different methods.}
 \label{fig:sample_paths}
 \end{figure}
@@ -453,7 +454,7 @@ Hitherto, we have taken the maximum likelihood values $m_\theta$ for the quadrat
 
 \begin{figure}
 \centering
-%\includegraphics[width=0.48\textwidth]{figures/int_hypers.eps}
+\includegraphics[width=0.48\textwidth]{figures/int_hypers.eps}
 \caption{A demo of the effect of integrating hyperparameters on the marginal posterior variance.}
 \label{fig:integrate_hypers}
 \end{figure}
@@ -539,25 +540,16 @@ we recreated the hyperparamter integration problem from \citep{BZMonteCarlo}.
 
 \paragraph{Evaluation}
 
-% \begin{figure}
-% \centering
-% \begin{tabular}{ccc}
-% 	\hspace{-.5cm}
-% 	\setlength\fheight{2cm} 
-% 	\setlength\fwidth{2cm}
-% 	\input{figures/integrands/easy_1d.tikz} &
-% 	\hspace{-.5cm}
-% 	\setlength\fheight{2cm} 
-% 	\setlength\fwidth{2cm}
-% 	\input{figures/integrands/bumpy_1d_exp.tikz} 
-% 	\hspace{-.5cm}	
-% 	\setlength\fheight{2cm} 
-% 	\setlength\fwidth{2cm}
-% 	\input{figures/integrands/two_humps_1d.tikz}
-% \end{tabular}
-% \caption{The one-dimensional integrands in our test suite.  Green lines are priors, blue lines likelihoods, and red lines are posteriors.}
-% \label{fig:1d_problems}
-% \end{figure}
+ \begin{figure}
+ \centering
+ \begin{tabular}{ccc}
+ 	\psfragfig{figures/integrands/easy_1d} &
+ 	\psfragfig{figures/integrands/bumpy_1d} 
+ 	\psfragfig{figures/integrands/two_spikes_1d}
+ \end{tabular}
+ \caption{The one-dimensional integrands in our test suite.  Green lines are priors, blue lines likelihoods, and red lines are posteriors.}
+ \label{fig:1d_problems}
+ \end{figure}
 % 
 % %\begin{figure}
 % %\centering
@@ -570,23 +562,23 @@ we recreated the hyperparamter integration problem from \citep{BZMonteCarlo}.
 % %    \input{tables/times_taken.tex}
 % %\end{minipage}
 % 
-% %\input{tables/truth_prob.tex}
-% %\input{tables/se.tex}
+\input{tables/truth_prob.tex}
+\input{tables/se.tex}
 % 
-%\begin{figure}
-%	\centering
-%	\psfragfig{figures/plots/legend}
-%\end{figure}
+\begin{figure}
+	\centering
+	\psfragfig[width=4cm]{figures/plots/legend}
+\end{figure}
 
-%\begin{figure}
-%	\centering
-%	\psfragfig[width=8cm,height=4cm]{figures/plots/log_of_truth_plot_simple}
-%\end{figure}
+\begin{figure}
+	\centering
+	\psfragfig[width=8cm,height=4cm]{figures/plots/log_of_truth_plot_simple}
+\end{figure}
 
-%\begin{figure}
-%	\centering
-%	\psfragfig[width=8cm,height=6cm]{figures/plots/varplot_easy_4d}
-%\end{figure}
+\begin{figure}
+	\centering
+	\psfragfig[width=8cm,height=6cm]{figures/plots/varplot_easy_4d}
+\end{figure}
 
 
 
