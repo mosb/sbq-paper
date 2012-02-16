@@ -27,9 +27,8 @@
 
 \begin{document} 
 \twocolumn[
-\icmltitle{Model-based Active Learning of Normalization Constants
-\\or\\
-Doubly-Bayesian Quadrature for Estimating Model Evidence}
+\icmltitle{
+Doubly-Bayesian Quadrature for Active Learning of Model Evidence}
 %Sampling for Bayesian Quadrature\\or\\Actively Learning Normalization Constants\\or\\Doubly Bayesian Quadrature: The BBQ Algorithm\\or\\
 
 % It is OKAY to include author information, even for blind
@@ -62,34 +61,31 @@ Training or evaluating any probabilistic model typically requires an integration
 
 These randomized methods estimate the model evidence $Z$ given the value of the integrand on a set of sample points.  The number of points sampled is limited in size by the computational expense of evaluating the integrand. As discussed in \citep{MCUnsound}, traditional Monte Carlo integration techniques do not make the best possible use of this valuable information. An alternative is found in Bayesian quadrature (\acro{bq}) \citep{BZHermiteQuadrature}, a method which uses function samples within a Gaussian process model to compute a closed-formed posterior over the value of the integral.
 
-Bayesian Quadrature has previously been used to infer model evidence, \citep{BZMonteCarlo}.  However the approach used there suffered from 3 difficulties which are overcome in this paper: 
-\begin{itemize}
-\item In previous work, the \gpb prior used was inappropriate prior for likelihood functions, which are strictly positive and have a high dynamic range.  We introduce tractable approximate inference under a log-\gp.
+Bayesian Quadrature has previously been used to infer model evidence, \citep{BZMonteCarlo}.  However the approach used there suffered from three difficulties which are overcome in this paper: 
 
-\item Previously, uncertainty in the quadrature hyperparameters was ignored, leading to pathologies.  We introduce a tractable approximation which accounts for uncertainty in hyperparameter values.  
+\paragraph*{Log-prior:} Previous work used a \gpb prior inappropriate for likelihood functions, which are strictly positive and have a high dynamic range.  We introduce tractable approximate inference under a log-\gp.
 
-\item In \citep{BZMonteCarlo}, sample points were chosen using a Markov Chain.  We demonstrate how to actively choose function samples in order to minimize the uncertainty in our integral.
-\end{itemize}
+\paragraph*{Hyperparameter Marginalisation:} Uncertainty in the quadrature hyperparameters has previously been ignored, leading to pathologies.  We introduce a tractable approximation which accounts for uncertainty in hyperparameter values.  
+
+\paragraph*{Active Sampling:} In \citep{BZMonteCarlo}, sample points were chosen using a Markov Chain.  We demonstrate how to actively choose function samples in order to minimize the uncertainty in our integral.
+
 As well, we compare our \acro{bq} approach to standard \acro{mcmc} techniques on a real scientific problem, where we demonstrate one of the key advantages of \acro{bq}: a closed-form expression for the posterior uncertainty in our integral provides a natural stopping criterion for approximate inference.
 
-\section{Monte Carlo Approaches for Estimating Model Evidence}
+\section{Estimating Model Evidence}
 
 %Here, we give a brief overview of the standard methods used for computing normalization constants.  For the remainder of the paper, we will assume that we are able to draw samples from 
 
-\paragraph*{Simple Monte Carlo} is the simplest monte carlo method.  In this procedure, one generates samples $s_1 \dots s_N$ from the prior distribution.  Then we estimate $Z$ by $$\hat{Z} = \frac{1}{N} \sum_{n=1}^{N} \lfn(s_n).$$  An estimate of the variance of $\hat{Z}$ is given by the standard error of $\lfn({\bf s})$.
+Simple Monte Carlo is the simplest Monte Carlo method.  In this procedure, one generates samples $s_1 \dots s_N$ from the prior distribution.  Then we estimate $Z$ by $$\hat{Z} = \frac{1}{N} \sum_{n=1}^{N} \lfn(s_n).$$  An estimate of the variance of $\hat{Z}$ is given by the standard error of $\lfn({\bf s})$.
 
 %\paragraph*{Annealed Importance Sampling} \citep{neal2001annealed} is a popular thermodynamic integration method which 
 
-There exist several other standard methods for computing partition functions, such as annealed importance sampling (AIS) \citep{neal2001annealed}, nested sampling\cite{skilling2004nested} and bridge sampling.  For a review, see \cite{chen2000monte}.  In this paper we 
+There exist several other standard methods for computing partition functions, such as annealed importance sampling (\acro{ais}) \citep{neal2001annealed}, nested sampling\cite{skilling2004nested} and bridge sampling.  For a review, see \cite{chen2000monte}.  In this paper we 
 
-One of the main difficulties with using MCMC methods in practice is that most methods have at least a handful of parameters which are typically set by hand.
+One of the main difficulties with using \acro{mcmc} methods in practice is that most methods have at least a handful of parameters which are typically set by hand.
 
-\paragraph{Convergence}
 Convergence diagnostics exist to indicate if a Markov chain is failing to 'mix', or explore the entire integrand.  However, these methods are known to have failure modes in which the chain does not mix, however the diagnostics fail to indicate there is a problem \citep{NealMC} [need more citations].
 
-\section{Model-Based Integration}
-
-[Note: I plan to merge this section with one of the two following sections, I'm just not sure which one yet] An alternative approach to evaluating $Z$ is to posit a distribution over likelihood functions, and update that distribution based on information observed about the likelihood function.
+An alternative approach to evaluating $Z$ is to posit a distribution over likelihood functions, and update that distribution based on information observed about the likelihood function.
 
  \begin{figure}
  \centering
@@ -98,7 +94,7 @@ Convergence diagnostics exist to indicate if a Markov chain is failing to 'mix',
  \label{fig:model_based}
  \end{figure}
 
-Using a model-based approach, the issue of convergence is solved naturally:  Our posterior variance over $Z$ indicates our remaining uncertainty about the quantity we care about.  This statistic is typically only reliable if we are able to integrate over all unknown quantities.  This is typically intractable, however by approximately integrating out lengthscales in section ?? we go some ways towards fixing this problem.  The results in section ?? indicate that our posterior variance is reasonably well-calibrated.
+Using a model-based approach, the issue of convergence is solved naturally:  our posterior variance over $Z$ indicates our remaining uncertainty about the quantity we care about.  This statistic is typically only reliable if we are able to integrate over all unknown quantities.  This is typically intractable, however by approximately integrating out lengthscales in section ?? we go some ways towards fixing this problem.  The results in section ?? indicate that our posterior variance is reasonably well-calibrated.
 
 Having a reliable indicator that our estimate has converged to the truth is vital. [We need to stress this more in the intro and conclusion]
 
@@ -166,7 +162,7 @@ We'll assume we are integrating with respect to a Gaussian prior
 \end{align}
 although other convenient forms, or, if necessary, the use of an importance re-weighting trick, allow any other integral to be approximated. If $\lfv$ is a vector, $\nu_{\lfv}$ is a  vector of identical size, and $\lambda_{\lfv}$ an appropriate covariance matrix.
 
-%\textcolor{red}{[I'm hoping to re-write the next two paragraphs; it's way too indirect, and I think the philosophical foundations of MCMC are a poor avenue of attack]}
+%\textcolor{red}{[I'm hoping to re-write the next two paragraphs; it's way too indirect, and I think the philosophical foundations of \acro{mcmc} are a poor avenue of attack]}
 Quadrature involves evaluating $f(\lfv)$ at a vector of sample points $\vlfv_s$, giving $\vf\pha_s\deq f(\vlfv_s)$. Often this evaluation is computationally expensive; the consequent sparsity of our samples introduces uncertainty about the function $f$ between them, and hence uncertainty about the integral $\inty{f}$.
 
 %As ever in the face of uncertainty, we address the estimation of the value of our integral as a problem of Bayesian inference \citep{BZNumericalAnalysis}. 
@@ -212,12 +208,12 @@ where for $\lfv_i \in \vlfv_s$,
 \end{align*}
 %
 %Note that the form of our `best estimate' for $\inty{f}$, \eqref{eq:mean_inty_f}, is an affine combination of the samples $\vf_s$, just as for traditional quadrature or Monte Carlo techniques. 
-% Indeed, if $\mu_f$ is taken as the mean of $\vf_s$ (as is usual for \gpb inference), the second term in \eqref{eq:mean_inty_f} can be viewed as a correction factor to the Monte Carlo estimate \eqref{eq:MC_integral_estimate}. \textcolor{red}{[Since we're using a different sampling strategy than MCMC in this paper, I think the preceeding statement is kind of misleading / confusing...]}
+% Indeed, if $\mu_f$ is taken as the mean of $\vf_s$ (as is usual for \gpb inference), the second term in \eqref{eq:mean_inty_f} can be viewed as a correction factor to the Monte Carlo estimate \eqref{eq:MC_integral_estimate}. \textcolor{red}{[Since we're using a different sampling strategy than \acro{mcmc} in this paper, I think the preceeding statement is kind of misleading / confusing...]}
 % \sout{Note also that $h_f$ represents a simple multiplicative factor to both $\ntT{s}{f}$ and $K_{f}\bigl(\vlfv_s,\vlfv_s\bigr)$, and as such cancels out of \eqref{eq:mean_inty_f}.} 
 %
 Similarly, we can compute the means for integrals over multiple terms. In the following three sections, we will expand upon the improvements this paper introduces in the use of Bayesian Quadrature for computing model evidences.
 
-\section{Modeling Likelihood Functions}
+\section{Modeling Likelihood Functions}\label{sec:model_lik}
 
 We wish to evaluate the evidence $Z = \inty{\lfn} = \int \lfn(\lfv) p(\lfv) \ud\lfv$, an integral over non-negative likelihoods, $\lfn(\lfv)$, whose arguments are the parameters of the relevant model.
 
@@ -379,11 +375,38 @@ where the correction factor is
 \begin{align*}
  \corrn \deq \mean{\inty{\lfn \Delta}}{\vr_s, \Delta_c}\,.
 \end{align*}
-As $\Delta$ is small, we expect $C$ to also be small.
+As $\Delta$ is small, we expect $C$ to also be small. 
+
+The variance in the evidence is
+\begin{align*}
+& \cov{\inty{\lfn}}{Z_0,\tvr_s,\Delta_c}\\ 
+& = \secm{\inty{\lfn}}{Z_0,\tvr_s} - \mean{\inty{\lfn}}{Z_0,\tvr_s,\Delta_c}^2\,,
+\end{align*}
+where the second moment is 
+\begin{align*}
+& \secm{\inty{\lfn}}{Z_0,\tvr_s}  \\
+& \deq \int Z^2 
+\delta\bigl(Z - \mean{Z[\tr]}{Z_0}\bigr)
+\p{\tr}{\tvr_s}
+\ud Z \ud\tr\\
+& = \int \mean{Z[\tr]}{Z_0}^2
+\N{\tr}{\meancondfn{\tr}{s}}{C_{\tr|s}}
+ \ud\tr\\
+& = \mean{\inty{\lfn\,C_{\tr|s}\,\lfn}}{\tvr_s}+
+\mean{\inty{\lfn}}{Z_0,\tvr_s,\Delta_c}^2,
+\end{align*}
+and hence 
+\begin{align*}
+  &\cov{\inty{\lfn}}{Z_0,\tvr_s,\Delta_c} = \mean{\inty{\lfn\,C_{\tr|s}\,\lfn}}{\tvr_s} \\ 
+& \deq
+ \iint m_{\lfn|s}(\lfv) m_{\lfn|s}(\lfv') C_{\tr|s}(\lfv,\lfv')  p(x) p(x') \ud \lfv \ud\lfv',
+\end{align*}
+which is expressible in closed form, although space precludes us from doing so.
+
 
 \section{Marginalising quadrature hyperparameters}
 
-Hitherto, we have taken the maximum likelihood values $m_\theta$ for the quadrature hyperparameters $\theta$ of the quadrature-\gpb used to model the integrand. Once we have very many samples, this approximation seems reasonable: with lots of data, we can be almost certain about the values of the quadrature hyperparameters. However, we want to consider actively selecting samples, guided by our beliefs about the integrand: we require this process to be robust even when we have only few samples. 
+Hitherto, we have taken the maximum likelihood values $m_\theta$ for the quadrature hyperparameters $\theta$ of the \gpb used to model the integrand, $\tr$. Once we have very many samples, this approximation seems reasonable: with lots of data, we can be almost certain about the values of the quadrature hyperparameters. However, we want to consider actively selecting samples, guided by our beliefs about the integrand: we require this process to be robust even when we have only few samples. 
 
 
 \begin{figure}
@@ -393,15 +416,18 @@ Hitherto, we have taken the maximum likelihood values $m_\theta$ for the quadrat
 \label{fig:integrate_hypers}
 \end{figure}
 
-The quadrature-hyperparameters of most interest are the input scales $w_l$; these hyperparameters can have a very dramatic influence on our fit to a function. Unfortunately, the dependence of our predictions upon these input scales is complex, ruling out analytic results. However, any approximation we make is likely to improve upon our existing assumption that the posterior for all quadrature-hyperparameters is a delta function! We make the following assumptions.
-\begin{itemize}
- \item We assume that the posterior for $\theta$ is Gaussian with mean equal to the maximum likelihood value $m_\theta$, equivalent to assuming that our prior is very broad. 
-\item The Gaussian's covariance matrix $C_\theta$ is taken as diagonal. For quadrature hyperparameters other than the input scales, we take the appropriate diagonal elements as infinitesimally small, such that our posterior for these parameters is a delta function. For the the diagonal elements corresponding to $w_l$, we use a Laplace approximation.
+The hyperparameters of most interest are the input scales $w_\tr$; these hyperparameters can have a very dramatic influence on our fit to a function. Unfortunately, the dependence of our predictions upon these input scales is complex, ruling out analytic results. However, any approximation we make is likely to improve upon our existing assumption that the posterior for all hyperparameters is a delta function! We make the following assumptions.
+
+ \paragraph*{Flat prior} We assume that the prior for $\theta$ is very broad, so that our posterior is a simple scaling of the likelihood. 
+\paragraph*{Laplace approximation:} The likelihood  is taken as Gaussian with mean equal to the maximum likelihood value $m_\theta$, and with diagonal covariance matrix $C_\theta$. For quadrature hyperparameters other than the input scales, we take the appropriate diagonal elements as infinitesimally small, such that our posterior for these parameters is a delta function. The diagonal elements corresponding to $w_\tr$ are fitted using the Hessian of the likelihood.
 %the squared input scales $w_s$ of another \gp, fitted to the likelihood $s(w_r)$ of the input scales $w_r$. \textcolor{red}{[Neat idea, but I can think of simple examples where the lengthscale is short but the mass is spread out; it seems to me that it'd be better to first fit a \gpb, then fit a Gaussian to the \gpb posterior.]}
-\item that our predictions for $\tr_a$ have a mean which is linear in $w_r$ around the maximum likelihood values, and a variance which is essentially constant.  
-\end{itemize}
+\paragraph*{Affine GP mean:} Our predictions for $\tr$ are assumed to have a \gpb mean which is affine in $w_\tr$ around the maximum likelihood values, and a constant variance.  
+
  
-The implication of these assumptions is that the posterior mean over our functions remains the same.
+The implication of these assumptions is that the posterior mean over $\tr$ remains the same. However, the posterior variance is inflated by an additive factor
+$
+(\npderiv{m_{\tr|s}}{\theta})\,C_\theta\,(\npderiv{m\tra_{\tr|s}}{\theta})
+$. 
  % David sez: I moved this to the appendix.
 %With these assumptions, we have
 %\begin{align*}
@@ -430,35 +456,24 @@ The implication of these assumptions is that the posterior mean over our functio
 %& = \mean{Z[\tr]}{Z_0,m_{\tr|s,m_\theta}}\,,
 %\end{align*}
 %which is identical to \eqref{eq:mean_ev} (note that we had previously just implicitly assumed that $\theta=m_\theta$). 
-However, for the expected variance after adding a sample, we have
-\begin{align}\label{eqn:exp_var_wtheta}
-& \bigl\langle \cov{\inty{\lfn}}{\chi_0,Z_0,\tvr_{s,a}}\mid \chi_0,Z_0,\tvr_{s}\bigr\rangle
-\nonumber\\
-& =  \mean{\chi[\tr]}{\chi_0,m_{\tr|s,m_\theta}}  - 
-\int\mean{\inty{\lfn}}{Z_0,\tvr_{a,s}}^2
-\nonumber\\
-& \hspace{2cm}
-\times\N{\tr_a}
-{\tilde{m}_a }
-{\tilde{C}_a +\pderiv{\tilde{m}_a}{\theta}C_\theta\pderiv{\tilde{m}\tra_a}{\theta}}
-\ud\tr_a\,.
-\end{align}
-where
+This implies that our posterior mean for $Z$ is unchanged, and the variance becomes
 \begin{align*}
-\tilde{m}_a & \deq \mean{\tr_a}{\tvr_s,m_\theta}\\
-\tilde{C}_a & \deq \cov{\tr_a}{\tvr_s,m_\theta}\,.
+  &\cov{\inty{\lfn}}{Z_0,\tvr_s,\Delta_c}=
+ \iint m_{\lfn|s}(\lfv)\, m_{\lfn|s}(\lfv')\\
+&  
+\hspace{0.5cm}\biggl(C_{\tr|s}(\lfv,\lfv') + \pderiv{m_{\tr|s}}{\theta}\,C_\theta\,\pderiv{m\tra_{\tr|s}}{\theta}\biggr)
+ \ud \lfv \ud\lfv',
 \end{align*}
-As with \eqref{eqn:exp_var}, \eqref{eqn:exp_var_wtheta} can be evaluated analytically, and minimised to determine the optimal $\lfv_a$.
-Hence our variance for $\tr_a$ has been inflated due to our consideration of the influence of hyperparameters (See Figure \ref{fig:integrate_hypers}), which we expect to promote additional exploration, as desired.
+which is again possible, although laborious, to express analytically.
+
+
 
 \section{Doubly Bayesian Quadrature}
 
-we'd like to acknowledge the influence new samples may have on our beliefs about the quadrature-hyperparameters. We'd expect this would further promote exploration, particularly early on, so as to firm up our beliefs about the quadrature-hyperparameters. 
-
 We aim to select samples $\lfv_s$ so as to minimise the \textit{expected} uncertainty in the evidence after seeing our next sample.\footnote{We also expect such samples to be useful not just for estimating the evidence, but also for any other related expectations, such as would be required to perform prediction using the model.}
-Surprisingly, the posterior variance of a \gpb model with fixed hyperparameters does not depend on the function values at sampled locations all all; only the location of those samples matters. Hence active learning is pointless, and the optimal sampling design can be found in advance \cite{minka2000dqr}.
+Surprisingly, the posterior variance of a \gpb model with fixed hyperparameters does not depend on the function values at sampled locations all all; only the location of those samples matters. The evidence is a simple affine transformation of the likelihood, which traditional Bayesian quadrature takes models with a \gpb; hence its estimate for the variance in the evidence is likewise independent of likelihood values. Hence active learning is pointless, and the optimal sampling design can be found in advance \cite{minka2000dqr}.
 
-However, because we place our \gpb model on the log-likelihood, our variance depends crucially on the values of the log-likelihoods observed. We will assume that our integral is jointly Gaussian with the log of the likelihood, meaning that large likelihoods will lead to a large variance for the integral (even holding hyperparameters fixed). Were the integral and likelihood joint Gaussian, as in Section \ref{sec:BQ}, the variance of the integral would be independent of the magnitude of the likelihood observations.
+In Section \ref{sec:model_lik}, we took the integral as the affine transform of the log-likelihood, which we model with a \gpb. As the affine transformation itself depends on the function values (see \eqref{eq:linearisation}), active learning is now desirable. Our uncertainty over the hyperparameters of the \gpb further motivates active learning: without assuming \textit{a priori} knowledge of the hyperparameters, we can't evaluate the \gpb to compute a sampling schedule beforehand. Our approximate marginalisation of hyperparameters permits us an approach to active sampling that acknowledges the influence new samples may have on our beliefs about the hyperparameters. We'd expect this would further promote exploration, particularly early on, so as to firm up our beliefs about the hyperparameters. 
 
  \begin{figure}
  \centering
@@ -481,45 +496,33 @@ However, because we place our \gpb model on the log-likelihood, our variance dep
 \label{fig:sample_paths}
 \end{figure}
 
-The variance in the evidence is
-\begin{align*}
-& \cov{\inty{\lfn}}{Z_0,\tvr_s,\Delta_c}\\ 
-& = \secm{\inty{\lfn}}{Z_0,\tvr_s} - \mean{\inty{\lfn}}{Z_0,\tvr_s,\Delta_c}^2\,,
-\end{align*}
-where the second moment is 
-\begin{align*}
-& \secm{\inty{\lfn}}{Z_0,\tvr_s}  \\
-& \deq \int Z^2 
-\delta\bigl(Z - \mean{Z[\tr]}{Z_0}\bigr)
-\p{\tr}{\tvr_s}
-\ud Z \ud\tr\\
-& = \int \mean{Z[\tr]}{Z_0}^2
-\N{\tr}{\meancondfn{\tr}{s}}{C_{\tr|s}}
- \ud\tr\\
-& = \mean{\inty{\lfn\,C_{\tr|s}\,\lfn}}{\tvr_s}+
-\mean{\inty{\lfn}}{Z_0,\tvr_s,\Delta_c}^2,
-\end{align*}
-and
-\begin{align*}
-  &\mean{\inty{\lfn\,C_{\tr|s}\,\lfn}}{\tvr_s} \\ &\deq
- \iint m_{\lfn|s}(\lfv) C_{\tr|s}(\lfv,\lfv') m_{\lfn|s}(\lfv') \ud \lfv \ud\lfv',
-\end{align*}
-which is expressible in closed form, although space precludes us from doing so.
-
 Consider adding a new sample at $\lfv_a$. The expected variance in our evidence after doing so is
 \begin{align}
 &\bigl\langle \cov{\inty{\lfn}}{Z_0,\tvr_{s,a}}\mid Z_0,\tvr_{s}\bigr\rangle 
 \nonumber\\
-& = \secm{\inty{\lfn}}{Z_0,\tvr_s} 
-- \int\mean{\inty{\lfn}}{Z_0,\tvr_{a,s},\Delta_c}^2\nonumber\\
-& \hspace{3.8cm} \p{\tr_a}{\tvr_s}\ud\tr_a\,.\label{eqn:exp_var}
+% & = \secm{\inty{\lfn}}{Z_0,\tvr_s} 
+% - \int\mean{\inty{\lfn}}{Z_0,\tvr_{a,s},\Delta_c}^2\nonumber\\
+% & \hspace{3.8cm} \p{\tr_a}{\tvr_s}\ud\tr_a\,.\nonumber\\
+ & = \secm{\inty{\lfn}}{Z_0,\tvr_s} 
+ - \int\mean{\inty{\lfn}}{Z_0,\tvr_{a,s},\Delta_c}^2\nonumber\\
+& \hspace{0.2cm}
+\times\N{\tr_a}
+{\tilde{m}_a }
+{\tilde{C}_a +\pderiv{\tilde{m}_a}{\theta}C_\theta\pderiv{\tilde{m}\tra_a}{\theta}}
+\ud\tr_a\,.\label{eq:exp_var}
 \end{align}
-The first term is independent of the selection of $\lfv_a$ and hence can be safely ignored. Noting that $\int \exp(c\, \tr_a)\, \N{\tr_a;m, \sigma^2} \ud\tr_a = \exp(c\, m + \nicefrac{1}{2}\, c^2 \sigma^2)$, the second term can be resolved analytically for any trial $\lfv_a$ (we omit the laborious details of doing so). With this expression, we now select the $\lfv_a$ that minimises the second term using a numerical optimisation technique. 
+where
+\begin{align*}
+\tilde{m}_a & \deq \mean{\tr_a}{\tvr_s,m_\theta}\\
+\tilde{C}_a & \deq \cov{\tr_a}{\tvr_s,m_\theta}\,.
+\end{align*}
+The first term in \eqref{eq:exp_var}, the second moment, is independent of the selection of $\lfv_a$ and hence can be safely ignored for active sampling. Noting that $\int \exp(c\, y)\, \N{y}{m}{\sigma^2} \ud y = \exp(c\, m + \nicefrac{1}{2}\, c^2 \sigma^2)$, the second term, the negative expected squared mean, can be resolved analytically for any trial $\lfv_a$ (we omit the laborious details of doing so). With this expression, we now select the $\lfv_a$ that minimises the expected variance using a multi-start local optimizer, where the starting points are chosen as $\lfv_c$. 
+Note that our variance for $\tr_a$ has been inflated due to our consideration of the influence of hyperparameters (See Figure \ref{fig:integrate_hypers}), which we expect to promote additional exploration, as desired.
 
 
 \section{Experiments}
 
-In this section we attempt to show that our changes to the BMC algorithm improve its convergence to the truth.  We also compare against several standard MCMC methods.
+In this section we attempt to show that our changes to the BMC algorithm improve its convergence to the truth.  We also compare against several standard \acro{mcmc} methods.
 
 \paragraph{Integrands}
 
@@ -533,8 +536,8 @@ we recreated the hyperparamter integration problem from \citep{BZMonteCarlo}.
 
 \begin{itemize}
 \item Simple Monte Carlo (SMC)
-\item Annealed Importance Sampling (AIS).  The inverse temperature schedule was linear as in \citep{BZMonteCarlo}, and the proposal width was adjusted to attain approximately a 50\% acceptance rate.
-\item Bayesian Monte Carlo (BMC) - the algorithm used in \citep{BZMonteCarlo}, in which samples were chosen from a AIS chain.
+\item Annealed Importance Sampling (\acro{ais}).  The inverse temperature schedule was linear as in \citep{BZMonteCarlo}, and the proposal width was adjusted to attain approximately a 50\% acceptance rate.
+\item Bayesian Monte Carlo (BMC) - the algorithm used in \citep{BZMonteCarlo}, in which samples were chosen from a \acro{ais} chain.
 \item Sequential Bayesian Quadrature (SBQ)
 \end{itemize}
 
@@ -595,9 +598,9 @@ The methods developed here can be applied without modification to discrete domai
 
 \section{Conclusions}
 
- In this paper, we have made several advances to the BMC method.  We have also demonstrated the many advantages of model-based integration over standard MCMC: a natural stopping criterion, an estimate of uncertainty in our integral, and the ability to use active learning to select our samples rather than monte carlo methods.
+ In this paper, we have made several advances to the BMC method.  We have also demonstrated the many advantages of model-based integration over standard \acro{mcmc}: a natural stopping criterion, an estimate of uncertainty in our integral, and the ability to use active learning to select our samples rather than Monte Carlo methods.
 
-MCMC is an extremely widely used method, and advances in MCMC allow modelers [such as...] to use richer model classes and to be more confident in their model evaluations.  While we do not expect model-based integration approaches to be a better choice in every instance, we expect that this family of approaches will one day be seen as a standard alternative to MCMC.
+\acro{mcmc} is an extremely widely used method, and advances in \acro{mcmc} allow modelers [such as...] to use richer model classes and to be more confident in their model evaluations.  While we do not expect model-based integration approaches to be a better choice in every instance, we expect that this family of approaches will one day be seen as a standard alternative to \acro{mcmc}.
 
 \section*{Acknowledgements}
 
