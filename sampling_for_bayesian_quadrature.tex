@@ -89,7 +89,7 @@ An alternative approach to evaluating $Z$ is to posit a distribution over likeli
 
  \begin{figure}
  \centering
- \psfragfig[width=0.5\textwidth]{figures/bmc_intro}
+ \psfragfig[width=0.5\textwidth]{figures/bmc_intro2}
  \caption{An illustration of model-based integration, or Bayesian Quadrature.  We compute the expected are underneath Gaussian process posterior, conditioned on sampled values of the true likelihood function.  Obtaining samples about uncertain regions allows us to reduce our uncertainty about the area under the function.  }
  \label{fig:model_based}
  \end{figure}
@@ -218,7 +218,7 @@ We wish to evaluate the evidence $Z = \inty{\lfn} = \int \lfn(\lfv) p(\lfv) \ud\
 
  \begin{figure}
  \centering
- \psfragfig[width=0.5\textwidth]{figures/log_transform}
+ \psfragfig[width=\columnwidth]{figures/log_transform}
  \caption{The lengthscale of a \gpb fitted to the log-likelihood function will typically be much longer than that of a \gpb fit to the likelihood function.  A \gpb with a long lengthscale will generalize better to distant parts of the function, and will have a posterior more concentrated around the true evidence. }
  \label{fig:log_is_better}
  \end{figure}
@@ -231,8 +231,8 @@ where $\gamma = 1$.  This give better resolution of some numerical issues, and a
 
  \begin{figure}
  \centering
- \includegraphics[width=0.48\textwidth]{figures/log_gp_diff.eps}
- \caption{An illustration of our method of finding the integral under the exp of a Gaussian process. For all \gp s, we plot only the relevant posterior means.}
+ \psfragfig[width=\columnwidth]{figures/delta}
+ \caption{An illustration of our method of finding the integral under the exp of a Gaussian process.}
  \label{fig:integrate_hypers}
  \end{figure}
 
