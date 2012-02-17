@@ -477,7 +477,7 @@ In Section \ref{sec:model_lik}, we took the integral as the affine transform of 
  \begin{figure}
  \centering
  \includegraphics[width=0.48\textwidth]{figures/eue.eps}
- \caption{An example the expected uncertainty in the evidence after observing the likelihood function at that location.}
+ \caption{An example showing the expected uncertainty in the evidence after observing the likelihood function at that location.}
  \label{fig:eue}
  \end{figure}
  
@@ -491,7 +491,7 @@ In Section \ref{sec:model_lik}, we took the integral as the affine transform of 
 \begin{figure}
 \centering
 \psfragfig{figures/plots/sampleplot_two_spikes_1d}
-\caption{An the location of samples chosen by different methods.}
+\caption{The location of samples chosen by different methods.}
 \label{fig:sample_paths}
 \end{figure}
 
@@ -526,26 +526,18 @@ In order to minimize the expected variance, we are hence impelled to maximize th
 With \eqref{eq:exp_var}, we now select the $\lfv_a$ that minimises the expected variance using a multi-start local optimizer, where the starting points are chosen as $\lfv_c$. 
 
 \section{Experiments}
-
-
-
 In this section we attempt to show that our changes to the BMC algorithm improve its convergence to the truth.  We also compare against several standard \acro{mcmc} methods.
-
 \paragraph{Integrands}
-
 We chose a set of problems which would demonstrate the strengths and weakness of the various methods we compared.
-
-we recreated the hyperparamter integration problem from \citep{BZMonteCarlo}.
-
 \input{tables/integrands.tex}
-
+The true value of Z for the non-analytic integrands was estimated by a run of SMC with $10^6$ samples.
 \paragraph{Methods}
-
 \begin{itemize}
 \item Simple Monte Carlo (SMC)
 \item Annealed Importance Sampling (\acro{ais}).  The inverse temperature schedule was linear as in \citep{BZMonteCarlo}, and the proposal width was adjusted to attain approximately a 50\% acceptance rate.
-\item Bayesian Monte Carlo (BMC) - the algorithm used in \citep{BZMonteCarlo}, in which samples were chosen from a \acro{ais} chain.
-\item Sequential Bayesian Quadrature (SBQ)
+\item Bayesian Monte Carlo (BMC) - the algorithm used in \citep{BZMonteCarlo}, in which samples were chosen from a \acro{ais} chain, and a GP was fit to the likelihood samples.
+\item Bayesian Quadrature (BQ) - Bayesian Quadrature using a GP on the log-transformed lieklihood values, but not marginalizing over hyperparameters, and selecting sample locations via \acro{ais}.
+\item Doubly Bayesian Quadrature (BBQ) - The algorithm outlined in this paper, in which samples are chosen actively, lengthscale hyperparameters are approximately integrated out, and a GP was defined over the log-transformed likelihood values.
 \end{itemize}
 
 \paragraph{Evaluation}
@@ -557,7 +549,9 @@ we recreated the hyperparamter integration problem from \citep{BZMonteCarlo}.
  	\psfragfig{figures/integrands/bumpy_1d} 
  	\psfragfig{figures/integrands/two_spikes_1d}
  \end{tabular}
- \caption{The one-dimensional integrands in our test suite.  Green lines are priors, blue lines likelihoods, and red lines are posteriors. \textcolor{red}{mike says: maybe we should make the lines variously dashed to help with B\&W printing. Also I'm not sure we need the posterior, which could be removed to de-clutter.}}
+ \caption{The one-dimensional integrands in our test suite.  Green dashed lines are priors, blue lines are likelihoods.
+ % \textcolor{red}{mike says: maybe we should make the lines variously dashed to help with B\&W printing. Also I'm not sure we need the posterior, which could be removed to de-clutter.}
+ }
  \label{fig:1d_problems}
  \end{figure}
 % 
@@ -572,22 +566,22 @@ we recreated the hyperparamter integration problem from \citep{BZMonteCarlo}.
 % %    \input{tables/times_taken.tex}
 % %\end{minipage}
 % 
-\input{tables/truth_prob.tex}
-\input{tables/se.tex}
 % 
-\begin{figure}
-	\centering
-	\psfragfig[width=4cm]{figures/plots/legend}
-\end{figure}
+%\begin{figure}
+%	\centering
+%\end{figure}
 
 \begin{figure}
 	\centering
-	\psfragfig[width=8cm,height=4cm]{figures/plots/log_of_truth_plot_simple}
+	\psfragfig[width=6cm,height=4cm]{figures/plots/log_of_truth_plot_simple} 	
+	\psfragfig[width=3cm]{figures/plots/legend}
+	\caption{The negative log density of the true normalization constant, versus different methods.}
 \end{figure}
 
 \begin{figure}
 	\centering
 	\psfragfig[width=8cm,height=6cm]{figures/plots/varplot_easy_4d}
+	\caption{The posterior mean and variance over Z for different methods, compared to the true Z (in black)}
 \end{figure}
 
 
@@ -613,6 +607,9 @@ The methods developed here can be applied without modification to discrete domai
 
 \bibliography{bub}
 \bibliographystyle{icml2012}
+\pagebreak
+\input{tables/truth_prob.tex}
+\input{tables/se.tex}
 
 \end{document} 
 
