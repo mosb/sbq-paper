@@ -470,7 +470,7 @@ which is again possible, although laborious, to express analytically.
 \section{Doubly Bayesian Quadrature}
 
 We aim to select samples $\lfv_s$ so as to minimise the \textit{expected} uncertainty in the evidence after seeing our next sample.\footnote{We also expect such samples to be useful not just for estimating the evidence, but also for any other related expectations, such as would be required to perform prediction using the model.}
-Surprisingly, the posterior variance of a \gpb model with fixed hyperparameters does not depend on the function values at sampled locations all all; only the location of those samples matters. The evidence is a simple affine transformation of the likelihood, which traditional Bayesian quadrature takes models with a \gpb; hence its estimate for the variance in the evidence is likewise independent of likelihood values. Hence active learning is pointless, and the optimal sampling design can be found in advance \cite{minka2000dqr}.
+Surprisingly, the posterior variance of a \gpb model with fixed hyperparameters does not depend on the function values at sampled locations all all; only the location of those samples matters. The evidence is a simple affine transformation of the likelihood, which traditional Bayesian quadrature takes models with a \gp; hence its estimate for the variance in the evidence is likewise independent of likelihood values. Hence active learning is pointless, and the optimal sampling design can be found in advance \cite{minka2000dqr}.
 
 In Section \ref{sec:model_lik}, we took the integral as the affine transform of the log-likelihood, which we model with a \gpb. As the affine transformation itself depends on the function values (see \eqref{eq:linearisation}), active learning is now desirable. Our uncertainty over the hyperparameters of the \gpb further motivates active learning: without assuming \textit{a priori} knowledge of the hyperparameters, we can't evaluate the \gpb to compute a sampling schedule beforehand. Our approximate marginalisation of hyperparameters permits us an approach to active sampling that acknowledges the influence new samples may have on our beliefs about the hyperparameters. We'd expect this would further promote exploration, particularly early on, so as to firm up our beliefs about the hyperparameters. 
 
@@ -495,7 +495,7 @@ In Section \ref{sec:model_lik}, we took the integral as the affine transform of 
 \label{fig:sample_paths}
 \end{figure}
 
-Consider adding a new sample at $\lfv_a$. The expected variance in our evidence after doing so is
+In selecting a new sample $\lfv_a$, we wish to minimise the variance in our evidence after adding it to our model. As such, we choose that variance as our loss function, and choose the $\lfv_a$ that minimises the expected loss
 \begin{align}
 &\bigl\langle \cov{\inty{\lfn}}{Z_0,\tvr_{s,a}}\mid Z_0,\tvr_{s}\bigr\rangle 
 \nonumber\\
@@ -517,13 +517,10 @@ where
 \end{align*}
 The first term in \eqref{eq:exp_var}, the (expected) second moment, is independent of the selection of $\lfv_a$ and hence can be safely ignored for active sampling. This is true regardless of the probabilistic model chosen for the likelihood surface. 
 Noting that $\int \exp(c\, y)\, \N{y}{m}{\sigma^2} \ud y = \exp(c\, m + \nicefrac{1}{2}\, c^2 \sigma^2)$, 
-the second term, the negative expected squared mean, can be resolved analytically
-\footnote{We assume that $\Delta$ does not depend on $\tr_a$, only its location $x_a$: we know $\Delta(x_a) = 0$ and assume $\Delta$ elsewhere remains relatively unchanded.}
- for any trial $\lfv_a$ (we omit the laborious details of doing so). We do not have to make a linearisation approximation here, and our prior over $\tr_a$ can be fully exploited for its most important purposes: selecting new samples. 
+the second term, the negative expected squared mean, can be resolved analytically\footnote{We assume that $\Delta$ does not depend on $\tr_a$, only its location $x_a$: we know $\Delta(x_a) = 0$ and assume $\Delta$ elsewhere remains relatively unchanded.}
+ for any trial $\lfv_a$ (we omit the laborious details of doing so). We do not have to make a linearisation approximation here, and our prior over $\tr_a$ can be fully exploited for its most important purpose: selecting new samples. 
 
-In order to minimize the expected variance, we are hence impelled to maximize the expected squared mean. Unlike in traditional Bayesian quadrature, our exponentiation means that one means of maximising the expected squared mean is to seek points where the log-likelihood is predicted to be large: exploitation. We are also compelled to seek out points where our current variance in the log-likelihood is significant, leading to exploration. Note that our variance for $\tr_a$ has been inflated due to our consideration of the influence of hyperparameters (See Figure \ref{fig:integrate_hypers}), which we expect to promote additional exploration, as desired.
-
-With \eqref{eq:exp_var}, we now select the $\lfv_a$ that minimises the expected variance using a multi-start local optimizer, where the starting points are chosen as $\lfv_c$. 
+In order to minimize the expected variance, we are hence impelled to maximize the expected squared mean. Unlike in traditional Bayesian quadrature, our exponentiation means that one means of doing so is to seek points where the log-likelihood is predicted to be large: exploitation. We are also compelled to seek out points where our current variance in the log-likelihood is significant, leading to exploration. Note that our variance for $\tr_a$ has been inflated due to our consideration of the influence of hyperparameters (See Figure \ref{fig:integrate_hypers}), which we expect to promote additional exploration, as desired.
 
 
 
@@ -534,7 +531,7 @@ In this section we attempt to show that our changes to the BMC algorithm improve
 \paragraph{Integrands}
 We chose a set of problems which would demonstrate the strengths and weakness of the various methods we compared.
 \input{tables/integrands.tex}
-The true value of Z for the non-analytic integrands was estimated by a run of SMC with $10^6$ samples.
+The true value of $Z$ for the non-analytic integrands was estimated by a run of \acro{SMC} with $10^6$ samples.
 \paragraph{Methods}
 \begin{itemize}
 \item Simple Monte Carlo (SMC)
@@ -543,6 +540,7 @@ The true value of Z for the non-analytic integrands was estimated by a run of SM
 \item Bayesian Quadrature (BQ) - Bayesian Quadrature using a GP on the log-transformed lieklihood values, but not marginalizing over hyperparameters, and selecting sample locations via \acro{ais}.
 \item Doubly Bayesian Quadrature (BBQ) - The algorithm outlined in this paper, in which samples are chosen actively, lengthscale hyperparameters are approximately integrated out, and a GP was defined over the log-transformed likelihood values.
 \end{itemize}
+We minimise \eqref{eq:exp_var} using a multi-start local optimizer, where the starting points are chosen as $\lfv_c$. 
 
 One somewhat standard method that is missing from this comparison is Hamiltonian Monte Carlo, which uses information about the derivatives in order to speed mixing.  However, Bayesian Quadrature can also incorporate information about the derivatives of the likelihood function, and would presumably also perform better if given this information.  An exhaustive comparison with MCMC methods is beyond the scope of this paper.
 
