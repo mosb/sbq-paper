@@ -16,8 +16,7 @@
 \usepackage{pgfplots}
 \usepackage{icml2012}
 
-\newlength\fheight  % For tikz figures
-\newlength\fwidth 
+% The width of one column in cm: \printinunitsof{cm}\prntlen{\columnwidth} = 8.25381
 
 % \usepackage[accepted]{icml2012}¡
 
@@ -89,7 +88,7 @@ An alternative approach to evaluating $Z$ is to posit a distribution over likeli
 
  \begin{figure}
  \centering
- \psfragfig[width=0.5\textwidth]{figures/bmc_intro2}
+ \psfragfig[width=\columnwidth]{figures/bmc_intro}
  \caption{An illustration of model-based integration, or Bayesian Quadrature.  We compute the expected are underneath Gaussian process posterior, conditioned on sampled values of the true likelihood function.  Obtaining samples about uncertain regions allows us to reduce our uncertainty about the area under the function.  }
  \label{fig:model_based}
  \end{figure}
@@ -227,14 +226,12 @@ Assigning a standard \gpb prior to $\lfn(\lfv)$ would ignore our prior informati
 $\log\left(\nicefrac{\lfn(\lfv)}{\gamma} + 1\right)$
 where $\gamma = 1$.  This give better resolution of some numerical issues, and allows us to assume the transformed quantity has zero mean. For the sake of simplicity, we omit this detail in the following derivations.}
 
-
-
- \begin{figure}
- \centering
- \psfragfig[width=\columnwidth]{figures/delta}
- \caption{An illustration of our method of finding the integral under the exp of a Gaussian process.}
- \label{fig:integrate_hypers}
- \end{figure}
+\begin{figure}
+\centering
+\psfragfig{figures/delta}
+\caption{An illustration of our method of finding the integral under the exp of a Gaussian process.}
+\label{fig:integrate_hypers}
+\end{figure}
 
 %Firstly, we define the transformation
 %\begin{align*}
@@ -474,17 +471,17 @@ In Section \ref{sec:model_lik}, we took the integral as the affine transform of 
 
  \begin{figure}
  \centering
- \includegraphics[width=0.48\textwidth]{figures/eue.eps}
+\psfragfig[width=0.5\textwidth]{figures/eue_progression}
  \caption{An example showing the expected uncertainty in the evidence after observing the likelihood function at that location.}
  \label{fig:eue}
  \end{figure}
  
-\begin{figure}
-\centering
-\includegraphics[width=0.48\textwidth]{figures/active_learning.eps}
-\caption{An example of the posterior over likelihood functions converging as new samples are selected.}
-\label{fig:active_learning}
-\end{figure}
+%\begin{figure}
+%\centering
+%\includegraphics[width=0.48\textwidth]{figures/active_learning.eps}
+%\caption{An example of the posterior over likelihood functions converging as new samples are selected.}
+%\label{fig:active_learning}
+%\end{figure}
 
 \begin{figure}
 \centering
