@@ -71,7 +71,7 @@ Bayesian Quadrature has previously been used to infer model evidence, \citep{BZM
 
 As well, we compare our \acro{bq} approach to standard \acro{mcmc} techniques on a real scientific problem, where we demonstrate one of the key advantages of \acro{bq}: a closed-form expression for the posterior uncertainty in our integral provides a natural stopping criterion for approximate inference.
 
-\section{Estimating Model Evidence}
+\section{Estimating Model Evidence via MCMC}
 
 %Here, we give a brief overview of the standard methods used for computing normalization constants.  For the remainder of the paper, we will assume that we are able to draw samples from 
 
@@ -79,7 +79,7 @@ Simple Monte Carlo is the simplest Monte Carlo method.  In this procedure, one g
 
 %\paragraph*{Annealed Importance Sampling} \citep{neal2001annealed} is a popular thermodynamic integration method which 
 
-There exist several other standard methods for computing partition functions, such as annealed importance sampling (\acro{ais}) \citep{neal2001annealed}, nested sampling \citep{skilling2004nested} and bridge sampling.  For a review, see \citet{chen2000monte}.  In this paper we 
+There exist several other standard methods for computing partition functions, such as annealed importance sampling (\acro{ais}) \citep{neal2001annealed}, nested sampling \citep{skilling2004nested} and bridge sampling.  For a review, see \citet{chen2000monte}.
 
 One of the main difficulties with using \acro{mcmc} methods in practice is that most methods have at least a handful of parameters which are typically set by hand.
 
@@ -94,9 +94,7 @@ An alternative approach to evaluating $Z$ is to posit a distribution over likeli
  \label{fig:model_based}
  \end{figure}
 
-Using a model-based approach, the issue of convergence is solved naturally:  our posterior variance over $Z$ indicates our remaining uncertainty about the quantity we care about.  This statistic is typically only reliable if we are able to integrate over all unknown quantities.  This is typically intractable, however by approximately integrating out lengthscales in section ?? we go some ways towards fixing this problem.  The results in section ?? indicate that our posterior variance is reasonably well-calibrated.
-
-Having a reliable indicator that our estimate has converged to the truth is vital. [We need to stress this more in the intro and conclusion]
+Having a reliable indicator that our estimate has converged to the truth is vital.  Using a model-based approach, the issue of convergence is solved naturally:  our posterior variance over $Z$ indicates our remaining uncertainty about the quantity we care about.  This statistic is typically only reliable if we are able to integrate over all unknown quantities.  This is typically intractable, however by approximately integrating out lengthscales in section \ref{sec:marginalization} we go some ways towards fixing this problem.  The results in section \ref{sec:experiments} indicate that our posterior variance is reasonably well-calibrated.
 
 \section{Gaussian Processes}
 Gaussian processes (\gp s) offer a powerful method to perform Bayesian inference about functions \citep{GPsBook}. A \gpb is defined as a distribution over the functions $f: \Phi \rightarrow \mathbb{R}$ such that the distribution over the possible function values on any finite subset of $\Phi$ is multivariate Gaussian.  For a function $f(\lfv)$, the prior distribution over its values $\vf$ on a subset $\vlfv \subset \Phi$ is
@@ -403,8 +401,10 @@ and hence
 which is expressible in closed form, although space precludes us from doing so.
 
 
-\section{Marginalising quadrature hyperparameters}
 
+
+\section{Marginalising quadrature hyperparameters}
+\label{sec:marginalization}
 Hitherto, we have taken the maximum likelihood values $m_\theta$ for the quadrature hyperparameters $\theta$ of the \gpb used to model the integrand, $\tr$. Once we have very many samples, this approximation seems reasonable: with lots of data, we can be almost certain about the values of the quadrature hyperparameters. However, we want to consider actively selecting samples, guided by our beliefs about the integrand: we require this process to be robust even when we have only few samples. 
 
 
@@ -525,7 +525,11 @@ In order to minimize the expected variance, we are hence impelled to maximize th
 
 With \eqref{eq:exp_var}, we now select the $\lfv_a$ that minimises the expected variance using a multi-start local optimizer, where the starting points are chosen as $\lfv_c$. 
 
+
+
+
 \section{Experiments}
+\label{sec:experiments}
 In this section we attempt to show that our changes to the BMC algorithm improve its convergence to the truth.  We also compare against several standard \acro{mcmc} methods.
 \paragraph{Integrands}
 We chose a set of problems which would demonstrate the strengths and weakness of the various methods we compared.
