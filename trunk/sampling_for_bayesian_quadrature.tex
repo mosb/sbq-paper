@@ -538,11 +538,13 @@ The true value of Z for the non-analytic integrands was estimated by a run of SM
 \paragraph{Methods}
 \begin{itemize}
 \item Simple Monte Carlo (SMC)
-\item Annealed Importance Sampling (\acro{ais}).  The inverse temperature schedule was linear as in \citep{BZMonteCarlo}, and the proposal width was adjusted to attain approximately a 50\% acceptance rate.
+\item Annealed Importance Sampling (\acro{ais}).  The inverse temperature schedule was linear as in \citep{BZMonteCarlo}, and the proposal width was adjusted to attain approximately a 50\% acceptance rate.  In an attempt to be fair, the posterior variance of the \acro{ais} estimate of $Z$ was set to the empirical variance over 10 chains.
 \item Bayesian Monte Carlo (BMC) - the algorithm used in \citep{BZMonteCarlo}, in which samples were chosen from a \acro{ais} chain, and a GP was fit to the likelihood samples.
 \item Bayesian Quadrature (BQ) - Bayesian Quadrature using a GP on the log-transformed lieklihood values, but not marginalizing over hyperparameters, and selecting sample locations via \acro{ais}.
 \item Doubly Bayesian Quadrature (BBQ) - The algorithm outlined in this paper, in which samples are chosen actively, lengthscale hyperparameters are approximately integrated out, and a GP was defined over the log-transformed likelihood values.
 \end{itemize}
+
+One somewhat standard method that is missing from this comparison is Hamiltonian Monte Carlo, which uses information about the derivatives in order to speed mixing.  However, Bayesian Quadrature can also incorporate information about the derivatives of the likelihood function, and would presumably also perform better if given this information.  An exhaustive comparison with MCMC methods is beyond the scope of this paper.
 
 \paragraph{Evaluation}
 
