@@ -515,11 +515,17 @@ where
 \tilde{m}_a & \deq \mean{\tr_a}{\tvr_s,m_\theta}\\
 \tilde{C}_a & \deq \cov{\tr_a}{\tvr_s,m_\theta}\,.
 \end{align*}
-The first term in \eqref{eq:exp_var}, the second moment, is independent of the selection of $\lfv_a$ and hence can be safely ignored for active sampling. Noting that $\int \exp(c\, y)\, \N{y}{m}{\sigma^2} \ud y = \exp(c\, m + \nicefrac{1}{2}\, c^2 \sigma^2)$, the second term, the negative expected squared mean, can be resolved analytically for any trial $\lfv_a$ (we omit the laborious details of doing so). With this expression, we now select the $\lfv_a$ that minimises the expected variance using a multi-start local optimizer, where the starting points are chosen as $\lfv_c$. 
-Note that our variance for $\tr_a$ has been inflated due to our consideration of the influence of hyperparameters (See Figure \ref{fig:integrate_hypers}), which we expect to promote additional exploration, as desired.
+The first term in \eqref{eq:exp_var}, the (expected) second moment, is independent of the selection of $\lfv_a$ and hence can be safely ignored for active sampling. This is true regardless of the probabilistic model chosen for the likelihood surface. 
+Noting that $\int \exp(c\, y)\, \N{y}{m}{\sigma^2} \ud y = \exp(c\, m + \nicefrac{1}{2}\, c^2 \sigma^2)$, 
+the second term, the negative expected squared mean, can be resolved analytically
+\footnote{We assume that $\Delta$ does not depend on $\tr_a$, only its location $x_a$: we know $\Delta(x_a) = 0$ and assume $\Delta$ elsewhere remains relatively unchanded.}
+ for any trial $\lfv_a$ (we omit the laborious details of doing so). In order to minimize the expected variance, we are hence impelled to maximize the expected squared mean. Unlike in traditional Bayesian quadrature, our exponentiation means that one means of maximising the expected squared mean is to seek points where the log-likelihood is predicted to be large: exploitation. We are also compelled to seek out points where our current variance in the log-likelihood is significant, leading to exploration. Note that our variance for $\tr_a$ has been inflated due to our consideration of the influence of hyperparameters (See Figure \ref{fig:integrate_hypers}), which we expect to promote additional exploration, as desired.
 
+With \eqref{eq:exp_var}, we now select the $\lfv_a$ that minimises the expected variance using a multi-start local optimizer, where the starting points are chosen as $\lfv_c$. 
 
 \section{Experiments}
+
+
 
 In this section we attempt to show that our changes to the BMC algorithm improve its convergence to the truth.  We also compare against several standard \acro{mcmc} methods.
 
