@@ -360,16 +360,11 @@ Note that we do not need to evaluate $\lfn(\lfv_c)$ in order to compute $\Delta(
 $\vlfv_c$ should firstly include $\vlfv_s$, where we know that $\delta$ is equal to zero. Following \citet{BQR}, we select the remainder of $\vlfv_c$  as the  vertices of a Voronoi diagram \citep{okabe1997locational}, where we expect $\delta$ to be extremised. 
 
 Given these samples, we can now marginalise \eqref{eq:mean_ev1} over $\Delta$ to give
-\begin{align}
- \mean{\inty{\lfn}}{Z_0,\tvr_s,\Delta_c} =
-\mean{\inty{\lfn}}{\vr_s} + \corrn \,,
-\label{eq:mean_ev2}
-\end{align}
-where the correction factor is
 \begin{align*}
- \corrn \deq \mean{\inty{\lfn \Delta}}{\vr_s, \Delta_c}\,.
+ \mean{\inty{\lfn}}{Z_0,\tvr_s,\Delta_c} =
+\mean{\inty{\lfn}}{\vr_s} + \mean{\inty{\lfn \Delta}}{\vr_s, \Delta_c}\,,
 \end{align*}
-As $\Delta$ is small, we expect $C$ to also be small. The variance in the evidence is
+where the second term, the correction factor, is expected to be small, as $\Delta$ is small. The variance in the evidence is
 \begin{align*}
 & \cov{\inty{\lfn}}{Z_0,\tvr_s,\Delta_c}\\ 
 & = \secm{\inty{\lfn}}{Z_0,\tvr_s} - \mean{\inty{\lfn}}{Z_0,\tvr_s,\Delta_c}^2\,,
