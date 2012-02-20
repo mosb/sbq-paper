@@ -56,7 +56,7 @@ We introduce several innovations making Bayesian Quadrature methods suitable for
 
 \section{Introduction}
 
-Training or evaluating any probabilistic model typically requires an integration over model parameters, weighted by their likelihoods.  This common problem has many names:  computing the model evidence, estimating the partition function or normalizing a distribution.  Typically, this task is performed using Markov-Chain Monte Carlo (\acro{mcmc}) methods.  These methods have many well-known problems, such as requiring extensive tuning, becoming stuck in local modes, and falsely appearing to converge \citep{NealMC}.  However, almost all standard approaches fall into the wide family of \acro{mcmc} methods.
+Training or evaluating any probabilistic model typically requires an integration over model parameters, weighted by their likelihoods.  This common problem has many names:  computing the model evidence, calculating the marginal likelihood, estimating the partition function or normalizing a distribution.  Typically, this task is performed using Markov-Chain Monte Carlo (\acro{mcmc}) methods.  These methods have many well-known problems, such as requiring extensive tuning, becoming stuck in local modes, and falsely appearing to converge \citep{NealMC}.  However, almost all standard approaches fall into the wide family of \acro{mcmc} methods.
 
 These randomized methods estimate the model evidence $Z$ given the value of the integrand on a set of sample points.  The number of points sampled is limited in size by the computational expense of evaluating the integrand. As discussed in \citep{MCUnsound}, traditional Monte Carlo integration techniques do not make the best possible use of this valuable information. An alternative is found in Bayesian quadrature (\acro{bq}) \citep{BZHermiteQuadrature}, a method which uses function samples within a Gaussian process model to compute a closed-formed posterior over the value of the integral.
 
@@ -70,21 +70,22 @@ Bayesian Quadrature has previously been used to infer model evidence, \citep{BZM
 
 As well, we compare our \acro{bq} approach to standard \acro{mcmc} techniques on a real scientific problem, where we demonstrate one of the key advantages of \acro{bq}: a closed-form expression for the posterior uncertainty in our integral provides a natural stopping criterion for approximate inference.
 
-\section{Estimating Model Evidence via \acro{mcmc}}
+\section{Estimating Model Evidence}
 
 %Here, we give a brief overview of the standard methods used for computing normalization constants.  For the remainder of the paper, we will assume that we are able to draw samples from 
 
-Simple Monte Carlo (\acro{smc}) generates samples $x_1 \dots x_N$ from the prior distribution.  Then we estimate $Z$ by $$\hat{Z} = \frac{1}{N} \sum_{n=1}^{N} \lfn(x_n).$$  An estimate of the variance of $\hat{Z}$ is given by the standard error of $\lfn({\bf x})$.
+Our problem is to estimate the evidence of some model $M$. This is computed as $$Z = p(M) = \int l(x) p(x) dx\,,$$ for the likelihood $l(x) = \p{M}{x}$. The arguments $x$ represent the appropriate parameters of the model, which must be marginalised. 
+Unfortunately, the integral is typically non-analytic for interesting likelihood functions. 
+
+One solution to this intractability is found in \emph{simple Monte Carlo} (\acro{smc}). \acro{smc} generates samples $x_1 \dots x_N$ from the prior distribution, and estimates $Z$ by $$\hat{Z} = \frac{1}{N} \sum_{n=1}^{N} \lfn(x_n).$$  An estimate of the variance of $\hat{Z}$ is given by the standard error of $\lfn({\bf x})$.
 
 %\paragraph*{Annealed Importance Sampling} \citep{neal2001annealed} is a popular thermodynamic integration method which 
+There exist several other standard methods for computing the evidence, such as annealed importance sampling (\acro{ais}) \citep{neal2001annealed}, nested sampling \citep{skilling2004nested} and bridge sampling.  For a review, see \citet{chen2000monte}. These typically involve the construction of a markov chain for generating samples, leading to them being termed \emph{Markov chain Monte Carlo} (\acro{mcmc}) methods. 
 
-There exist several other standard methods for computing partition functions, such as annealed importance sampling (\acro{ais}) \citep{neal2001annealed}, nested sampling \citep{skilling2004nested} and bridge sampling.  For a review, see \citet{chen2000monte}.
+One of the main difficulties with using \acro{mcmc} methods in practice is that most methods have at least a handful of parameters which are typically set by hand. These often include a `burn-in' parameter, specifying a certain quantity of data to exclude when constructing the final estimate. The selection of this parameter can be problematic \citep{cowles1999possible}. 
 
-One of the main difficulties with using \acro{mcmc} methods in practice is that most methods have at least a handful of parameters which are typically set by hand. 
+Convergence diagnostics exist to indicate if a Markov chain is failing to `mix', or explore the entire integrand.  However, these methods are known to have failure modes in which diagnostics do not identify a lack of mixing \citep{NealMC, brooks1998convergence, cowles1999possible}. One solution to this problem is found by `exact' or `perfect' sampling via coupling from the past \citep{green1999exact}, but is impractical for realistic problems. 
 
-Convergence diagnostics exist to indicate if a Markov chain is failing to 'mix', or explore the entire integrand.  However, these methods are known to have failure modes in which the chain does not mix, however the diagnostics fail to indicate there is a problem \citep{NealMC} [need more citations].
-
-An alternative approach to evaluating $Z$ is to posit a distribution over likelihood functions, and update that distribution based on information observed about the likelihood function.
 
  \begin{figure}
  \centering
@@ -93,7 +94,8 @@ An alternative approach to evaluating $Z$ is to posit a distribution over likeli
  \label{fig:model_based}
  \end{figure}
 
-Having a reliable indicator that our estimate has converged to the truth is vital.  Using a model-based approach, the issue of convergence is solved naturally:  our posterior variance over $Z$ indicates our remaining uncertainty about the quantity we care about.  This statistic is typically only reliable if we are able to integrate over all unknown quantities.  This is typically intractable, however by approximately integrating out lengthscales in Section \ref{sec:marginalization} we go some ways towards fixing this problem.  The results in Section \ref{sec:experiments} indicate that our posterior variance is reasonably well-calibrated.
+An alternative approach is to posit a distribution over likelihood functions, and to use observations of the likelihood to infer the distribution for $Z$.
+Here the issue of convergence is solved naturally: our posterior variance over $Z$ indicates the uncertainty remaining in the quantity we care about. While standard errors are possible for \acro{mcmc}, typically they rely on the sampler mixing well \citep{flegal2008markov}. As such, these errors can not identify exactly the failure to mix that is of most concern. The distribution of most use for our inference is a Gaussian process, which we now briefly introduce. 
 
 \section{Gaussian Processes}
 Gaussian processes (\gp s) offer a powerful method to perform Bayesian inference about functions \citep{GPsBook}. A \gpb is defined as a distribution over the functions $f: \Phi \rightarrow \mathbb{R}$ such that the distribution over the possible function values on any finite subset of $\Phi$ is multivariate Gaussian.  For a function $f(\lfv)$, the prior distribution over its values $\vf$ on a subset $\vlfv \subset \Phi$ is
@@ -395,8 +397,7 @@ which is expressible in closed form, although space precludes us from doing so.
 
 \section{Marginalising quadrature hyperparameters}
 \label{sec:marginalization}
-Hitherto, we have taken the maximum likelihood values $m_\theta$ for the quadrature hyperparameters $\theta$ of the \gpb used to model the integrand, $\tr$. Once we have very many samples, this approximation seems reasonable: with lots of data, we can be almost certain about the values of the quadrature hyperparameters. However, we want to consider actively selecting samples, guided by our beliefs about the integrand: we require this process to be robust even when we have only few samples. 
-
+Hitherto, we have taken the maximum likelihood values $m_\theta$ for the quadrature hyperparameters $\theta$ of the \gpb used to model the integrand, $\tr$. Once we have very many samples, this approximation seems reasonable: with lots of data, we can be almost certain about the values of the quadrature hyperparameters. However, we want to consider actively selecting samples, guided by our beliefs about the integrand: we require this process to be robust even when we have only few samples. Our variance of $Z$ is typically only reliable if we are able to integrate over all unknown quantities. Ignoring the hyperparameters to which our predictions are sensitive can lead to pathologies. 
 
 \begin{figure}
 \centering
@@ -533,6 +534,10 @@ The true value of $Z$ for the non-analytic integrands was estimated by a run of 
 We minimise \eqref{eq:exp_var} using a multi-start local optimizer, where the starting points are chosen as $\lfv_c$. 
 
 One somewhat standard method that is missing from this comparison is Hamiltonian Monte Carlo, which uses information about the derivatives in order to speed mixing.  However, Bayesian Quadrature can also incorporate information about the derivatives of the likelihood function, and would presumably also perform better if given this information.  An exhaustive comparison with \acro{mcmc} methods is beyond the scope of this paper.
+
+Bayesian model comparison is emerging as an important method for comparing theories in the biological sciences 
+\citep{penny2010comparing, mann2011bayesian, mann2011objectively, rosa2011bayesian, mann2012multi}. \citet{mann2012multi} applied a model comparison methodology to discover the rules of interaction between simple individual animals (glass prawns, {\it Paratya australiensis}), which lead to coherent group motion. By evaluating the evidence for models of varying complexity, they were able to show that more complex rules of greater than expected were optimal to describe the interactions, including in particular a non-Markovian rule governing the memory of the prawns. We aim to reproduce their experiments using our 
+
 
 \paragraph{Evaluation}
 
