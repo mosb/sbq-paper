@@ -151,7 +151,7 @@ K_{f}(\vlfv_s,\lfv'_\star)\,, \nonumber%\label{eq:\gpbCov}
 
 \emph{Bayesian quadrature} \citep{BZHermiteQuadrature,BZMonteCarlo} is a means of performing Bayesian inference about the value of a potentially nonanalytic integral 
 \begin{equation} \label{eq:intyf}
- \If \deq \int f(\lfv)\,\po{\lfv}\,\ud\lfv\,.
+Y \deq \int f(\lfv)\,\po{\lfv}\,\ud\lfv\,.
 \end{equation}
 %Note that we use a condensed notation; this and all integrals to follow are definite integrals over the entire domain of interest.
 We'll assume we are integrating with respect to a Gaussian prior
@@ -162,7 +162,7 @@ We'll assume we are integrating with respect to a Gaussian prior
 although other convenient forms, or, if necessary, the use of an importance re-weighting trick, allow any other integral to be approximated. If $\lfv$ is a vector, $\nu_{\lfv}$ is a  vector of identical size, and $\lambda_{\lfv}$ an appropriate covariance matrix.
 
 %\textcolor{red}{[I'm hoping to re-write the next two paragraphs; it's way too indirect, and I think the philosophical foundations of \acro{mcmc} are a poor avenue of attack]}
-Quadrature involves evaluating $f(\lfv)$ at a vector of sample points $\vlfv_s$, giving $\vf\pha_s\deq f(\vlfv_s)$. Often this evaluation is computationally expensive; the consequent sparsity of our samples introduces uncertainty about the function $f$ between them, and hence uncertainty about the integral $\If$.
+Quadrature involves evaluating $f(\lfv)$ at a vector of sample points $\vlfv_s$, giving $\vf\pha_s\deq f(\vlfv_s)$. Often this evaluation is computationally expensive; the consequent sparsity of our samples introduces uncertainty about the function $f$ between them, and hence uncertainty about the integral $Y$.
 
 %As ever in the face of uncertainty, we address the estimation of the value of our integral as a problem of Bayesian inference \citep{BZNumericalAnalysis}. 
 
@@ -178,17 +178,17 @@ We choose for $f$ a \gpb prior with mean $\mu_f$ and the Gaussian covariance \eq
 % Many more of these will be implicitly introduced in the coming sections; we'll take this as given and incorporate them into the (hidden) context $I$. 
 % Note that it will later become apparent that our inference for $\inty{f}$ is independent of the $h_f$ quadrature hyperparameter.
 
-Note that variables over which we have a multivariate Gaussian distribution are jointly Gaussian distributed with any affine transformations of those variables. Because integration is affine, we can hence use our computed samples $\vf_s$ to perform analytic Gaussian process inference about the value of integrals over $f(\lfv)$, such as $\If$. Our mean estimate for $\If$ given $\vf_s$ is
+Note that variables over which we have a multivariate Gaussian distribution are jointly Gaussian distributed with any affine transformations of those variables. Because integration is affine, we can hence use our computed samples $\vf_s$ to perform analytic Gaussian process inference about the value of integrals over $f(\lfv)$, such as $Y$. Our mean estimate for $Y$ given $\vf_s$ is
 %
 \begin{align} \label{eq:mean_inty_f}
-\mean{\If}{\vf_s}
+\mean{Y}{\vf_s}
 & 
-=\iint \If\,\p{\If}{f}\p{f}{\vf_s} \ud \If \,\ud f                                                                                                                                                               \nonumber\\
+=\iint Y\,\p{Y}{f}\p{f}{\vf_s} \ud Y \,\ud f                                                                                                                                                               \nonumber\\
 &
- =\iint \If\,\dd{\If}{\int f(\lfv)\,\po{\lfv}\,\ud\lfv}
+ =\iint Y\,\dd{Y}{\int f(\lfv)\,\po{\lfv}\,\ud\lfv}
 \nonumber\\
 &\hspace{2.5cm}
-\N{f}{\meancondfn{f}{s}}{C_{f|s}} \ud \If \,\ud f \nonumber\\
+\N{f}{\meancondfn{f}{s}}{C_{f|s}} \ud Y \,\ud f \nonumber\\
 &
  = \int \meancondfn{f}{s}(\lfv)\,\po{\lfv}\,\ud\lfv\nonumber\\
 &
@@ -458,7 +458,7 @@ which is again possible, although laborious, to express analytically.
 
 
 
-\section{Doubly Bayesian Quadrature}
+\section{Doubly Bayesian Quadrature}\label{sec:BBQ}
 
 We aim to select samples $\lfv_s$ so as to minimise the \textit{expected} uncertainty in the evidence after seeing our next sample.\footnote{We also expect such samples to be useful not just for estimating the evidence, but also for any other related expectations, such as would be required to perform prediction using the model.}
 Surprisingly, the posterior variance of a \gpb model with fixed hyperparameters does not depend on the function values at sampled locations all all; only the location of those samples matters. The evidence is a simple affine transformation of the likelihood, which traditional Bayesian quadrature models with a \gp; hence its estimate for the variance in the evidence is likewise independent of likelihood values. As such, active learning is pointless, and the optimal sampling design can be found in advance \cite{minka2000dqr}.
@@ -519,17 +519,24 @@ In order to minimize the expected variance, we are hence impelled to maximize th
 \section{Experiments}
 \label{sec:experiments}
 
-We now present empirical evaluation of the various components of our algorithm in a variety of different experiments. 
+We now present empirical evaluation of the various components of our algorithm in a variety of different experiments.
+
+\paragraph{Metrics:} We judged our methods according to three metrics, all averages over $N$ similar experiments indexed by $i$. Define the ground truth evidence for the $i$th experiment $Z_i$, its estimated mean $m(Z_i)$ and predicted variance as $V(Z_i)$. Firstly, we compute the normalised mean square error,
+$
+\acro{nmse} \deq 10 \log_{10} \nicefrac{1}{N} \sum_{i=1}^{N} \nicefrac{(m(Z_i) - Z_i)^2}{Z_i^2}\,,
+$
+providing some measure of the average percentage error, in decibels. Next we compute the log-density of the truth, assuming experiments are independent,
+$
+p(\vect{Z}) = \prod_i \N{Z_i}{m(Z_i)}{V(Z_i)}
+$. This allows us to determine how accurate are our variance estimates. As a further metric, we supply the calibration $\mathcal{C}$, defined as the fraction of experiments in which the ground truth lay within our 50\% confidence interval $\bigl(m(Z_i) - 0.6745 \sqrt{V(Z_i)}, m(Z_i) + 0.6745 \sqrt{V(Z_i)}\bigr)$. Ideally, $\mathcal{C}$ would be exactly 50\%: any higher, and a method is under-confident, any lower and it is over-confident. 
 
 \paragraph{Methods:} We firstly compared against simple Monte Carlo (\acro{smc}), as described in Section \ref{sec:ev}. As an alternative Monte Carlo technique, we also implemented Annealed Importance Sampling (\acro{ais}).  The inverse temperature schedule was linear as in \citep{BZMonteCarlo}, and the proposal width was adjusted to attain approximately a 50\% acceptance rate.  In an attempt to be as generous to \acro{ais} as possible, the posterior variance of the \acro{ais} estimate of $Z$ was set to the empirical variance over 10 chains.
 
-Our first model-based method was Bayesian Monte Carlo (\acro{bmc}) -- the algorithm used in \citep{BZMonteCarlo}, in which samples were chosen from a \acro{ais} chain, and a \gpb was fit to the likelihood samples. For this \gpb, and the others that follow, the hyperparameters were selected as those that maximised the likelihood. 
+Our first model-based method was Bayesian Monte Carlo (\acro{bmc}) -- the algorithm used in \citep{BZMonteCarlo}, in which samples were drawn from the \acro{ais} chain just described, and a \gp was fit to the likelihood samples. For this \gp, and the others that follow, the hyperparameters were selected as those that maximised the likelihood. 
 
-We then tested a two novel methods. Firstly, Bayesian Quadrature (\acro{bq}), which  employed the linearisation approach of Section \ref{sec:model_lik} to modeling the log-transformed lieklihood values. It did not, however but not marginalizing over hyperparameters, and selecting sample locations via \acro{ais}.
+We then tested three novel methods. Firstly, Bayesian Quadrature (\acro{bq}*), which employed the linearisation approach of Section \ref{sec:model_lik} to modeling the log-transformed likelihood values, and the approach of Section \ref{sec:marginalizing} to approximately marginalising hyperparameters (the latter denoted by the asterisk). The samples supplied to it were drawn from the same \acro{ais} chain as used above. The performance of this method allows us to quantify to what extent our innovations improve estimation given a fixed set of samples. Note that marginalising hyperparameters affects only our predictive variance, so its impact can be measured in the relative performance of this approach in $\acro{nmse}$ and $\mathcal{C}$ metrics. 
 
-Doubly Bayesian Quadrature (\acro{bbq}) - The algorithm outlined in this paper, in which samples are chosen actively, lengthscale hyperparameters are approximately integrated out, and a \gpb was defined over the log-transformed likelihood values.
-
-We minimise \eqref{eq:exp_var} using a multi-start local optimizer, where the starting points are chosen as $\lfv_c$. 
+Secondly, we tested Doubly Bayesian Quadrature (\acro{bbq}), which again used a \gpb over the log-transformed likelihood values. This algorithm also chose samples actively, as described in Section \ref{sec:BBQ}; \eqref{eq:exp_var} was minimised using a multi-start local optimizer, where the starting points were chosen as $\lfv_c$. Finally, \acro{bbq}* was the same algorithm, but with hyperparameters  approximated marginalised. Both algorithms demonstrate the influence of active sampling on our performance; the relative performances of \acro{bbq} and \acro{bbq}* illustrate the importance of hyperparameter marginalisation. 
 
 One somewhat standard method that is missing from this comparison is Hamiltonian Monte Carlo, which uses information about the derivatives in order to speed mixing.  However, Bayesian Quadrature can also incorporate information about the derivatives of the likelihood function, and would presumably also perform better if given this information.  An exhaustive comparison with \acro{mcmc} methods is beyond the scope of this paper.
 
