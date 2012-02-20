@@ -51,7 +51,7 @@ Doubly-Bayesian Quadrature for Active Learning of Model Evidence}
 
 \begin{abstract} 
 %We describe a novel approach to quadrature for probabilistic integrals, offering a competitor to traditional Monte Carlo methods. We use a Bayesian quadrature framework \citep{BZHermiteQuadrature,BZMonteCarlo}.
-We introduce several innovations making Bayesian Quadrature methods suitable for computing model evidences, or normalization constants.  We demonstrate the many advantages of model-based integration over standard Markov-chain Monte Carlo approaches.  These include sample efficiency, a natural stopping criterion and an estimate of uncertainty in our integral. We extend existing Bayesian quadrature approaches to this problem by modeling the non-negativity of our integrand and approximately marginalising over the hyperparameters of our Gaussian process model. We also propose the use of active learning to select our samples as an alternative to Monte Carlo methods.
+We introduce several innovations making Bayesian Quadrature methods suitable for computing model evidences, or normalization constants.  We demonstrate the many advantages of model-based integration over standard Markov-chain Monte Carlo approaches.  These include sample efficiency, a natural stopping criterion and an estimate of uncertainty in our integral. We extend existing Gaussian Process models by modeling the non-negativity of our integrand, and by approximately marginalising over hyperparameters in closed form.  We use active learning to select our function samples, as opposed to running a Markov chain.
 \end{abstract} 
 
 \section{Introduction}
@@ -98,7 +98,7 @@ An alternative approach is to posit a distribution over likelihood functions, an
 Here the issue of convergence is solved naturally: our posterior variance over $Z$ indicates the uncertainty remaining in the quantity we care about. While standard errors are possible for \acro{mcmc}, typically they rely on the sampler mixing well \citep{flegal2008markov}. As such, these errors can not identify exactly the failure to mix that is of most concern. The distribution of most use for our inference is a Gaussian process, which we now briefly introduce. 
 
 \section{Gaussian Processes}
-Gaussian processes (\gp s) offer a powerful method to perform Bayesian inference about functions \citep{GPsBook}. A \gpb is defined as a distribution over the functions $f: \Phi \rightarrow \mathbb{R}$ such that the distribution over the possible function values on any finite subset of $\Phi$ is multivariate Gaussian.  For a function $f(\lfv)$, the prior distribution over its values $\vf$ on a subset $\vlfv \subset \Phi$ is
+Gaussian processes (\gp s) offer a powerful method to perform Bayesian inference about functions \citep{GPsBook}. A \gpb is defined as a distribution over the functions $f: \mathcal{X} \rightarrow \mathbb{R}$ such that the distribution over the possible function values on any finite subset of $\mathcal{X}$ is multivariate Gaussian.  For a function $f(\lfv)$, the prior distribution over its values $\vf$ on a subset $\vlfv \subset \mathcal{X}$ is
 \begin{align*}%\label{eq:\gpbDefn}
 \textstyle
  &\po{\vf}\deq \N{\vf}{\vmu_{f}}{K_{f}}\\
@@ -151,7 +151,7 @@ K_{f}(\vlfv_s,\lfv'_\star)\,, \nonumber%\label{eq:\gpbCov}
 
 \emph{Bayesian quadrature} \citep{BZHermiteQuadrature,BZMonteCarlo} is a means of performing Bayesian inference about the value of a potentially nonanalytic integral 
 \begin{equation} \label{eq:intyf}
- \inty{f} \deq \int f(\lfv)\,\po{\lfv}\,\ud\lfv\,.
+ \If \deq \int f(\lfv)\,\po{\lfv}\,\ud\lfv\,.
 \end{equation}
 %Note that we use a condensed notation; this and all integrals to follow are definite integrals over the entire domain of interest.
 We'll assume we are integrating with respect to a Gaussian prior
@@ -162,7 +162,7 @@ We'll assume we are integrating with respect to a Gaussian prior
 although other convenient forms, or, if necessary, the use of an importance re-weighting trick, allow any other integral to be approximated. If $\lfv$ is a vector, $\nu_{\lfv}$ is a  vector of identical size, and $\lambda_{\lfv}$ an appropriate covariance matrix.
 
 %\textcolor{red}{[I'm hoping to re-write the next two paragraphs; it's way too indirect, and I think the philosophical foundations of \acro{mcmc} are a poor avenue of attack]}
-Quadrature involves evaluating $f(\lfv)$ at a vector of sample points $\vlfv_s$, giving $\vf\pha_s\deq f(\vlfv_s)$. Often this evaluation is computationally expensive; the consequent sparsity of our samples introduces uncertainty about the function $f$ between them, and hence uncertainty about the integral $\inty{f}$.
+Quadrature involves evaluating $f(\lfv)$ at a vector of sample points $\vlfv_s$, giving $\vf\pha_s\deq f(\vlfv_s)$. Often this evaluation is computationally expensive; the consequent sparsity of our samples introduces uncertainty about the function $f$ between them, and hence uncertainty about the integral $\If$.
 
 %As ever in the face of uncertainty, we address the estimation of the value of our integral as a problem of Bayesian inference \citep{BZNumericalAnalysis}. 
 
@@ -178,17 +178,17 @@ We choose for $f$ a \gpb prior with mean $\mu_f$ and the Gaussian covariance \eq
 % Many more of these will be implicitly introduced in the coming sections; we'll take this as given and incorporate them into the (hidden) context $I$. 
 % Note that it will later become apparent that our inference for $\inty{f}$ is independent of the $h_f$ quadrature hyperparameter.
 
-Note that variables over which we have a multivariate Gaussian distribution are jointly Gaussian distributed with any affine transformations of those variables. Because integration is affine, we can hence use our computed samples $\vf_s$ to perform analytic Gaussian process inference about the value of integrals over $f(\lfv)$, such as $\inty{f}$. Our mean estimate for $\inty{f}$ given $\vf_s$ is
+Note that variables over which we have a multivariate Gaussian distribution are jointly Gaussian distributed with any affine transformations of those variables. Because integration is affine, we can hence use our computed samples $\vf_s$ to perform analytic Gaussian process inference about the value of integrals over $f(\lfv)$, such as $\If$. Our mean estimate for $\If$ given $\vf_s$ is
 %
 \begin{align} \label{eq:mean_inty_f}
-\mean{\inty{f}}{\vf_s}
+\mean{\If}{\vf_s}
 & 
-=\iint \inty{f}\,\p{\inty{f}}{f}\p{f}{\vf_s} \ud \inty{f} \,\ud f                                                                                                                                                               \nonumber\\
+=\iint \If\,\p{\If}{f}\p{f}{\vf_s} \ud \If \,\ud f                                                                                                                                                               \nonumber\\
 &
- =\iint \inty{f}\,\dd{\inty{f}}{\int f(\lfv)\,\po{\lfv}\,\ud\lfv}
+ =\iint \If\,\dd{\If}{\int f(\lfv)\,\po{\lfv}\,\ud\lfv}
 \nonumber\\
 &\hspace{2.5cm}
-\N{f}{\meancondfn{f}{s}}{C_{f|s}} \ud \inty{f} \,\ud f \nonumber\\
+\N{f}{\meancondfn{f}{s}}{C_{f|s}} \ud \If \,\ud f \nonumber\\
 &
  = \int \meancondfn{f}{s}(\lfv)\,\po{\lfv}\,\ud\lfv\nonumber\\
 &
@@ -227,17 +227,17 @@ We wish to evaluate the evidence $Z = \int \lfn(\lfv) p(\lfv) \ud\lfv$, an integ
 Assigning a standard \gpb prior to $\lfn(\lfv)$ would ignore our prior information about the range and non-negativity of $\lfn(\lfv)$, leading to pathologies such as potentially negative evidences (as observed in \citet{BZMonteCarlo}).  A much better prior would be a \gpb prior on $\log\bigl(\lfn(x)\bigr)$.  However, the integral under the exp of a \gpb is intractable.  In this section, we apply the approximate inference method of \citep{BQR} to tractably integrate under a log-\gpb prior,\footnote{In practice, we use the transform 
 $\log\left(\nicefrac{\lfn(\lfv)}{\gamma} + 1\right)$
 where $\gamma = 1$.  This give better resolution of some numerical issues, and allows us to assume the transformed quantity has zero mean. For the sake of simplicity, we omit this detail in the following derivations.}
-
+%
 \begin{figure}
 \centering
 \psfragfig{figures/delta}
 \caption{An illustration of our method of finding the integral under the exp of a Gaussian process.}
 \label{fig:integrate_hypers}
 \end{figure}
-
+%
 %Firstly, we define the transformation
 %\begin{align*}
-
+%
 % \intertext{and its inverse}
 % t\inv\bigl(\tr(\lfv)\bigr) & \deq \gamma \bigl(\exp \tr(\lfv)-1\bigr)
 %\end{align*}
@@ -269,23 +269,23 @@ where $\gamma = 1$.  This give better resolution of some numerical issues, and a
 %
 %
 \begin{multline}\label{eq:minty_l}
-\mean{\inty{\lfn}}{\vr_s}
+\mean{\If}{\vr_s}
 % & 
 % =\iint \inty{l}\,\p{\inty{l}}{l}\p{l}{\vl_s} \ud \inty{l} \,\ud l                                                                                                                                                               \nonumber\\
 % &
  =\int \Bigl( \int \exp\bigl(\tr(\lfv)\bigr)\lfn(\lfv)\po{\lfv}\,\ud\lfv\Bigr)\\
 \N{\tr}{\meancondfn{\tr}{s}}{C_{\tr|s}} \ud \tr\,.
 \end{multline}
-
+%
 Here the exponential ruins the linearity that yielded the analyticity in Section \ref{sec:bq}. To combat this, we perform inference for $Z$ directly as a functional of $\tr$;
 %
 \begin{align*}
- Z[\tr] \deq \inty{\lfn} & = \int \exp \bigl( \tr(\lfv)\bigr) p(\lfv) \ud \lfv\\
+ Z[\tr] & = \int \exp \bigl( \tr(\lfv)\bigr) p(\lfv) \ud \lfv\\
   						    %& = \int \lfn(\lfv) p(\lfv) \ud \lfv\\
 \pderiv{}{\tr(\lfv)}Z[\tr] & = \exp \bigl( \tr(\lfv)\bigr) p(\lfv) % = \lfn(\lfv) p(\lfv)
 \,.
 \end{align*}
-
+%
 We now make a \emph{linearisation} approximation\footnote{Note that this linearisation is equivalent to taking another \gpb for $Z$. with the affine covariance
 \begin{equation*}
  K_Z(\tr,\tr')
@@ -296,7 +296,7 @@ We now make a \emph{linearisation} approximation\footnote{Note that this lineari
 + \omega^2\,.
 \end{equation*}
 } 
-for $Z$, forcing $Z$ to be, as desired, affine in $\tr$. 
+for $Z$, forcing $Z$ to be affine in $\tr$. 
 Note that \eqref{eq:minty_l} consists of the product of $Z[\tr]$ and a \gpb for $\tr$; the latter, due to the light tails of the Gaussian, effectively permits only a small range of $\tr$ functions. Over this narrow region, it is reasonable to assume that $Z[\tr]$ does not vary too dramatically, and can be approximated as linear. 
 
 Before proceeding, we introduce a separate \gpb model over $\lfn$, the non-log space.  Then $m_{\lfn|s}$ is the \gpb conditional mean (as per \eqref{eq:GPMean}) for $\lfn$ given observations $\lfn(\vlfv_s)$. For this \gpb (over the non-log space), we take zero prior means and Gaussian
@@ -316,7 +316,7 @@ That is, we can now write
 \begin{align*}
 Z_0 & = Z[\tr_0]
 = 
-{\mean{\inty{\lfn}}{\vr_s}}
+{\mean{\If}{\vr_s}}
 \intertext{along with the functional derivative}
 \pderiv{Z_0}{\tr(\lfv)} & = \pderiv{Z}{\tr(\lfv)}[\tr_0]
  = \mean{\lfn(\lfv)}{\vr_s}\,\po{\lfv}
@@ -337,15 +337,15 @@ the difference between the \gpb mean over our log-transformed likelihood and the
 We expect $\Delta(\lfv)$ to be everywhere small relative to the magnitude of $\tr(\phi)$ (see Figure \ref{fig:integrate_hypers}). This implies that
  $\tr_0$ is close to the peaks of our Gaussian over $\tr$, rendering our linearisation appropriate. 
 
-For brevity, we assume that if we condition on $Z_0$, we will also implicitly condition on its functional derivatives. This allows us to write our mean for  $\inty{\lfn}$
+For brevity, we assume that if we condition on $Z_0$, we will also implicitly condition on its functional derivatives. This allows us to write our mean for  $If$
 %
 \begin{align}
-& \mean{\inty{\lfn}}{Z_0,\tvr_s} \nonumber\\
+& \mean{\If}{Z_0,\tvr_s} \nonumber\\
 & \deq \int \mean{Z[\tr]}{Z_0,\tr}
 \p{\tr}{\tvr_s}\, \ud \tr 
 \nonumber\\
 & = \mean{Z[m_{\tr|s}]}{Z_0,m_{\tr|s}} \nonumber\\
-& = \mean{\inty{\lfn}}{\vr_s} + \iint \mean{\lfn(\lfv)}{\vr_s}\,
+& = \mean{\If}{\vr_s} + \iint \mean{\lfn(\lfv)}{\vr_s}\,
 \Delta(\lfv)\,\po{\lfv}\ud\lfv
 \label{eq:mean_ev1}
 \end{align}
@@ -363,17 +363,17 @@ $\vlfv_c$ should firstly include $\vlfv_s$, where we know that $\delta$ is equal
 
 Given these samples, we can now marginalise \eqref{eq:mean_ev1} over $\Delta$ to give
 \begin{align*}
- \mean{\inty{\lfn}}{Z_0,\tvr_s,\Delta_c} =
-\mean{\inty{\lfn}}{\vr_s} + \mean{\inty{\lfn \Delta}}{\vr_s, \Delta_c}\,,
+ \mean{\If}{Z_0,\tvr_s,\Delta_c} =
+\mean{\If}{\vr_s} + \mean{\inty{\lfn \Delta}}{\vr_s, \Delta_c}\,,
 \end{align*}
 where the second term, the correction factor, is expected to be small, as $\Delta$ is small. The variance in the evidence is
 \begin{align*}
-& \cov{\inty{\lfn}}{Z_0,\tvr_s,\Delta_c}\\ 
-& = \secm{\inty{\lfn}}{Z_0,\tvr_s} - \mean{\inty{\lfn}}{Z_0,\tvr_s,\Delta_c}^2\,,
+& \cov{\If}{Z_0,\tvr_s,\Delta_c}\\ 
+& = \secm{\If}{Z_0,\tvr_s} - \mean{\If}{Z_0,\tvr_s,\Delta_c}^2\,,
 \end{align*}
 where the second moment is 
 \begin{align*}
-& \secm{\inty{\lfn}}{Z_0,\tvr_s}  \\
+& \secm{\If}{Z_0,\tvr_s}  \\
 & \deq \int Z^2 
 \delta\bigl(Z - \mean{Z[\tr]}{Z_0}\bigr)
 \p{\tr}{\tvr_s}
@@ -382,11 +382,11 @@ where the second moment is
 \N{\tr}{\meancondfn{\tr}{s}}{C_{\tr|s}}
  \ud\tr\\
 & = \mean{\inty{\lfn\,C_{\tr|s}\,\lfn}}{\tvr_s}+
-\mean{\inty{\lfn}}{Z_0,\tvr_s,\Delta_c}^2,
+\mean{\If}{Z_0,\tvr_s,\Delta_c}^2,
 \end{align*}
 and hence 
 \begin{align*}
-  &\cov{\inty{\lfn}}{Z_0,\tvr_s,\Delta_c} = \mean{\inty{\lfn\,C_{\tr|s}\,\lfn}}{\tvr_s} \\ 
+  &\cov{\If}{Z_0,\tvr_s,\Delta_c} = \mean{\inty{\lfn\,C_{\tr|s}\,\lfn}}{\tvr_s} \\ 
 & \deq
  \iint m_{\lfn|s}(\lfv) m_{\lfn|s}(\lfv') C_{\tr|s}(\lfv,\lfv')  p(x) p(x') \ud \lfv \ud\lfv',
 \end{align*}
@@ -448,7 +448,7 @@ $.
 %which is identical to \eqref{eq:mean_ev} (note that we had previously just implicitly assumed that $\theta=m_\theta$). 
 This implies that our posterior mean for $Z$ is unchanged, and the variance becomes
 \begin{align*}
-  &\cov{\inty{\lfn}}{Z_0,\tvr_s,\Delta_c}=
+  &\cov{\If}{Z_0,\tvr_s,\Delta_c}=
  \iint m_{\lfn|s}(\lfv)\, m_{\lfn|s}(\lfv')\\
 &  
 \hspace{0.5cm}\biggl(C_{\tr|s}(\lfv,\lfv') + \pderiv{m_{\tr|s}}{\theta}\,C_\theta\,\pderiv{m\tra_{\tr|s}}{\theta}\biggr)
@@ -488,13 +488,13 @@ In Section \ref{sec:model_lik}, we took the integral as the affine transform of 
 
 In selecting a new sample $\lfv_a$, we wish to minimise the variance in our evidence after adding it to our model. As such, we choose that variance as our loss function, and choose the $\lfv_a$ that minimises the expected loss
 \begin{align}
-&\bigl\langle \cov{\inty{\lfn}}{Z_0,\tvr_{s,a}}\mid Z_0,\tvr_{s}\bigr\rangle 
+&\bigl\langle \cov{\If}{Z_0,\tvr_{s,a}}\mid Z_0,\tvr_{s}\bigr\rangle 
 \nonumber\\
 % & = \secm{\inty{\lfn}}{Z_0,\tvr_s} 
 % - \int\mean{\inty{\lfn}}{Z_0,\tvr_{a,s},\Delta_c}^2\nonumber\\
 % & \hspace{3.8cm} \p{\tr_a}{\tvr_s}\ud\tr_a\,.\nonumber\\
- & = \secm{\inty{\lfn}}{Z_0,\tvr_s} 
- - \int\mean{\inty{\lfn}}{Z_0,\tvr_{a,s},\Delta_c}^2\nonumber\\
+ & = \secm{\If}{Z_0,\tvr_s} 
+ - \int\mean{\If}{Z_0,\tvr_{a,s},\Delta_c}^2\nonumber\\
 & \hspace{0.2cm}
 \times\N{\tr_a}
 {\tilde{m}_a }
