@@ -70,7 +70,7 @@ Bayesian Quadrature has previously been used to infer model evidence, \citep{BZM
 
 As well, we compare our \acro{bq} approach to standard \acro{mcmc} techniques on a real scientific problem, where we demonstrate one of the key advantages of \acro{bq}: a closed-form expression for the posterior uncertainty in our integral provides a natural stopping criterion for approximate inference.
 
-\section{Estimating Model Evidence}
+\section{Estimating Model Evidence}\label{sec:ev}
 
 %Here, we give a brief overview of the standard methods used for computing normalization constants.  For the remainder of the paper, we will assume that we are able to draw samples from 
 
@@ -518,22 +518,26 @@ In order to minimize the expected variance, we are hence impelled to maximize th
 
 \section{Experiments}
 \label{sec:experiments}
-In this section we attempt to show that our changes to the \acro{bmc} algorithm improve its convergence to the truth.  We also compare against several standard \acro{mcmc} methods.
+
+We now present empirical evaluation of the various components of our algorithm in a variety of different experiments. 
+
+\paragraph{Methods:} We firstly compared against simple Monte Carlo (\acro{smc}), as described in Section \ref{sec:ev}. As an alternative Monte Carlo technique, we also implemented Annealed Importance Sampling (\acro{ais}).  The inverse temperature schedule was linear as in \citep{BZMonteCarlo}, and the proposal width was adjusted to attain approximately a 50\% acceptance rate.  In an attempt to be as generous to \acro{ais} as possible, the posterior variance of the \acro{ais} estimate of $Z$ was set to the empirical variance over 10 chains.
+
+Our first model-based method was Bayesian Monte Carlo (\acro{bmc}) -- the algorithm used in \citep{BZMonteCarlo}, in which samples were chosen from a \acro{ais} chain, and a \gpb was fit to the likelihood samples. For this \gpb, and the others that follow, the hyperparameters were selected as those that maximised the likelihood. 
+
+We then tested a two novel methods. Firstly, Bayesian Quadrature (\acro{bq}), which  employed the linearisation approach of Section \ref{sec:model_lik} to modeling the log-transformed lieklihood values. It did not, however but not marginalizing over hyperparameters, and selecting sample locations via \acro{ais}.
+
+Doubly Bayesian Quadrature (\acro{bbq}) - The algorithm outlined in this paper, in which samples are chosen actively, lengthscale hyperparameters are approximately integrated out, and a \gpb was defined over the log-transformed likelihood values.
+
+We minimise \eqref{eq:exp_var} using a multi-start local optimizer, where the starting points are chosen as $\lfv_c$. 
+
+One somewhat standard method that is missing from this comparison is Hamiltonian Monte Carlo, which uses information about the derivatives in order to speed mixing.  However, Bayesian Quadrature can also incorporate information about the derivatives of the likelihood function, and would presumably also perform better if given this information.  An exhaustive comparison with \acro{mcmc} methods is beyond the scope of this paper.
+
 \paragraph{Integrands}
 We chose a set of problems which would demonstrate the strengths and weakness of the various methods we compared.
 \input{tables/integrands.tex}
 The true value of $Z$ for the non-analytic integrands was estimated by a run of \acro{smc} with $10^6$ samples.
-\paragraph{Methods}
-\begin{itemize}
-\item Simple Monte Carlo (\acro{smc})
-\item Annealed Importance Sampling (\acro{ais}).  The inverse temperature schedule was linear as in \citep{BZMonteCarlo}, and the proposal width was adjusted to attain approximately a 50\% acceptance rate.  In an attempt to be fair, the posterior variance of the \acro{ais} estimate of $Z$ was set to the empirical variance over 10 chains.
-\item Bayesian Monte Carlo (\acro{bmc}) - the algorithm used in \citep{BZMonteCarlo}, in which samples were chosen from a \acro{ais} chain, and a \gpb was fit to the likelihood samples.
-\item Bayesian Quadrature (\acro{bq}) - Bayesian Quadrature using a \gpb on the log-transformed lieklihood values, but not marginalizing over hyperparameters, and selecting sample locations via \acro{ais}.
-\item Doubly Bayesian Quadrature (\acro{bbq}) - The algorithm outlined in this paper, in which samples are chosen actively, lengthscale hyperparameters are approximately integrated out, and a \gpb was defined over the log-transformed likelihood values.
-\end{itemize}
-We minimise \eqref{eq:exp_var} using a multi-start local optimizer, where the starting points are chosen as $\lfv_c$. 
 
-One somewhat standard method that is missing from this comparison is Hamiltonian Monte Carlo, which uses information about the derivatives in order to speed mixing.  However, Bayesian Quadrature can also incorporate information about the derivatives of the likelihood function, and would presumably also perform better if given this information.  An exhaustive comparison with \acro{mcmc} methods is beyond the scope of this paper.
 
 Bayesian model comparison is emerging as an important method for comparing theories in the biological sciences 
 \citep{penny2010comparing, mann2011bayesian, mann2011objectively, rosa2011bayesian, mann2012multi}. \citet{mann2012multi} applied a model comparison methodology to discover the rules of interaction between simple individual animals (glass prawns, {\it Paratya australiensis}), which lead to coherent group motion. By evaluating the evidence for models of varying complexity, they were able to show that more complex rules of greater than expected were optimal to describe the interactions, including in particular a non-Markovian rule governing the memory of the prawns. We aim to reproduce their experiments using our 
