@@ -27,7 +27,7 @@
 \begin{document} 
 \twocolumn[
 \icmltitle{
-Bayesian Quadrature for Active Learning of Probability Integrals}
+Bayesian Quadrature for Active Learning of Model Evidence}
 %Sampling for Bayesian Quadrature\\or\\Actively Learning Normalization Constants\\or\\Doubly Bayesian Quadrature: The \acro{bbq} Algorithm\\or\\
 
 % It is OKAY to include author information, even for blind
@@ -385,7 +385,7 @@ We now present a novel means of approximately marginalising the quadrature hyper
 \begin{figure}
 \centering
 \psfragfig[width=0.5\textwidth]{figures/int_hypers}
-\caption{A demo of the effect of integrating hyperparameters on the marginal posterior variance.}
+\caption{An illustration of the effect of integrating hyperparameters on the marginal posterior variance.  Regions whose mean varies as the lengthscales changes have an increased marginal posterior variance.}
 \label{fig:integrate_hypers}
 \end{figure}
 
@@ -446,12 +446,13 @@ which is again possible, although laborious, to express analytically.
 
 
 
-\section{Doubly Bayesian Quadrature}\label{sec:BBQ}
 
-We aim to select samples $\lfv_s$ so as to minimise the \textit{expected} uncertainty in the evidence after seeing our next sample.\footnote{We also expect such samples to be useful not just for estimating the evidence, but also for any other related expectations, such as would be required to perform prediction using the model.}
-Surprisingly, the posterior variance of a \gpb model with fixed hyperparameters does not depend on the function values at sampled locations all all; only the location of those samples matters. The evidence is a simple affine transformation of the likelihood, which traditional Bayesian quadrature models with a \gp; hence its estimate for the variance in the evidence is likewise independent of likelihood values. As such, active learning is pointless, and the optimal sampling design can be found in advance \cite{minka2000dqr}.
+\section{Active Sampling}\label{sec:BBQ}
 
-In Section \ref{sec:model_lik}, we took the integral as the affine transform of the log-likelihood, which we model with a \gpb. As the affine transformation itself depends on the function values (see \eqref{eq:linearisation}), active learning is now desirable. Our uncertainty over the hyperparameters of the \gpb further motivates active learning: without assuming \textit{a priori} knowledge of the hyperparameters, we can't evaluate the \gpb to compute a sampling schedule beforehand. Our approximate marginalisation of hyperparameters permits us an approach to active sampling that acknowledges the influence new samples may have on our beliefs about the hyperparameters. We'd expect this would further promote exploration, particularly early on, so as to firm up our beliefs about the hyperparameters. 
+One major benefit of model-based integration is that samples can be chosen by any method, as opposed to Monte Carlo methods which must typically sample from a specific distribution.  Here, samples $\lfv_s$ are selected so as to minimise the \textit{expected} uncertainty in the evidence after seeing the next sample.\footnote{We also expect such samples to be useful not just for estimating the evidence, but also for any other related expectations, such as would be required to perform prediction using the model.}
+Surprisingly, the posterior variance of a \gpb model with fixed hyperparameters does not depend on the function values at sampled locations at all; only the location of those samples matters. \footnote{In traditional Bayesian quadrature, the evidence is a simple affine transformation of the sampled likelihood values, hence its estimate for the variance in the evidence is also independent of likelihood values. As such, active learning with fixed hyperparameters is pointless, and the optimal sampling design can be found in advance \cite{minka2000dqr}.}
+
+In Section \ref{sec:model_lik}, we took the integral as the affine transform of the log-likelihood, which we model with a \gpb. As the affine transformation itself depends on the function values (see \eqref{eq:linearisation}), active learning is now desirable. The uncertainty over the hyperparameters of the \gpb further motivates active learning: without assuming \textit{a priori} knowledge of the hyperparameters, we can't evaluate the \gpb to compute a sampling schedule beforehand. The approximate marginalisation of hyperparameters permits an approach to active sampling that acknowledges the influence new samples may have on the posterior over hyperparameters. Active sampling promotes exploration, particularly early on, so as to concentrate the posterior over hyperparameters. 
 
  \begin{figure}
  \centering
@@ -474,7 +475,12 @@ In Section \ref{sec:model_lik}, we took the integral as the affine transform of 
 \label{fig:sample_paths}
 \end{figure}
 
-In selecting a new sample $\lfv_a$, we wish to minimise the variance in our evidence after adding it to our model. As such, we choose that variance as our loss function, and choose the $\lfv_a$ that minimises the expected loss
+Active sampling selects a new sample $\lfv_a$, which minimises the expected variance in the evidence after adding it to the model of $\ell$.  The objective is therefore to choose the $\lfv_a$ that minimizes the expected loss
+%
+\begin{align}
+\lfv_a = \argmin_{\lfv_a} \bigl\langle \cov{\If}{Z_0,\tvr_{s,a}}\mid Z_0,\tvr_{s}\bigr\rangle 
+\end{align}
+where
 \begin{align}
 &\bigl\langle \cov{\If}{Z_0,\tvr_{s,a}}\mid Z_0,\tvr_{s}\bigr\rangle 
 \nonumber\\
@@ -497,10 +503,9 @@ where
 The first term in \eqref{eq:exp_var}, the (expected) second moment, is independent of the selection of $\lfv_a$ and hence can be safely ignored for active sampling. This is true regardless of the probabilistic model chosen for the likelihood surface. 
 Noting that $\int \exp(c\, y)\, \N{y}{m}{\sigma^2} \ud y = \exp(c\, m + \nicefrac{1}{2}\, c^2 \sigma^2)$, 
 the second term, the negative expected squared mean, can be resolved analytically\footnote{We assume that $\Delta$ does not depend on $\tr_a$, only its location $x_a$: we know $\Delta(x_a) = 0$ and assume $\Delta$ elsewhere remains relatively unchanged.}
- for any trial $\lfv_a$ (we omit the laborious details of doing so). We do not have to make a linearisation approximation here, and our prior over $\tr_a$ can be fully exploited for its most important purpose: selecting new samples. 
+ for any trial $\lfv_a$ (we omit the laborious details of doing so). We do not have to make a linearisation approximation here, and the posterior over $\tr_a$ can be fully exploited for its most important purpose: selecting new samples. 
 
-In order to minimize the expected variance, we are hence impelled to maximize the expected squared mean. Unlike in traditional Bayesian quadrature, our exponentiation means that one means of doing so is to seek points where the log-likelihood is predicted to be large: exploitation. We are also compelled to seek out points where our current variance in the log-likelihood is significant, leading to exploration. Note that our variance for $\tr_a$ has been inflated due to our consideration of the influence of hyperparameters (See Figure \ref{fig:integrate_hypers}), which we expect to promote additional exploration, as desired.
-
+In order to minimize the expected variance, the objective in \eqref{eq:exp_var} encourages the maximization the expected squared mean of $Z$. Unlike in traditional Bayesian quadrature, our log-GP model means that one means of doing so is to seek points where the log-likelihood is predicted to be large: exploitation.  The objective function in \eqref{eq:exp_var} also encourages the choice of points where our current variance in the log-likelihood is significant, leading to exploration. Note that our variance for $\tr_a$ has been inflated due to our consideration of the influence of hyperparameters (See Figure \ref{fig:integrate_hypers}), which we expect to promote additional exploration, as desired.
 
 
 
