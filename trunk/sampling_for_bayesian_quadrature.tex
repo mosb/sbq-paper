@@ -534,20 +534,24 @@ $. This allows us to determine how accurate are our variance estimates. As a fur
 
 Our first model-based method was Bayesian Monte Carlo (\acro{bmc}) -- the algorithm used in \citep{BZMonteCarlo}, in which samples were drawn from the \acro{ais} chain just described, and a \gp was fit to the likelihood samples. For this \gp, and the others that follow, the hyperparameters were selected as those that maximised the likelihood. 
 
-We then tested three novel methods. Firstly, Bayesian Quadrature (\acro{bq}*), which employed the linearisation approach of Section \ref{sec:model_lik} to modeling the log-transformed likelihood values, and the approach of Section \ref{sec:marginalizing} to approximately marginalising hyperparameters (the latter denoted by the asterisk). The samples supplied to it were drawn from the same \acro{ais} chain as used above. The performance of this method allows us to quantify to what extent our innovations improve estimation given a fixed set of samples. Note that marginalising hyperparameters affects only our predictive variance, so its impact can be measured in the relative performance of this approach in $\acro{nmse}$ and $\mathcal{C}$ metrics. 
+We then tested four novel methods. Firstly, Bayesian Quadrature (\acro{bq}), which employed the linearisation approach of Section \ref{sec:model_lik} to modeling the log-transformed likelihood values. The samples supplied to it were drawn from the same \acro{ais} chain as used above. \acro{bq}* is identical except that it additionally took the approach of Section \ref{sec:marginalizing} to approximately marginalising hyperparameters, where \acro{bq} did not. The performance of these methods allow us to quantify to what extent our innovations improve estimation given a fixed set of samples. 
 
-Secondly, we tested Doubly Bayesian Quadrature (\acro{bbq}), which again used a \gpb over the log-transformed likelihood values. This algorithm also chose samples actively, as described in Section \ref{sec:BBQ}; \eqref{eq:exp_var} was minimised using a multi-start local optimizer, where the starting points were chosen as $\lfv_c$. Finally, \acro{bbq}* was the same algorithm, but with hyperparameters  approximated marginalised. Both algorithms demonstrate the influence of active sampling on our performance; the relative performances of \acro{bbq} and \acro{bbq}* illustrate the importance of hyperparameter marginalisation. 
+Next, we tested Doubly Bayesian Quadrature (\acro{bbq}), which again used a \gpb over the log-transformed likelihood values. This algorithm also chose samples actively, as described in Section \ref{sec:BBQ}; \eqref{eq:exp_var} was minimised using a multi-start local optimizer, where the starting points were chosen as $\lfv_c$. Finally, \acro{bbq}* was the same algorithm, but with hyperparameters  approximated marginalised. Both algorithms demonstrate the influence of active sampling on our performance. 
 
 One somewhat standard method that is missing from this comparison is Hamiltonian Monte Carlo, which uses information about the derivatives in order to speed mixing.  However, Bayesian Quadrature can also incorporate information about the derivatives of the likelihood function, and would presumably also perform better if given this information.  An exhaustive comparison with \acro{mcmc} methods is beyond the scope of this paper.
 
-\paragraph{Integrands}
-We chose a set of problems which would demonstrate the strengths and weakness of the various methods we compared.
+\paragraph{Problems:}
+We chose a variety of problems which would demonstrate the strengths and weakness of the various methods we compared; please refer to Table \ref{tbl:problem_descriptions} for brief descriptions. As in \citet{BZMonteCarlo} and \citet{BQR}, we focus on evaluating evidences given only low numbers of samples; motivated by real-world problems where evaluating likelihood samples is (computationally or otherwise) expensive. 
+
 \input{tables/integrands.tex}
+
 The true value of $Z$ for the non-analytic integrands was estimated by a run of \acro{smc} with $10^6$ samples.
 
 
 Bayesian model comparison is emerging as an important method for comparing theories in the biological sciences 
-\citep{penny2010comparing, mann2011bayesian, mann2011objectively, rosa2011bayesian, mann2012multi}. \citet{mann2012multi} applied a model comparison methodology to discover the rules of interaction between simple individual animals (glass prawns, {\it Paratya australiensis}), which lead to coherent group motion. By evaluating the evidence for models of varying complexity, they were able to show that more complex rules of greater than expected were optimal to describe the interactions, including in particular a non-Markovian rule governing the memory of the prawns. We aim to reproduce their experiments using our 
+\citep{penny2010comparing, mann2011bayesian, mann2011objectively, rosa2011bayesian, mann2012multi}. \citet{mann2012multi} applied a model comparison methodology to discover the rules of interaction between simple individual animals (glass prawns, {\it Paratya australiensis}), which lead to coherent group motion. By evaluating the evidence for models of varying complexity, they were able to show that more complex rules of greater than expected were optimal to describe the interactions, including in particular a non-Markovian rule governing the memory of the prawns. Given the large corpus of data available, evaluating likelihood samples for these models is computationally demanding. Hence using techniques for evidence estimation that can operate given only a small set of samples is desirable. 
+
+We aim to reproduce their experiments using our 
 
 
 \paragraph{Evaluation}
