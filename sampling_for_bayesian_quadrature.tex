@@ -389,13 +389,17 @@ We now present a novel means of approximately marginalising the quadrature hyper
 \label{fig:integrate_hypers}
 \end{figure}
 
-The hyperparameters of most interest are the input scales $w_\tr$; these hyperparameters can have a powerful influence on the fit to a function. Unfortunately, the dependence of our predictions upon these input scales is complex, ruling out analytic results. However, any approximation we make is likely to improve upon our existing assumption that the posterior for all hyperparameters is a delta function! We make the following essential assumptions.
+The hyperparameters of most interest are the input scales $w_\tr$; these hyperparameters can have a powerful influence on the fit to a function. Unfortunately, the dependence of our predictions upon these input scales is complex, ruling out their analytic marginalisation. However, any approximation we make is likely to improve upon the assumption made by maximum likelihood: that the posterior for all hyperparameters is a delta function. We make the following essential assumptions.
 
  \paragraph*{Flat prior:} We assume that the prior for $\theta$ is very broad, so that our posterior is a simple scaling of the likelihood. 
-\paragraph*{Laplace approximation:} The likelihood  is taken as Gaussian with mean equal to the maximum likelihood value $m_\theta$, and with diagonal covariance matrix $C_\theta$. For quadrature hyperparameters other than the input scales, we take the appropriate diagonal elements as infinitesimally small, such that our posterior for these parameters is a delta function. The diagonal elements corresponding to $w_\tr$ are fitted using the Hessian of the likelihood.
+\paragraph*{Laplace approximation:} For quadrature hyperparameters other than the input scales, we perform maximum likelihood. The likelihood of $w_\tr$ is taken as Gaussian with mean equal to the maximum likelihood value $m_\theta$ and with diagonal covariance matrix $C_\theta$, diagonal elements fitted using the second derivatives of the likelihood.
 %the squared input scales $w_s$ of another \gp, fitted to the likelihood $s(w_r)$ of the input scales $w_r$. \textcolor{red}{[Neat idea, but I can think of simple examples where the lengthscale is short but the mass is spread out; it seems to me that it'd be better to first fit a \gpb, then fit a Gaussian to the \gpb posterior.]}
-\paragraph*{Affine GP mean:} Our predictions for $\tr$ are assumed to have a \gpb mean which is affine in $w_\tr$ around the maximum likelihood values, and a constant variance.  
-
+\paragraph*{Affine GP mean:} Our predictions for $\tr$ are assumed to have a \gpb mean which is affine in $\theta$ around the maximum likelihood values, and a constant covariance;
+\begin{align}
+ \mean{\tr\st}{\tr_s, \theta} & \simeq \mean{\tr\st}{\tr_s, m_\theta} \nonumber\\
+& \hspace{-1.52cm} + \left.\pderiv{\mean{\tr\st}{\tr_s, \theta}}{\theta}\right|_{m_\theta} (\theta - m_\theta)\\
+ C(\tr\st,\tr\st'|\tr_s, \theta) & \simeq \var{\tr\st}{\tr_s, m_\theta}
+\end{align}
  
 The implication of these assumptions is that the posterior mean over $\tr$ remains the same. However, the posterior variance is inflated by an additive factor
 $
