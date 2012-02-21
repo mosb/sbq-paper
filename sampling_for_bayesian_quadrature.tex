@@ -341,7 +341,7 @@ We expect $\Delta(\lfv)$ to be everywhere small relative to the magnitude of $\t
 Unfortunately, \eqref{eq:mean_corrn} is non-analytic due to the $\tr_0$ term within $\Delta$. As such, we perform another stage of Bayesian quadrature by treating $\Delta$ as an unknown function of $\lfv$. We take Gaussian process priors for $\Delta$, with zero prior mean and Gaussian covariance \eqref{eq:Gaussian_cov_fn}. We must now choose sample points $\vlfv_c$ at which to evaluate the $\Delta$ function. 
 Note that we do not need to evaluate $\lfn(\lfv_c)$ in order to compute $\Delta(\lfv_c)$.
 % Unfortunately, it is impractical to resolve this decision problem in the same manner as the selection of $\vlfvS$, our ultimate goal (a topic that receives our full attention in Section \ref{sec:S\acro{bq}})).
-$\vlfv_c$ should firstly include $\vlfv_s$, where we know that $\delta$ is equal to zero. Following \citet{BQR}, we select the remainder of $\vlfv_c$  as the  vertices of a Voronoi diagram \citep{okabe1997locational}, where we expect $\delta$ to be extremised. 
+$\vlfv_c$ should firstly include $\vlfv_s$, where we know that $\Delta$ is equal to zero. Following \citet{BQR}, we select the remainder of $\vlfv_c$  as the  vertices of a Voronoi diagram \citep{okabe1997locational}, where we expect $\delta$ to be extremised. 
 
 Given these samples, we can now marginalise \eqref{eq:mean_ev1} over $\Delta$ to give
 \begin{align*}
@@ -523,15 +523,13 @@ $. This allows us to determine how accurate are our variance estimates. As a fur
 
 \paragraph{Methods:} We firstly compared against simple Monte Carlo (\acro{smc}). \acro{smc} generates samples $x_1 \dots x_N$ from the prior distribution, and estimates $Z$ by $$\hat{Z} = \frac{1}{N} \sum_{n=1}^{N} \lfn(x_n).$$  An estimate of the variance of $\hat{Z}$ is given by the standard error of $\lfn({\bf x})$.
 
-As an alternative Monte Carlo technique, we also implemented Annealed Importance Sampling (\acro{ais}).  The inverse temperature schedule was linear as in \citep{BZMonteCarlo}, and the proposal width was adjusted to attain approximately a 50\% acceptance rate.  In an attempt to be as generous to \acro{ais} as possible, the posterior variance of the \acro{ais} estimate of $Z$ was set to the empirical variance over 10 chains.
+As an alternative Monte Carlo technique, we also implemented Annealed Importance Sampling (\acro{ais}) using a Metropolis-Hastings sampler.  The inverse temperature schedule was linear as in \citep{BZMonteCarlo}, and the proposal width was adjusted to attain approximately a 50\% acceptance rate.  In an attempt to be as generous to \acro{ais} as possible, the posterior variance of the \acro{ais} estimate of $Z$ was set to the empirical variance over 10 chains.  An alternative sampler which we did not use was Hamiltonian Monte Carlo, which uses information about the derivatives in order to speed mixing.  However, Bayesian Quadrature can also incorporate information about the derivatives of the likelihood function, and would presumably also perform better if given this information.  An exhaustive comparison of sampling methods is beyond the scope of this paper.
 
 Our first model-based method was Bayesian Monte Carlo (\acro{bmc}) -- the algorithm used in \citep{BZMonteCarlo}, in which samples were drawn from the \acro{ais} chain just described, and a \gp was fit to the likelihood samples. For this \gp, and the others that follow, the hyperparameters were selected as those that maximised the likelihood. 
 
 We then tested four novel methods. Firstly, Bayesian Quadrature (\acro{bq}), which employed the linearisation approach of Section \ref{sec:model_lik} to modeling the log-transformed likelihood values. The samples supplied to it were drawn from the same \acro{ais} chain as used above. \acro{bq}* is identical except that it additionally took the approach of Section \ref{sec:marginalizing} to approximately marginalising hyperparameters, where \acro{bq} did not. The performance of these methods allow us to quantify to what extent our innovations improve estimation given a fixed set of samples. 
 
 Next, we tested Doubly Bayesian Quadrature (\acro{bbq}), which again used a \gpb over the log-transformed likelihood values. This algorithm also chose samples actively, as described in Section \ref{sec:BBQ}; \eqref{eq:exp_var} was minimised using a multi-start local optimizer, where the starting points were chosen as $\lfv_c$. Finally, \acro{bbq}* was the same algorithm, but with hyperparameters  approximated marginalised. Both algorithms demonstrate the influence of active sampling on our performance. 
-
-One somewhat standard method that is missing from this comparison is Hamiltonian Monte Carlo, which uses information about the derivatives in order to speed mixing.  However, Bayesian Quadrature can also incorporate information about the derivatives of the likelihood function, and would presumably also perform better if given this information.  An exhaustive comparison with \acro{mcmc} methods is beyond the scope of this paper.
 
 \paragraph{Problems:}
 We chose a variety of problems which would demonstrate the strengths and weakness of the various methods we compared; please refer to Table \ref{tbl:problem_descriptions} for brief descriptions. As in \citet{BZMonteCarlo} and \citet{BQR}, we focus on evaluating evidences given only low numbers of samples; motivated by real-world problems where evaluating likelihood samples is (computationally or otherwise) expensive. 
@@ -540,7 +538,7 @@ We chose a variety of problems which would demonstrate the strengths and weaknes
 
 The true value of $Z$ for the non-analytic integrands was estimated by a run of \acro{smc} with $10^6$ samples.
 
-
+[This paragraph was contributed by Richard Mann, who provided the prawn data + likelihood function, it is yet to be integrated]
 Bayesian model comparison is emerging as an important method for comparing theories in the biological sciences 
 \citep{penny2010comparing, mann2011bayesian, mann2011objectively, rosa2011bayesian, mann2012multi}. \citet{mann2012multi} applied a model comparison methodology to discover the rules of interaction between simple individual animals (glass prawns, {\it Paratya australiensis}), which lead to coherent group motion. By evaluating the evidence for models of varying complexity, they were able to show that more complex rules of greater than expected were optimal to describe the interactions, including in particular a non-Markovian rule governing the memory of the prawns. Given the large corpus of data available, evaluating likelihood samples for these models is computationally demanding. Hence using techniques for evidence estimation that can operate given only a small set of samples is desirable. 
 
