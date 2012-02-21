@@ -396,10 +396,10 @@ The hyperparameters of most interest are the input scales $w_\tr$; these hyperpa
 %the squared input scales $w_s$ of another \gp, fitted to the likelihood $s(w_r)$ of the input scales $w_r$. \textcolor{red}{[Neat idea, but I can think of simple examples where the lengthscale is short but the mass is spread out; it seems to me that it'd be better to first fit a \gpb, then fit a Gaussian to the \gpb posterior.]}
 \paragraph*{Affine GP mean:} Our predictions for $\tr$ are assumed to have a \gpb mean which is affine in $\theta$ around the maximum likelihood values, and a constant covariance;
 \begin{align}
- \mean{\tr\st}{\tr_s, \theta} & \simeq \nonumber\\
-\mean{\tr\st}{\tr_s, m_\theta}
- \hspace{-1.52cm} + \left.\pderiv{\mean{\tr\st}{\tr_s, \theta}}{\theta}\right|_{m_\theta} (\theta - m_\theta)\\
- C(\tr\st,\tr\st'|\tr_s, \theta) & \simeq C(\tr\st|\tr_s, m_\theta)
+& \mean{\tr\st}{\tr_s, \theta} \simeq \mean{\tr\st}{\tr_s, m_\theta} \nonumber\\
+& 
+\hspace{1.5cm} + \left.\pderiv{\mean{\tr\st}{\tr_s, \theta}}{\theta}\right|_{m_\theta} (\theta - m_\theta)\\
+& C(\tr\st,\tr\st'|\tr_s, \theta) \simeq C(\tr\st|\tr_s, m_\theta)\,.
 \end{align}
  
 The implication of these assumptions is that the posterior mean over $\tr$ remains the same. However, the posterior variance is inflated by an additive factor
@@ -445,12 +445,10 @@ This implies that our posterior mean for $Z$ is unchanged, and the variance beco
 which is again possible, although laborious, to express analytically.
 
 
-
-
 \section{Active Sampling}\label{sec:BBQ}
 
-One major benefit of model-based integration is that samples can be chosen by any method, as opposed to Monte Carlo methods which must typically sample from a specific distribution.  Here, samples $\lfv_s$ are selected so as to minimise the \textit{expected} uncertainty in the evidence after seeing the next sample.\footnote{We also expect such samples to be useful not just for estimating the evidence, but also for any other related expectations, such as would be required to perform prediction using the model.}
-Surprisingly, the posterior variance of a \gpb model with fixed hyperparameters does not depend on the function values at sampled locations at all; only the location of those samples matters. \footnote{In traditional Bayesian quadrature, the evidence is a simple affine transformation of the sampled likelihood values, hence its estimate for the variance in the evidence is also independent of likelihood values. As such, active learning with fixed hyperparameters is pointless, and the optimal sampling design can be found in advance \cite{minka2000dqr}.}
+One major benefit of model-based integration is that samples can be chosen by any method, as opposed to Monte Carlo methods which must typically sample from a specific distribution.  In this section, we describe a scheme to select samples $\lfv_s$ so as to minimise the \textit{expected} uncertainty in the evidence.\footnote{We also expect such samples to be useful not just for estimating the evidence, but also for any other related expectations, such as would be required to perform prediction using the model.}
+Surprisingly, the posterior variance of a \gpb model with fixed hyperparameters does not depend on the function values at sampled locations at all; only the location of those samples matters.\footnote{In traditional Bayesian quadrature, the evidence is a simple affine transformation of the sampled likelihood values, hence its estimate for the variance in the evidence is also independent of likelihood values. As such, active learning with fixed hyperparameters is pointless, and the optimal sampling design can be found in advance \cite{minka2000dqr}.}
 
 In Section \ref{sec:model_lik}, we took the integral as the affine transform of the log-likelihood, which we model with a \gpb. As the affine transformation itself depends on the function values (see \eqref{eq:linearisation}), active learning is now desirable. The uncertainty over the hyperparameters of the \gpb further motivates active learning: without assuming \textit{a priori} knowledge of the hyperparameters, we can't evaluate the \gpb to compute a sampling schedule beforehand. The approximate marginalisation of hyperparameters permits an approach to active sampling that acknowledges the influence new samples may have on the posterior over hyperparameters. Active sampling promotes exploration, particularly early on, so as to concentrate the posterior over hyperparameters. 
 
