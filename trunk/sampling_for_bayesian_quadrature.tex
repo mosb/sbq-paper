@@ -137,7 +137,6 @@ K_{f}(\lfv_1,\lfv_2)& \deq h_f^2\,\N{\lfv_1}{\lfv_2}{w_{f}}.
 \end{align} 
 Here $h_f$ specifies the output scale (`height') over $f$, while $w_f$ defines a (squared) input scale (`width') over $\lfv$. Note that if $\lfv$ a function over multi-dimensional inputs, $w_f$ is a covariance matrix. For the remainder of the paper, we'll take $w_f$ as diagonal. 
 
-
 Let us assume we have observations $(\vlfv_s,\vf_s)$ and are interested in making predictions about the function valus $f_\star$ at input $\lfv_\star$. We will assume that function inputs such as $\vlfv_s$ and $\lfv_\star$ are always known; they will not be explicitly represented. With this information, we have the predictive equations
 \begin{equation}
  \pskinny{f\st}{\vf_s} = 
@@ -168,6 +167,7 @@ K_{f}(\vlfv_s,\!\lfv'_\star)%\label{eq:\gpbCov}
 \deq {\cov{f_\star}{\vf_s}} 
 \deq C_{f|s}(\lfv_\star, \lfv_\star).
 \end{align} 
+Note that the above assumes implicit conditioning on hyperparameter. Where required for disambiguation, we'll make this explicit, as per $m_{f|s,w_f}(x\st) \deq \mean{f\st}{\vf_s, w_f}$ and so forth.
 
 \section{Bayesian Quadrature} \label{sec:bq}
 
@@ -194,7 +194,7 @@ Quadrature involves evaluating $f(\lfv)$ at a vector of sample points $\vlfv_s$,
 %effectively ignores the information content of $\vlfv_s$, leading to unsatisfactory behaviour.
 %\footnote{  For example, imagine that we had $\card{s}=3$, and $\lfv_1 = \lfv_2$. In this case, the identical value $q(\lfv_1)= q(\lfv_2)$ will receive $\nicefrac{2}{3}$ of the weight, whereas the equally useful $q(\lfv_3)$ will receive only $\nicefrac{1}{3}$. \textcolor{red}{I'm not crazy about this argument, since the weightings are also incorporating information about the prior...} }
 
-Traditional Bayesian quadrature chooses a \gpb prior for $f$, with mean $\mu_f$ and the Gaussian covariance \eqref{eq:Gaussian_cov_fn}. Here the scales $h_f$ and $w_f$ are \emph{quadrature hyperparameters}, hyperparameters that specify the  \gpb used for Bayesian quadrature. These scales are typically fitted using maximum likelihood; we will later introduce an approximate means of marginalising them in Section \ref{sec:marginalization}.
+Traditional Bayesian quadrature chooses a \gpb prior for $f$, with mean $\mu_f$ and the Gaussian covariance \eqref{eq:Gaussian_cov_fn}. Here the scales $h_f$ and $w_f$ are \emph{quadrature hyperparameters}, hyperparameters that specify the  \gpb used for Bayesian quadrature. These scales are typically fitted using maximum likelihood; we will later introduce an approximate means of marginalising them in Section \ref{sec:marginalizing}.
 
 % Many more of these will be implicitly introduced in the coming sections; we'll take this as given and incorporate them into the (hidden) context $I$. 
 % Note that it will later become apparent that our inference for $\inty{f}$ is independent of the $h_f$ quadrature hyperparameter.
@@ -344,43 +344,46 @@ Note that we do not need to evaluate $\lfn(\lfv_c)$ in order to compute $\Delta(
 $\vlfv_c$ should firstly include $\vlfv_s$, where we know that $\Delta$ is equal to zero. Following \citet{BQR}, we select the remainder of $\vlfv_c$  as the  vertices of a Voronoi diagram \citep{okabe1997locational}, where we expect $\delta$ to be extremised. 
 
 Given these samples, we can now marginalise \eqref{eq:mean_ev1} over $\Delta$ to give
-\begin{align*}
- \mean{\If}{Z_0,\tvr_s,\Delta_c} =
-\mean{\If}{\vr_s} + \mean{\inty{\lfn \Delta}}{\vr_s, \Delta_c}\,,
-\end{align*}
+\begin{equation} \label{eq:post_mean}
+ \hspace{-0.2cm}\mean{\If}{Z_0,\tvr_s,\Delta_c} =
+\mean{\If}{\vr_s} + \mean{\inty{\lfn \Delta}}{\vr_s, \Delta_c},
+\end{equation}
 where the second term, the correction factor, is expected to be small, as $\Delta$ is small. The variance in the evidence is
-\begin{align*}
-& \cov{\If}{Z_0,\tvr_s,\Delta_c}\\ 
+\begin{align} 
+& \cov{\If}{Z_0,\tvr_s,\Delta_c}\nonumber\\ 
 & = \secm{\If}{Z_0,\tvr_s} - \mean{\If}{Z_0,\tvr_s,\Delta_c}^2\,,
-\end{align*}
+\end{align}
 where the second moment is 
-\begin{align*}
-& \secm{\If}{Z_0,\tvr_s}  \\
+\begin{align}
+& \secm{\If}{Z_0,\tvr_s}  \nonumber\\
 & \deq \int Z^2 
 \delta\bigl(Z - \mean{Z[\tr]}{Z_0}\bigr)
 \p{\tr}{\tvr_s}
-\ud Z \ud\tr\\
+\ud Z \ud\tr
+\nonumber\\
 & = \int \mean{Z[\tr]}{Z_0}^2
 \N{\tr}{\meancondfn{\tr}{s}}{C_{\tr|s}}
- \ud\tr\\
+ \ud\tr
+\nonumber\\
 & = \mean{\inty{\lfn\,C_{\tr|s}\,\lfn}}{\tvr_s}+
-\mean{\If}{Z_0,\tvr_s,\Delta_c}^2,
-\end{align*}
+\mean{\If}{Z_0,\tvr_s,\Delta_c}^2
+\end{align}
 and hence 
-\begin{align*}
-  &\cov{\If}{Z_0,\tvr_s,\Delta_c} = \mean{\inty{\lfn\,C_{\tr|s}\,\lfn}}{\tvr_s} \\ 
-& \deq
+\begin{align} \label{eq:post_var}
+  &\cov{\If}{Z_0,\tvr_s,\Delta_c} = \mean{\inty{\lfn\,C_{\tr|s}\,\lfn}}{\tvr_s} 
+\nonumber\\ 
+&\deq
  \iint m_{\lfn|s}(\lfv) m_{\lfn|s}(\lfv') C_{\tr|s}(\lfv,\lfv')  p(x) p(x') \ud \lfv \ud\lfv',
-\end{align*}
+\end{align}
 which is expressible in closed form, although space precludes us from doing so. This variance can be employed as a convergence diagnostic; it describes our uncertainty in the ultimate quantity of interest.
 
-In summary, we have described a linearisation approach to exploiting a \acro{gp} prior over log-likelihoods to determine the posterior mean and variance for the evidence. 
+In summary, we have described a linearisation approach to exploiting a \acro{gp} prior over log-likelihoods to determine the posterior mean \eqref{eq:post_mean} and variance \eqref{eq:post_var} for the evidence. 
 
 \section{Marginalising quadrature hyperparameters}
-\label{sec:marginalization}
+\label{sec:marginalizing}
 
-We now present a novel means of approximately marginalising the quadrature hyperparameters $\theta$ of the \gpb used to model the integrand, $\tr$. In previous approaches to Bayesian Quadrature, quadrature hyperparameters have been fitted to the
- maximum likelihood values $m_\theta$. However, ignoring the uncertainty in the hyperparameters to which our predictions are sensitive can lead to pathologies. In particular, the reliability of the variance for $Z$ depends crucially upon marginalising over all unknown quantities. 
+We now present a novel means of approximately marginalising the quadrature hyperparameters of the \gpb used to model the log-integrand, $\tr$. In previous approaches to Bayesian Quadrature, quadrature hyperparameters have been fitted using 
+ maximum likelihood. However, ignoring the uncertainty in the hyperparameters to which our predictions are sensitive can lead to pathologies. In particular, the reliability of the variance for $Z$ depends crucially upon marginalising over all unknown quantities. 
 
 \begin{figure}
 \centering
@@ -389,23 +392,30 @@ We now present a novel means of approximately marginalising the quadrature hyper
 \label{fig:integrate_hypers}
 \end{figure}
 
-The hyperparameters of most interest are the input scales $w_\tr$; these hyperparameters can have a powerful influence on the fit to a function. Unfortunately, the dependence of our predictions upon these input scales is complex, ruling out their analytic marginalisation. However, any approximation we make is likely to improve upon the assumption made by maximum likelihood: that the posterior for all hyperparameters is a delta function. We make the following essential assumptions.
+The hyperparameters of most interest are the input scales $w$ for the \gpb over the log-likelihood; these hyperparameters can have a powerful influence on the fit to a function. We use maxmimum likelihood to fit all hyperparmeters other than $w$. Unfortunately, the analytic marginalisation of $w$ is ruled out by the complex dependence of our predictions upon these input scales. However, any approximation we make is likely to improve upon the assumption made by maximum likelihood: that the posterior for all hyperparameters is a delta function. We make the following essential assumptions.
 
- \paragraph*{Flat prior:} We assume that the prior for $\theta$ is very broad, so that our posterior is a simple scaling of the likelihood. 
-\paragraph*{Laplace approximation:} For quadrature hyperparameters other than the input scales, we perform maximum likelihood. The likelihood of $w_\tr$ is taken as Gaussian with mean equal to the maximum likelihood value $m_\theta$ and with diagonal covariance matrix $C_\theta$, diagonal elements fitted using the second derivatives of the likelihood.
+ \paragraph*{Flat prior:} We assume that the prior for $w$ is very broad, so that our posterior is a simple scaling of the likelihood. 
+\paragraph*{Laplace approximation:} The likelihood of $w$ is taken as Gaussian with mean equal to the maximum likelihood value $\hat{w}$ and with diagonal covariance matrix $C_w$, diagonal elements fitted using the second derivatives of the likelihood.
 %the squared input scales $w_s$ of another \gp, fitted to the likelihood $s(w_r)$ of the input scales $w_r$. \textcolor{red}{[Neat idea, but I can think of simple examples where the lengthscale is short but the mass is spread out; it seems to me that it'd be better to first fit a \gpb, then fit a Gaussian to the \gpb posterior.]}
-\paragraph*{Affine GP mean:} Our predictions for $\tr$ are assumed to have a \gpb mean which is affine in $\theta$ around the maximum likelihood values, and a constant covariance;
+\paragraph*{Affine GP mean:} Given the tightness of the likelihood for $w$, our predictions for $\tr$ are assumed to have a \gpb mean which is affine in $w$ around the maximum likelihood values, and a constant covariance;
 \begin{align}
-& \mean{\tr\st}{\tr_s, \theta} \simeq \mean{\tr\st}{\tr_s, m_\theta} \nonumber\\
-& 
-\hspace{1.5cm} + \left.\pderiv{\mean{\tr\st}{\tr_s, \theta}}{\theta}\right|_{m_\theta} (\theta - m_\theta)\\
-& C(\tr\st,\tr\st'|\tr_s, \theta) \simeq C(\tr\st|\tr_s, m_\theta)\,.
+\hspace{-0.2cm} m_{\tr|s,w} & \simeq m_{\tr|s,\hat{w}} 
+ + \pderiv{m_{\tr|s,\hat{w}}}{w} (w- \hat{w})\\
+ \hspace{-0.2cm} C_{\tr|s, w} & \simeq C_{\tr|s, \hat{w}}.
 \end{align}
  
-The implication of these assumptions is that the posterior mean over $\tr$ remains the same. However, the posterior variance is inflated by an additive factor
+The implication of these assumptions is that the marginal posterior mean over $\tr$ is simply
 $
-(\npderiv{m_{\tr|s}}{\theta})\,C_\theta\,(\npderiv{m\tra_{\tr|s}}{\theta})
-$. 
+\mean{\tr\st}{\tr_s} = \mean{\tr\st}{\tr_s, \hat{w}}
+$.   
+The marginal posterior variance is 
+\begin{align}
+C(\tr\st,\tr\st'|\tr_s) & = C(\tr\st,\tr\st'|\tr_s, \hat{w}) \nonumber\\
+& \hspace{-0.5cm} + 
+\pderiv{m_{\tr|s,\hat{w}}}{w}
+\,C_w\,
+\pderiv{m_{\tr|s,\hat{w}}}{w}\,.
+\end{align}
  % David sez: I moved this to the appendix.
 %With these assumptions, we have
 %\begin{align*}
@@ -434,23 +444,28 @@ $.
 %& = \mean{Z[\tr]}{Z_0,m_{\tr|s,m_\theta}}\,,
 %\end{align*}
 %which is identical to \eqref{eq:mean_ev} (note that we had previously just implicitly assumed that $\theta=m_\theta$). 
-This implies that our posterior mean for $Z$ is unchanged, and the variance becomes
-\begin{align*}
+This implies that our posterior mean for $Z$ is simply $\mean{\If}{Z_0,\tvr_s,\Delta_c, w_m}$ of the form \eqref{eq:post_mean}. The variance
+\begin{align}
   &\cov{\If}{Z_0,\tvr_s,\Delta_c}=
  \iint m_{\lfn|s}(\lfv)\, m_{\lfn|s}(\lfv')\\
 &  
-\hspace{0.5cm}\biggl(C_{\tr|s}(\lfv,\lfv') + \pderiv{m_{\tr|s}}{\theta}\,C_\theta\,\pderiv{m\tra_{\tr|s}}{\theta}\biggr)
+\hspace{0.5cm}\biggl(C_{\tr|s}(\lfv,\lfv') + 
+\pderiv{m_{\tr|s,\hat{w}}}{w}
+\,C_w\,
+\pderiv{m_{\tr|s,\hat{w}}}{w}
+\biggr)
  \ud \lfv \ud\lfv',
-\end{align*}
-which is again possible, although laborious, to express analytically.
+\end{align}
+is possible, although laborious, to express analytically, just like \eqref{eq:post_var}.
 
 
 \section{Active Sampling}\label{sec:BBQ}
 
-One major benefit of model-based integration is that samples can be chosen by any method, as opposed to Monte Carlo methods which must typically sample from a specific distribution.  In this section, we describe a scheme to select samples $\lfv_s$ so as to minimise the \textit{expected} uncertainty in the evidence.\footnote{We also expect such samples to be useful not just for estimating the evidence, but also for any other related expectations, such as would be required to perform prediction using the model.}
-Surprisingly, the posterior variance of a \gpb model with fixed hyperparameters does not depend on the function values at sampled locations at all; only the location of those samples matters.\footnote{In traditional Bayesian quadrature, the evidence is a simple affine transformation of the sampled likelihood values, hence its estimate for the variance in the evidence is also independent of likelihood values. As such, active learning with fixed hyperparameters is pointless, and the optimal sampling design can be found in advance \cite{minka2000dqr}.}
+One major benefit of model-based integration is that samples can be chosen by any method, as opposed to Monte Carlo methods which must typically sample from a specific distribution.  In this section, we describe a scheme to select samples $\lfv_s$ sequentially by minimising the \textit{expected} uncertainty in the evidence remaining after taking each additional sample.\footnote{We also expect such samples to be useful not just for estimating the evidence, but also for any other related expectations, such as would be required to perform prediction using the model.} We take the variance in the evidence as our loss function, and proceed according to Bayesian decision theory.
 
-In Section \ref{sec:model_lik}, we took the integral as the affine transform of the log-likelihood, which we model with a \gpb. As the affine transformation itself depends on the function values (see \eqref{eq:linearisation}), active learning is now desirable. The uncertainty over the hyperparameters of the \gpb further motivates active learning: without assuming \textit{a priori} knowledge of the hyperparameters, we can't evaluate the \gpb to compute a sampling schedule beforehand. The approximate marginalisation of hyperparameters permits an approach to active sampling that acknowledges the influence new samples may have on the posterior over hyperparameters. Active sampling promotes exploration, particularly early on, so as to concentrate the posterior over hyperparameters. 
+Surprisingly, the posterior variance of a \gpb model with fixed hyperparameters does not depend on the function values at sampled locations at all; only the location of those samples matters. In traditional Bayesian quadrature, the evidence is a simple affine transformation of the sampled likelihood values, hence its estimate for the variance in the evidence is also independent of likelihood values. As such, active learning with fixed hyperparameters is pointless, and the optimal sampling design can be found in advance \cite{minka2000dqr}.
+
+In Section \ref{sec:model_lik}, we took the integral as the affine transform of the log-likelihood, which we model with a \gp. As the affine transformation itself depends on the function values (see \eqref{eq:linearisation}), active learning is  desirable. The uncertainty over the hyperparameters of the \gpb further motivates active learning: without assuming \textit{a priori} knowledge of the hyperparameters, we can't evaluate the \gpb to compute a sampling schedule beforehand. The approximate marginalisation of hyperparameters permits an approach to active sampling that acknowledges the influence new samples may have on the posterior over hyperparameters. Active sampling promotes exploration, particularly early on, so as to concentrate the posterior over hyperparameters. 
 
  \begin{figure}
  \centering
@@ -473,12 +488,12 @@ In Section \ref{sec:model_lik}, we took the integral as the affine transform of 
 \label{fig:sample_paths}
 \end{figure}
 
-Active sampling selects a new sample $\lfv_a$, which minimises the expected variance in the evidence after adding it to the model of $\ell$.  The objective is therefore to choose the $\lfv_a$ that minimizes the expected loss
+Active sampling selects a new sample $\lfv_a$ so as to minimise the expected variance in the evidence after adding it to the model of $\ell$.  The objective is therefore to choose the $\lfv_a$ that minimizes the expected loss;
 %
 \begin{align}
 \lfv_a = \argmin_{\lfv_a} \bigl\langle \cov{\If}{Z_0,\tvr_{s,a}}\mid Z_0,\tvr_{s}\bigr\rangle 
 \end{align}
-where
+where the expected loss is
 \begin{align}
 &\bigl\langle \cov{\If}{Z_0,\tvr_{s,a}}\mid Z_0,\tvr_{s}\bigr\rangle 
 \nonumber\\
@@ -493,17 +508,17 @@ where
 {\tilde{C}_a +\pderiv{\tilde{m}_a}{\theta}C_\theta\pderiv{\tilde{m}\tra_a}{\theta}}
 \ud\tr_a\,.\label{eq:exp_var}
 \end{align}
-where
-\begin{align*}
-\tilde{m}_a & \deq \mean{\tr_a}{\tvr_s,m_\theta}\\
+and
+\begin{align}
+\tilde{m}_a & \deq \mean{\tr_a}{\tvr_s,m_\theta}\\ 
 \tilde{C}_a & \deq \cov{\tr_a}{\tvr_s,m_\theta}\,.
-\end{align*}
+\end{align}
 The first term in \eqref{eq:exp_var}, the (expected) second moment, is independent of the selection of $\lfv_a$ and hence can be safely ignored for active sampling. This is true regardless of the probabilistic model chosen for the likelihood surface. 
 Noting that $\int \exp(c\, y)\, \N{y}{m}{\sigma^2} \ud y = \exp(c\, m + \nicefrac{1}{2}\, c^2 \sigma^2)$, 
 the second term, the negative expected squared mean, can be resolved analytically\footnote{We assume that $\Delta$ does not depend on $\tr_a$, only its location $x_a$: we know $\Delta(x_a) = 0$ and assume $\Delta$ elsewhere remains relatively unchanged.}
  for any trial $\lfv_a$ (we omit the laborious details of doing so). We do not have to make a linearisation approximation here, and the posterior over $\tr_a$ can be fully exploited for its most important purpose: selecting new samples. 
 
-In order to minimize the expected variance, the objective in \eqref{eq:exp_var} encourages the maximization the expected squared mean of $Z$. Unlike in traditional Bayesian quadrature, our log-GP model means that one means of doing so is to seek points where the log-likelihood is predicted to be large: exploitation.  The objective function in \eqref{eq:exp_var} also encourages the choice of points where our current variance in the log-likelihood is significant, leading to exploration. Note that our variance for $\tr_a$ has been inflated due to our consideration of the influence of hyperparameters (See Figure \ref{fig:integrate_hypers}), which we expect to promote additional exploration, as desired.
+In order to minimize the expected variance, the objective in \eqref{eq:exp_var} encourages the maximization of the expected squared mean of $Z$. Due to our log-\gpb model, one means of doing so is to seek points where the log-likelihood is predicted to be large: exploitation.  The objective function in \eqref{eq:exp_var} also encourages the choice of points where our current variance in the log-likelihood is significant, leading to exploration. Note that our variance for $\tr_a$ has been inflated due to our consideration of the influence of hyperparameters (See Figure \ref{fig:integrate_hypers}), which we expect to promote additional exploration, as desired.
 
 
 
@@ -518,7 +533,7 @@ $
 $
 providing some measure of the average percentage error, in decibels. Next we compute the log-density of the truth, assuming experiments are independent,
 $
-p(\vect{Z}) = \prod_i \N{Z_i}{m(Z_i)}{V(Z_i)}
+\log p(\vect{Z}) = \sum_i \log \N{Z_i}{m(Z_i)}{V(Z_i)}
 $. This allows us to determine how accurate are our variance estimates. As a further metric, we supply the calibration $\mathcal{C}$, defined as the fraction of experiments in which the ground truth lay within our 50\% confidence interval $\bigl(m(Z_i) - 0.6745 \sqrt{V(Z_i)}, m(Z_i) + 0.6745 \sqrt{V(Z_i)}\bigr)$. Ideally, $\mathcal{C}$ would be exactly 50\%: any higher, and a method is under-confident, any lower and it is over-confident. 
 
 \paragraph{Methods:} We firstly compared against simple Monte Carlo (\acro{smc}). \acro{smc} generates samples $x_1 \dots x_N$ from the prior distribution, and estimates $Z$ by $$\hat{Z} = \frac{1}{N} \sum_{n=1}^{N} \lfn(x_n).$$  An estimate of the variance of $\hat{Z}$ is given by the standard error of $\lfn({\bf x})$.
@@ -529,7 +544,7 @@ Our first model-based method was Bayesian Monte Carlo (\acro{bmc}) -- the algori
 
 We then tested four novel methods. Firstly, Bayesian Quadrature (\acro{bq}), which employed the linearisation approach of Section \ref{sec:model_lik} to modeling the log-transformed likelihood values. The samples supplied to it were drawn from the same \acro{ais} chain as used above. \acro{bq}* is identical except that it additionally took the approach of Section \ref{sec:marginalizing} to approximately marginalising hyperparameters, where \acro{bq} did not. The performance of these methods allow us to quantify to what extent our innovations improve estimation given a fixed set of samples. 
 
-Next, we tested Doubly Bayesian Quadrature (\acro{bbq}), which again used a \gpb over the log-transformed likelihood values. This algorithm also chose samples actively, as described in Section \ref{sec:BBQ}; \eqref{eq:exp_var} was minimised using a multi-start local optimizer, where the starting points were chosen as $\lfv_c$. Finally, \acro{bbq}* was the same algorithm, but with hyperparameters  approximated marginalised. Both algorithms demonstrate the influence of active sampling on our performance. 
+Next, we tested a novel algorithm, Doubly Bayesian Quadrature (\acro{bbq}). The method is so named for the fact that we use not only Bayesian inference (with a \gpb over the log-transformed likelihood) to compute the posterior for the evidence, but also Bayesian decision theory to select our samples actively, as described in Section \ref{sec:BBQ}. Note that \eqref{eq:exp_var} was minimised using a multi-start local optimizer, where the starting points were chosen as $\lfv_c$. Finally, \acro{bbq}* was the same algorithm, but with hyperparameters  approximated marginalised. Both algorithms demonstrate the influence of active sampling on our performance. 
 
 \paragraph{Problems:}
 We chose a variety of problems which would demonstrate the strengths and weakness of the various methods we compared; please refer to Table \ref{tbl:problem_descriptions} for brief descriptions. As in \citet{BZMonteCarlo} and \citet{BQR}, we focus on evaluating evidences given only low numbers of samples; motivated by real-world problems where evaluating likelihood samples is (computationally or otherwise) expensive. 
