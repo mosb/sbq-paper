@@ -72,7 +72,7 @@ There exist several standard randomized methods for computing model evidence, su
 
 %\section{Model-Based Integration}
 
-An alternative, model-based approach, Bayesian Quadrature (\acro{bq}) \citep{BZHermiteQuadrature}, specifies a distribution over likelihood functions, using observations of the likelihood to infer a distribution for $Z$ (see Figure \ref{fig:model_based}). Bayesian Quadrature has previously been used to infer model evidence, \citep{BZMonteCarlo}.  We improve upon this work in three ways:
+An alternative, model-based approach, Bayesian Quadrature (\acro{bq}) \citep{BZHermiteQuadrature}, specifies a distribution over likelihood functions, using observations of the likelihood to infer a distribution for $Z$ (see Figure \ref{fig:model_based}). Bayesian Quadrature has previously been used to infer model evidence \citep{BZMonteCarlo}.  We improve upon this work in three ways:
 
 \begin{figure}
 \centering
@@ -148,18 +148,18 @@ where the mean $m$, covariance $C$, and variance $V$ are
 &\meancond{f}{\lfv_\star}{s}
 \deq \mean{f_\star}{\vf_s}
 \nonumber\\
-&= \mu(\lfv_\star)\!+\!
+&= \mu(\lfv_\star)+
 K(\lfv_\star,\vlfv_s)
-K(\vlfv_s,\vlfv_s)\inv\!
-\bigl(\vf_s\!-\!{\mu}(\vlfv_s)\bigr)\label{eq:GPMean}
+K(\vlfv_s,\vlfv_s)\inv
+\bigl(\vf_s-{\mu}(\vlfv_s)\bigr)\label{eq:GPMean}
 \\[0.2cm]
 &C_{f|s}(\lfv_\star, \lfv'_\star)
 \deq C(f_\star,f'_\star|\vf_s) 
 \nonumber\\
-&=\!K(\lfv_\star,\lfv'_\star)\! - \!
-K(\lfv_\star,\!\vlfv_s)
-K(\vlfv_s,\!\vlfv_s)\inv\!
-K(\vlfv_s,\!\lfv'_\star)%\label{eq:\gpbCov}
+&=K(\lfv_\star,\lfv'_\star) - 
+K(\lfv_\star,\vlfv_s)
+K(\vlfv_s,\vlfv_s)\inv
+K(\vlfv_s,\lfv'_\star)%\label{eq:\gpbCov}
 \\[0.2cm]
 &\covcond{f}{\lfv_\star}{s}
 \deq {\cov{f_\star}{\vf_s}} 
@@ -232,8 +232,6 @@ $\mean{\inty{f g}}{\vf_s, \vect{g}_s}$ for an integral $\int f(x) g(x) p(x) \ud 
  In the following three sections, we will expand upon the improvements this paper introduces in the use of Bayesian Quadrature for computing model evidences.
 
 \section{Modeling Likelihood Functions}\label{sec:model_lik}
-
-We wish to evaluate the evidence \eqref{eq:ev}, an integral over non-negative likelihoods, $\lfn(\lfv)$.
 %
  \begin{figure}
  \centering
@@ -249,8 +247,7 @@ We wish to evaluate the evidence \eqref{eq:ev}, an integral over non-negative li
 \label{fig:delta}
 \end{figure}
 %
-Assigning a standard \gpb prior to $\lfn(\lfv)$ would ignore prior information about the range and non-negativity of $\lfn(\lfv)$, leading to pathologies such as potentially negative evidences (as observed in \citet{BZMonteCarlo}).  A much better prior would be a \gpb prior on $\log\bigl(\lfn(x)\bigr)$ (see Figure \ref{fig:log_is_better}). However, the integral under the exp of a \gpb is intractable,
-% 
+We wish to evaluate the evidence \eqref{eq:ev}, an integral over non-negative likelihoods, $\lfn(\lfv)$. Assigning a standard \gpb prior to $\lfn(\lfv)$ would ignore prior information about the range and non-negativity of $\lfn(\lfv)$, leading to pathologies such as potentially negative evidences (as observed in \citet{BZMonteCarlo}).  A much better prior would be a \gpb prior on $\log\bigl(\lfn(x)\bigr)$ (see Figure \ref{fig:log_is_better}). However, the integral under the exp of a \gpb is intractable,
 \begin{multline}\label{eq:minty_l}
 \mean{\If}{\vr_s}
 % & 
@@ -259,7 +256,7 @@ Assigning a standard \gpb prior to $\lfn(\lfv)$ would ignore prior information a
  =\int \Bigl( \int \exp\bigl(\tr(\lfv)\bigr)\po{\lfv}\,\ud\lfv\Bigr)\\
 \N{\tr}{\meancondfn{\tr}{s}}{C_{\tr|s}} \ud \tr\,.
 \end{multline}
-%
+
 Here the exponential ruins the linearity that yielded the analyticity in Section \ref{sec:bq}. To combat this, we adopt the approximate inference method of \citep{BQR} to tractably integrate under a log-\gpb prior.\footnote{In practice, we use the transform 
 $\log\left(\lfn(\lfv) + 1\right)$, allowing us to assume the transformed quantity has zero mean. For the sake of simplicity, we omit this detail in the following derivations.} That is, we perform inference for $Z$ directly as a functional of $\tr$;
 %
@@ -270,16 +267,17 @@ $\log\left(\lfn(\lfv) + 1\right)$, allowing us to assume the transformed quantit
 \,.
 \end{align}
 %
-We now make a \emph{linearisation} approximation\footnote{Note that this linearisation is equivalent to taking another \gpb for $Z$. with the affine covariance
-\begin{equation}
- K_Z(\tr,\tr')
-% \deq 
-%  K_Z\bigl((\tvq\pha_c,\tvr\pha_c),(\tvq'_c,\tvr'_c)\bigr)
-\deq
-\int\tr(\lfv) \tr'(\lfv) \ud \lfv
-+ \omega^2\,.
-\end{equation}
-} 
+We now make a \emph{linearisation} approximation
+% \footnote{Note that this linearisation is equivalent to taking another \gpb for $Z$. with the affine covariance
+% \begin{equation}
+%  K_Z(\tr,\tr')
+% % \deq 
+% %  K_Z\bigl((\tvq\pha_c,\tvr\pha_c),(\tvq'_c,\tvr'_c)\bigr)
+% \deq
+% \int\tr(\lfv) \tr'(\lfv) \ud \lfv
+% + \omega^2\,.
+% \end{equation}
+% } 
 for $Z$, assuming $Z$ to be affine in $\tr$. 
 Note that \eqref{eq:minty_l} consists of the product of $Z[\tr]$ and a \gpb for $\tr$; the latter, due to the light tails of the Gaussian, effectively permits only a small range of $\tr$ functions. Over this narrow region, it is reasonable to assume that $Z[\tr]$ does not vary too dramatically, and can be approximated as linear. If we perform the linearisation of $Z[\tr]$ around a point defined by $\tr_0$, we can define terms required for linearisation
 $Z_0 \deq Z[\tr_0]$ and $\pderiv{Z_0}{\tr(\lfv)} \deq \pderiv{Z}{\tr(\lfv)}[\tr_0]$.  Linearisation then gives us
@@ -317,15 +315,15 @@ For brevity, we assume that if we condition on $Z_0$, we will also implicitly co
 \nonumber\\
 & = \mean{Z[m_{\tr|s}]}{Z_0,m_{\tr|s}} \nonumber\\
 & = \mean{\If}{\vr_s} + 
-\mean{\varepsilon}{Z_0,\tvr_s}
+\mean{\varepsilon}{Z_0,\tvr_s,\Delta}
 \label{eq:mean_ev1}
 \end{align}
 where
-\begin{align}\label{eq:mean_corrn}
-\mean{\varepsilon}{Z_0,\tvr_s} 
-& = \iint \mean{\lfn(\lfv)}{\vr_s}\,
-\Delta(\lfv)\,\po{\lfv}\ud\lfv\,.
-\end{align}
+\begin{equation}\label{eq:mean_corrn}
+\mean{\varepsilon}{Z_0,\tvr_s,\Delta} 
+\!=\!\iint\!\mean{\lfn(\lfv)}{\vr_s}
+\Delta(\lfv)\po{\lfv}\ud\lfv.
+\end{equation}
 Here we have defined the difference between the \gpb mean over the log-transformed likelihood and the transformed \gpb mean over the original likelihood (illustrated in Figure \ref{fig:delta}) as
 \begin{align}
 \Delta & \deq m_{\tr |s} - \log(m_{l|s}) = m_{\tr |s}  - \tr_0 \,.
@@ -339,7 +337,7 @@ Note that we do not need to evaluate $\lfn(\lfv_c)$ in order to compute $\Delta(
 % Unfortunately, it is impractical to resolve this decision problem in the same manner as the selection of $\vlfvS$, our ultimate goal (a topic that receives our full attention in Section \ref{sec:S\acro{bq}})).
 $\vlfv_c$ should firstly include $\vlfv_s$, where we know that $\Delta$ is equal to zero. Following \citet{BQR}, we select the remainder of $\vlfv_c$  as the  vertices of a Voronoi diagram \citep{okabe1997locational}, where we expect $\delta$ to be extremised. The greater the number of candidate locations, the more accurate but slower we expect our calculations to be.
 
-Given these samples, we can now marginalise \eqref{eq:mean_ev1} over $\Delta$ to give
+Given these candidates, we can now marginalise \eqref{eq:mean_ev1} over $\Delta$ to give
 \begin{equation} \label{eq:post_mean}
  \hspace{-0.2cm}\mean{\If}{Z_0,\tvr_s,\Delta_c} =
 \mean{\If}{\vr_s} + \mean{\inty{\lfn \Delta}}{\vr_s, \Delta_c},
@@ -373,7 +371,7 @@ and hence
 \end{align}
 which is expressible in closed form, although space precludes us from doing so. This variance can be employed as a convergence diagnostic; it describes our uncertainty in the ultimate quantity of interest.
 
-In summary, we have described a linearisation approach to exploiting a \acro{gp} prior over log-likelihoods to determine the posterior mean \eqref{eq:post_mean} and variance \eqref{eq:post_var} for the evidence. 
+In summary, we have described a linearisation approach to exploiting a \acro{gp} prior over log-likelihoods; this permitted the calculation of the analytic posterior mean \eqref{eq:post_mean} and variance \eqref{eq:post_var} for the evidence. 
 
 \section{Marginalising hyperparameters}
 \label{sec:marginalizing}
@@ -388,10 +386,10 @@ We now present a novel means of approximately marginalising the hyperparameters 
 \label{fig:integrate_hypers}
 \end{figure}
 
-The hyperparameters of most interest are the input scales $w$ for the \gpb over the log-likelihood; these hyperparameters can have a powerful influence on the fit to a function. We use maxmimum likelihood to fit all hyperparmeters other than $w$. Unfortunately, the analytic marginalisation of $w$ is ruled out by the complex dependence of our predictions upon these input scales. However, any approximation we make is likely to improve upon the assumption made by \acro{mlii}: that the posterior for all hyperparameters is a delta function. We make the following essential assumptions.
+The hyperparameters of most interest are the input scales $w$ for the \gpb over the log-likelihood; these hyperparameters can have a powerful influence on the fit to a function. We use \acro{mlii} to fit all hyperparameters other than $w$. Unfortunately, the analytic marginalisation of $w$ is ruled out by the complex dependence of our predictions upon these input scales. However, any approximation we make is likely to improve upon the assumption made by \acro{mlii}: that the posterior for all hyperparameters is a delta function. We make the following essential assumptions.
 
- \paragraph*{Flat prior:} We assume that the prior for $w$ is very broad, so that our posterior is a simple scaling of the likelihood. 
-\paragraph*{Laplace approximation:} The likelihood of $w$ is taken as Gaussian with mean equal to the \acro{mlii} value $\hat{w}$ and with diagonal covariance matrix $C_w$, diagonal elements fitted using the second derivatives of the likelihood.
+ \paragraph*{Flat prior:} We assume that the prior for $w$ is broad, so that our posterior is the normalised likelihood. 
+\paragraph*{Laplace approximation:} The likelihood of $w$ is taken as Gaussian with mean equal to the \acro{mlii} value $\hat{w}$ and with diagonal covariance $C_w$, diagonal elements fitted using the second derivatives of the likelihood.
 %the squared input scales $w_s$ of another \gp, fitted to the likelihood $s(w_r)$ of the input scales $w_r$. \textcolor{red}{[Neat idea, but I can think of simple examples where the lengthscale is short but the mass is spread out; it seems to me that it'd be better to first fit a \gpb, then fit a Gaussian to the \gpb posterior.]}
 \paragraph*{Affine GP mean:} Given the tightness of the likelihood for $w$, our predictions for $\tr$ are assumed to have a \gpb mean which is affine in $w$ around the \acro{mlii} values, and a constant covariance;
 \begin{align}
@@ -462,9 +460,9 @@ is possible, although laborious, to express analytically, just like \eqref{eq:po
 
 \section{Active Sampling}\label{sec:BBQ}
 
-One major benefit of model-based integration is that samples can be chosen by any method, as opposed to Monte Carlo methods which must typically sample from a specific distribution.  In this section, we describe a scheme to select samples $\lfv_s$ sequentially by minimising the \textit{expected} uncertainty in the evidence remaining after taking each additional sample.\footnote{We also expect such samples to be useful not just for estimating the evidence, but also for any other related expectations, such as would be required to perform prediction using the model.} We take the variance in the evidence as our loss function, and proceed according to Bayesian decision theory.
+One major benefit of model-based integration is that samples can be chosen by any method, in contrast to Monte Carlo methods which typically must sample from a specific distribution.  In this section, we describe a scheme to select samples $\lfv_s$ sequentially by minimising the \textit{expected} uncertainty in the evidence remaining after taking each additional sample.\footnote{We also expect such samples to be useful not just for estimating the evidence, but also for any other related expectations, such as would be required to perform prediction using the model.} We take the variance in the evidence as our loss function, and proceed according to Bayesian decision theory.
 
-Surprisingly, the posterior variance of a \gpb model with fixed hyperparameters does not depend on the function values at sampled locations at all; only the location of those samples matters. In traditional Bayesian quadrature, the evidence is a simple affine transformation of the sampled likelihood values, hence its estimate for the variance in the evidence is also independent of likelihood values. As such, active learning with fixed hyperparameters is pointless, and the optimal sampling design can be found in advance \cite{minka2000dqr}.
+Surprisingly, the posterior variance of a \gpb model with fixed hyperparameters does not depend on the function values at sampled locations at all; only the location of those samples matters. In traditional Bayesian quadrature, the evidence is an affine transformation of the sampled likelihood values, hence its estimate for the variance in the evidence is also independent of likelihood values. As such, active learning with fixed hyperparameters is pointless, and the optimal sampling design can be found in advance \cite{minka2000dqr}.
 
 In Section \ref{sec:model_lik}, we took the integral as the affine transform of the log-likelihood, which we model with a \gp. As the affine transformation itself depends on the function values (see \eqref{eq:linearisation}), active learning is  desirable. The uncertainty over the hyperparameters of the \gpb further motivates active learning: without assuming \textit{a priori} knowledge of the hyperparameters, we can't evaluate the \gpb to compute a sampling schedule beforehand. The approximate marginalisation of hyperparameters permits an approach to active sampling that acknowledges the influence new samples may have on the posterior over hyperparameters. Active sampling promotes exploration, particularly early on, so as to concentrate the posterior over hyperparameters. 
 
@@ -514,12 +512,12 @@ and
 \hat{m}_a & \deq \mean{\tr_a}{\tvr_s,\hat{w}}\\ 
 \hat{C}_a & \deq \cov{\tr_a}{\tvr_s,\hat{w}}\,.
 \end{align}
-The first term in \eqref{eq:exp_var}, the (expected) second moment, is independent of the selection of $\lfv_a$ and hence can be safely ignored for active sampling. This is true regardless of the probabilistic model chosen for the likelihood surface. 
+The first term in \eqref{eq:exp_var}, the second moment, is independent of the selection of $\lfv_a$ and hence can be safely ignored for active sampling. This is true regardless of the model chosen for the likelihood surface. 
 Noting that $\int \exp(c\, y)\, \N{y}{m}{\sigma^2} \ud y = \exp(c\, m + \nicefrac{1}{2}\, c^2 \sigma^2)$, 
 the second term, the negative expected squared mean, can be resolved analytically\footnote{We assume that $\Delta$ does not depend on $\tr_a$, only its location $x_a$: we know $\Delta(x_a) = 0$ and assume $\Delta$ elsewhere remains relatively unchanged.}
  for any trial $\lfv_a$ (we omit the laborious details of doing so). We do not have to make a linearisation approximation here, and the posterior over $\tr_a$ can be fully exploited for its most important purpose: selecting new samples. 
 
-In order to minimize the expected variance, the objective in \eqref{eq:exp_var} encourages the maximization of the expected squared mean of $Z$. Due to our log-\gpb model, one means of doing so is to seek points where the log-likelihood is predicted to be large: exploitation.  The objective function in \eqref{eq:exp_var} also encourages the choice of points where our current variance in the log-likelihood is significant, leading to exploration. Note that our variance for $\tr_a$ has been inflated due to our consideration of the influence of hyperparameters (See Figure \ref{fig:integrate_hypers}), which we expect to promote additional exploration, as desired.
+In order to minimize the expected variance, the objective in \eqref{eq:exp_var} encourages the maximization of the expected squared mean of $Z$. Due to our log-\gpb model, one means of doing so is to seek points where the log-likelihood is predicted to be large: exploitation.  The objective in \eqref{eq:exp_var} also encourages the choice of points where our current variance in the log-likelihood is significant, leading to exploration. Note that our variance for $\tr_a$ has been inflated due to our consideration of the influence of hyperparameters (See Figure \ref{fig:integrate_hypers}), which we expect to promote additional exploration.
 
 
 
@@ -535,29 +533,27 @@ $
 providing some measure of the average percentage error, in decibels. Next we compute the log-density of the truth, assuming experiments are independent,
 $
 \log p(\vect{Z}) = \sum_i \log \N{Z_i}{m(Z_i)}{V(Z_i)}
-$. This allows us to determine how accurate are our variance estimates. As a further metric, we supply the calibration $\mathcal{C}$, defined as the fraction of experiments in which the ground truth lay within our 50\% confidence interval $\bigl(m(Z_i) - 0.6745 \sqrt{V(Z_i)}, m(Z_i) + 0.6745 \sqrt{V(Z_i)}\bigr)$. Ideally, $\mathcal{C}$ would be exactly 50\%: any higher, and a method is under-confident, any lower and it is over-confident. 
+$. This allows us to determine how accurate are our variance estimates. We also supply the calibration $\mathcal{C}$, defined as the fraction of experiments in which the ground truth lay within our 50\% confidence interval $\bigl(m(Z_i) - 0.6745 \sqrt{V(Z_i)}, m(Z_i) + 0.6745 \sqrt{V(Z_i)}\bigr)$. Ideally, $\mathcal{C}$ would be exactly 50\%: any higher, and a method is under-confident, any lower and it is over-confident. 
 
-\paragraph{Methods:} We firstly compared against simple Monte Carlo (\acro{smc}). \acro{smc} generates samples $x_1 \dots x_N$ from the prior distribution, and estimates $Z$ by $$\hat{Z} = \frac{1}{N} \sum_{n=1}^{N} \lfn(x_n).$$  An estimate of the variance of $\hat{Z}$ is given by the standard error of $\lfn({\bf x})$.
-
-As an alternative Monte Carlo technique, we also implemented Annealed Importance Sampling (\acro{ais}) using a Metropolis-Hastings sampler.  The inverse temperature schedule was linear as in \citep{BZMonteCarlo}, and the proposal width was adjusted to attain approximately a 50\% acceptance rate.  In an attempt to be as generous to \acro{ais} as possible, the posterior variance of the \acro{ais} estimate of $Z$ was set to the empirical variance over ten chains.  
+\paragraph{Methods:} We firstly compared against simple Monte Carlo (\acro{smc}). \acro{smc} generates samples $x_1 \dots x_N$ from the prior distribution, and estimates $Z$ by $\hat{Z} = \nicefrac{1}{N} \sum_{n=1}^{N} \lfn(x_n)$.  An estimate of the variance of $\hat{Z}$ is given by the standard error of $\lfn({\bf x})$. As an alternative Monte Carlo technique, we implemented Annealed Importance Sampling (\acro{ais}) using a Metropolis-Hastings sampler.  The inverse temperature schedule was linear as in \citet{BZMonteCarlo}, and the proposal width was adjusted to attain approximately a 50\% acceptance rate.  In an attempt to be generous to \acro{ais}, the posterior variance of the \acro{ais} estimate of $Z$ was set to the empirical variance over ten chains.  
 
 % An alternative sampler which we did not use was Hamiltonian Monte Carlo, which uses information about the derivatives in order to speed mixing.  However, Bayesian Quadrature can also incorporate information about the derivatives of the likelihood function, and would presumably also perform better if given this information.  An exhaustive comparison of sampling methods is beyond the scope of this paper.
 
-Our first model-based method was Bayesian Monte Carlo (\acro{bmc}) -- the algorithm used in \citep{BZMonteCarlo}, in which samples were drawn from the \acro{ais} chain just described, and a \gp was fit to the likelihood samples. For this \gp, and the others that follow, the hyperparameters were selected as those that maximised the likelihood. 
+Our first model-based method was Bayesian Monte Carlo (\acro{bmc}) -- the algorithm used in \citep{BZMonteCarlo}. Here samples were drawn from the \acro{ais} chain above, and a \gpb was fit to the likelihood samples. For this and other methods, where not otherwise mentioned, \gpb hyperparameters were selected using \acro{mlii}. 
 
-We then tested four novel methods. Firstly, Bayesian Quadrature (\acro{bq}), which employed the linearisation approach of Section \ref{sec:model_lik} to modeling the log-transformed likelihood values. The samples supplied to it were drawn from the same \acro{ais} chain as used above, and 400 candidate points were used. \acro{bq}* is identical except that it additionally took the approach of Section \ref{sec:marginalizing} to approximately marginalising hyperparameters, where \acro{bq} did not. The performance of these methods allow us to quantify to what extent our innovations improve estimation given a fixed set of samples. 
+We then tested four novel methods. Firstly, Bayesian Quadrature (\acro{bq}), which employed the linearisation approach of Section \ref{sec:model_lik} to modeling the log-transformed likelihood values. The samples supplied to it were drawn from the same \acro{ais} chain as used above, and 400 candidate points were permitted. \acro{bq}* is identical except that it additionally took the approach of Section \ref{sec:marginalizing} to approximately marginalising hyperparameters. The performance of these methods allow us to quantify to what extent our innovations improve estimation given a fixed set of samples. 
 
 Next, we tested a novel algorithm, Doubly Bayesian Quadrature (\acro{bbq}). The method is so named for the fact that we use not only Bayesian inference (with a \gpb over the log-transformed likelihood) to compute the posterior for the evidence, but also Bayesian decision theory to select our samples actively, as described in Section \ref{sec:BBQ}. Note that \eqref{eq:exp_var} was minimised using a multi-start local optimizer, where the starting points were chosen as $\lfv_c$. Finally, \acro{bbq}* was the same algorithm, but with hyperparameters  approximated marginalised. Both algorithms demonstrate the influence of active sampling on our performance. 
 
 \paragraph{Problems:}
-We chose a myriad of problems which would demonstrate the strengths and weaknesses of the methods we compared. OUr goal was to evaluate evidences given various likelihood functions and Gaussian priors. As in \citet{BZMonteCarlo} and \citet{BQR}, we focus on low numbers of samples. We are motivated by real-world problems where evaluating likelihood samples is (computationally or otherwise) expensive, for which it is desirable to determine the techniques for evidence estimation that can operate best when permitted only a small number of samples. Ground truth $Z$ is available for only some integrals; for the non-analytic integrals, $Z$ was estimated by a run of \acro{smc} with $10^6$ samples.
+We chose a myriad of problems which to compare our methods. Our goal was to evaluate evidences given various likelihood functions and Gaussian priors. As in \citet{BZMonteCarlo} and \citet{BQR}, we focus on low numbers of samples. We are motivated by real-world problems where evaluating likelihood samples is (computationally or otherwise) expensive, for which it is desirable to determine the techniques for evidence estimation that can operate best when permitted only a small number of samples. Ground truth $Z$ is available for only some integrals; for the non-analytic integrals, $Z$ was estimated by a run of \acro{smc} with $10^6$ samples.
 
 We firstly tested on six distinct one-dimensional functions. These included mixtures of two Gaussians, alternately widely separated and overlapping, along with a translation and scaling of one such problem. As a challenge, we included a high-frequency sinusoid. 
 
 In higher dimension, we included three examples of similar four-dimensional Gaussian mixtures. We also tested on a two-dimensional version of the funnel distribution of \citet{neal2003slice}, known to be particularly difficult for samplers. Another problem was drawn from \citet{BZMonteCarlo}: the computation of the evidence for a \gpb model over a synthetic function \citep{friedman1991}. This required the marginalisation of seven inputs; we also consider a restricted problem with only three inputs. Note that $\gpb$ likelihoods are often expensive to compute, scaling as $N^3$ in the number of data $N$.
 
 Finally, we compared approaches on a real scientific problem. Bayesian model comparison is increasingly important to the biological sciences 
-\citep{penny2010comparing, mann2011objectively, rosa2011bayesian}. \citet{mann2012multi} applied model comparison to discover the rules of interaction between simple animals (glass prawns, {\it Paratya australiensis}) which lead to coherent group motion. We aim to reproduce the experiments of \citep{mann2012multi} to calculate the evidence for each of three different models: a mean field model, a Markovian model and a non-Markovian model. Given the large corpus of data available, evaluating likelihood samples for these models is computationally demanding; we consider only a hundredth of the available data. These problems required five parameters to be marginalised. 
+\citep{penny2010comparing, rosa2011bayesian}. \citet{mann2012multi} applied model comparison to discover the rules of interaction between simple animals (glass prawns, {\it Paratya australiensis}) which lead to coherent group motion. We aim to reproduce the experiments of \citep{mann2012multi} to calculate the evidence for each of three different models: a mean field model, a Markovian model and a non-Markovian model. Given the large corpus of data available, evaluating likelihood samples for these models is computationally demanding; we consider only a hundredth of the available data. These problems required five parameters to be marginalised. 
 
 
 \paragraph{Evaluation}
