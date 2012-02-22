@@ -64,7 +64,7 @@ is commonly encountered and hugely important.  In machine learning applications,
 \begin{equation}
 Z = \int \ell(\vlfv) p(\vlfv) d\vlfv
 \end{equation}
-where $\ell(\vlfv)$ is non-negative.  Examples of this problem appear when computing marginal likelihoods, partition functions, predictive distributions at test points, or when marginalizing over variables in a model.  In this paper, we focus on computing model evidences, where $\ell(\vlfv)$ is the unnormalized likelihood of some parameterss $x_1 \dots x_D$.
+where $\ell(\vlfv)$ is non-negative.  Examples of this problem appear when computing marginal likelihoods, partition functions, predictive distributions at test points, or when marginalizing over variables in a model.  In this paper, we focus on computing model evidences, where $\ell(\vlfv)$ is the unnormalized likelihood of some parameters $x_1 \dots x_D$.
 
 %Training or evaluating any probabilistic model typically requires an integration over model parameters, weighted by their likelihoods.  This common problem has many names:  computing the model evidence, calculating the marginal likelihood, estimating the partition function or normalizing a distribution.  Typically, this task is performed using Markov-Chain Monte Carlo (\acro{mcmc}) methods.  These methods have many well-known problems, such as requiring extensive tuning, becoming stuck in local modes, and falsely appearing to converge \citep{NealMC}.  However, almost all standard approaches fall into the wide family of \acro{mcmc} methods.
 
@@ -406,16 +406,18 @@ The hyperparameters of most interest are the input scales $w$ for the \gpb over 
  
 The implication of these assumptions is that the marginal posterior mean over $\tr$ is simply
 $
-\mean{\tr\st}{\tr_s} = \mean{\tr\st}{\tr_s, \hat{w}}
+\tilde{m}_{\tr|s} \deq m_{\tr|s,\hat{w}}
 $.   
 The marginal posterior variance is 
-\begin{align}
-C(\tr\st,\tr\st'|\tr_s) & = C(\tr\st,\tr\st'|\tr_s, \hat{w}) \nonumber\\
-& \hspace{-0.5cm} + 
+\begin{equation}
+\hspace{-0.2cm}
+\tilde{C}_{\tr|s} 
+\deq C_{\tr|s,\hat{w}}
++ 
 \pderiv{m_{\tr|s,\hat{w}}}{w}
 \,C_w\,
 \pderiv{m_{\tr|s,\hat{w}}}{w}\,.
-\end{align}
+\end{equation}
  % David sez: I moved this to the appendix.
 %With these assumptions, we have
 %\begin{align*}
@@ -444,17 +446,20 @@ C(\tr\st,\tr\st'|\tr_s) & = C(\tr\st,\tr\st'|\tr_s, \hat{w}) \nonumber\\
 %& = \mean{Z[\tr]}{Z_0,m_{\tr|s,m_\theta}}\,,
 %\end{align*}
 %which is identical to \eqref{eq:mean_ev} (note that we had previously just implicitly assumed that $\theta=m_\theta$). 
-This implies that our posterior mean for $Z$ is simply $\mean{\If}{Z_0,\tvr_s,\Delta_c, w_m}$ of the form \eqref{eq:post_mean}. The variance
+This implies that our marginal posterior mean for $Z$ 
+\begin{equation}
+\tilde{m}(\If|Z_0,\tvr_s,\Delta_c) \deq \mean{\If}{Z_0,\tvr_s,\Delta_c, \hat{w}},
+\end{equation}
+is of the form \eqref{eq:post_mean}. The marginal posterior variance
 \begin{align}
-  &\cov{\If}{Z_0,\tvr_s,\Delta_c}=
- \iint m_{\lfn|s}(\lfv)\, m_{\lfn|s}(\lfv')\\
+& \tilde{V}(\If|Z_0,\tvr_s,\Delta_c)=
+ \iint  \ud \lfv\, \ud\lfv' m_{\lfn|s}(\lfv)\, m_{\lfn|s}(\lfv')\nonumber\\
 &  
-\hspace{0.5cm}\biggl(C_{\tr|s}(\lfv,\lfv') + 
-\pderiv{m_{\tr|s,\hat{w}}}{w}
+\biggl(C_{\tr|s}(\lfv,\lfv') + 
+\pderiv{m_{\tr|s,\hat{w}}(x)}{w}
 \,C_w\,
-\pderiv{m_{\tr|s,\hat{w}}}{w}
+\pderiv{m_{\tr|s,\hat{w}}(x')}{w}
 \biggr)
- \ud \lfv \ud\lfv',
 \end{align}
 is possible, although laborious, to express analytically, just like \eqref{eq:post_var}.
 
