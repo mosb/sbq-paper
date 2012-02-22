@@ -481,13 +481,13 @@ In Section \ref{sec:model_lik}, we took the integral as the affine transform of 
 %\caption{An example of the posterior over likelihood functions converging as new samples are selected.}
 %\label{fig:active_learning}
 %\end{figure}
-
-\begin{figure}
-\centering
-\psfragfig{figures/plots/sampleplot_two_spikes_1d}
-\caption{The location of samples chosen by different methods.}
-\label{fig:sample_paths}
-\end{figure}
+% 
+% \begin{figure}
+% \centering
+% \psfragfig{figures/plots/sampleplot_two_spikes_1d}
+% \caption{The location of samples chosen by different methods.}
+% \label{fig:sample_paths}
+% \end{figure}
 
 Active sampling selects a new sample $\lfv_a$ so as to minimise the expected variance in the evidence after adding it to the model of $\ell$.  The objective is therefore to choose the $\lfv_a$ that minimizes the expected loss;
 %
@@ -556,8 +556,8 @@ Of particular note in Table \ref{tbl:problem_descriptions} is the funnel 2d exam
 
 We also reproduced an experiment from \citet{BZMonteCarlo}, in which we compute the evidence for a \gpb model for a synthetic function from \citet{friedman1991}. This required the marginalisation of seven inputs (friedman 7d); we also consider a restricted problem with only three inputs (friedman 3d). Note that $\gpb$ likelihoods are often expensive to compute, scaling as $N^3$ in the number of data $N$.
 
-Finally, we compared approaches on a real scientific problem. Bayesian model comparison is emerging as an important method for comparing theories in the biological sciences 
-\citep{penny2010comparing, mann2011bayesian, mann2011objectively, rosa2011bayesian}. \citet{mann2012multi} applied a model comparison methodology to discover the rules of interaction between simple individual animals (glass prawns, {\it Paratya australiensis}) which lead to coherent group motion. We aim to reproduce the experiments of \citep{mann2012multi} to calculate the evidence for each of three different models: a mean field model, a Markovian model and a non-Markovian model. Given the large corpus of data available, evaluating likelihood samples for these models is computationally demanding. For the purposes of our own experiments, we consider only a hundredth of the available data.
+Finally, we compared approaches on a real scientific problem. Bayesian model comparison is increasingly important to the biological sciences 
+\citep{penny2010comparing, mann2011bayesian, mann2011objectively, rosa2011bayesian}. \citet{mann2012multi} applied model comparison to discover the rules of interaction between simple animals (glass prawns, {\it Paratya australiensis}) which lead to coherent group motion. We aim to reproduce the experiments of \citep{mann2012multi} to calculate the evidence for each of three different models: a mean field model, a Markovian model and a non-Markovian model. Given the large corpus of data available, evaluating likelihood samples for these models is computationally demanding; for the purposes of our own experiments, we consider only a hundredth of the available data.
 
 
 \paragraph{Evaluation}
