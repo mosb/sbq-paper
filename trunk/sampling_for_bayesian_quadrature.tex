@@ -96,12 +96,12 @@ An alternative, model-based approach, Bayesian Quadrature \citep{BZHermiteQuadra
 
 \paragraph*{Active Sampling:} In \citep{BZMonteCarlo}, sample points were chosen in a randomized manner.  We demonstrate how to actively choose sample points in order to minimize the uncertainty in our integral.
 
-\paragraph*{Hyperparameter Marginalisation:} Uncertainty in the quadrature hyperparameters has previously been ignored, leading to overconfidence in the estimate of $Z$.  We introduce a tractable approximation marginalization of lengthscale hyperparameters.
+\paragraph*{Hyperparameter Marginalisation:} Uncertainty in the quadrature hyperparameters has previously been ignored, leading to overconfidence in the estimate of $Z$.  We introduce a tractable approximate marginalization of lengthscale hyperparameters.
 
 
 %\paragraph*{Convergence:} Here the issue of convergence is solved naturally: our posterior variance over $Z$ indicates the uncertainty remaining in the quantity we care about. 
 
-We compare our \acro{bq} approach to standard Monte Carlo techniques on a real scientific problem, where we demonstrate one of the key advantages of \acro{bq}: a closed-form expression for the posterior uncertainty over $Z$ provides a natural convergence diagnostic.
+We compare our \acro{bq} approach to standard Monte Carlo techniques on both simulated and real scientific problems, where we demonstrate one of the key advantages of \acro{bq}: a closed-form expression for the posterior uncertainty over $Z$ provides a natural convergence diagnostic.
 
 %\section{Estimating Model Evidence}\label{sec:ev}
 
@@ -120,22 +120,22 @@ We compare our \acro{bq} approach to standard Monte Carlo techniques on a real s
 %While standard errors are possible for \acro{mcmc}, typically they rely on the sampler mixing well \citep{flegal2008markov}. As such, these errors can not identify exactly the failure to mix that is of most concern. The distribution of most use for our inference is a Gaussian process, which we now briefly introduce. 
 
 \section{Gaussian Processes}
-Gaussian processes (\gp s) offer a powerful method to perform Bayesian inference about functions \citep{GPsBook}. A \gpb is defined as a distribution over the functions $f: \mathcal{X} \rightarrow \mathbb{R}$ such that the distribution over the possible function values on any finite subset of $\mathcal{X}$ is multivariate Gaussian. For clarity, we'll henceforth assume $\mathcal{X} = \mathbb{R}$, although all results generalise readily to $\mathbb{R}^n$. For a function $f(\lfv)$, the prior distribution over its values $\vf$ on a subset $\vlfv \subset \mathcal{X}$ is
+Gaussian processes (\gp s) offer a powerful method to perform Bayesian inference about functions \citep{GPsBook}. A \gpb is defined as a distribution over the functions $f: \mathcal{X} \rightarrow \mathbb{R}$ such that the distribution over the possible function values on any finite subset of $\mathcal{X}$ is multivariate Gaussian. For clarity, we'll henceforth assume $\mathcal{X} = \mathbb{R}$, although all results generalise readily to $\mathbb{R}^n$. For a function $f(\lfv)$, the prior distribution over its values $\vf$ on $\vlfv \subset \mathcal{X}$ is
 \begin{align}%\label{eq:\gpbDefn}
 \textstyle
  &\po{\vf}\deq \N{\vf}{\vmu}{K}\\
  &\deq\frac{1}{\sqrt{\det{2\pi K}}}\,\exp \big(-\frac{1}{2}\,(\vf-\vmu)\tra\,K\inv\,(\vf-\vmu)\big),
 \end{align}
-This distribution is implicitly conditioned on mean and covariance functions, which generate mean vector $\vmu_{f}$ and covariance matrix $K_{f}$ respectively. 
-In this paper, we'll use Gaussian (squared exponential with different normalisation factor) covariance functions,
+This distribution is specified by mean and covariance functions, which generate mean vector $\vmu_{f}$ and covariance matrix $K_{f}$ respectively. 
+In this paper, we'll use Gaussian (squared exponential) covariance functions,
 \begin{align} \label{eq:Gaussian_cov_fn}
 % K(\vlfv,\vlfv') & \deq \prod_{e=1}^{E} K_e\big(\phi\pha_e,\phi_e'\big)\\
 \textstyle
 K_{f}(\lfv_1,\lfv_2)& \deq h_f^2\,\N{\lfv_1}{\lfv_2}{w_{f}}.
 \end{align} 
-Here $h_f$ specifies the output scale (`height') over $f$, while $w_f$ defines a (squared) input scale (`width') over $\lfv$. Note that if $x$ has dimension greater than one, $w_f$ is a covariance matrix. For the remainder of the paper, we'll take $w_f$ as diagonal. 
+Here $h_f$ specifies the output scale (`height') over $f$, while $w_f$ defines a (squared) input scale (`width') over $\lfv$. Note that if $x$ has dimension greater than one, $w_f$ is a covariance matrix; we'll assume $w_f$ is diagonal. 
 
-Let us assume we have observations $(\vlfv_s,\vf_s)$ and are interested in making predictions about the function valus $f_\star$ at input $\lfv_\star$. We will assume that function inputs such as $\vlfv_s$ and $\lfv_\star$ are always known; they will not be explicitly represented. With this information, we have the predictive equations
+Given observations $(\vlfv_s,\vf_s)$, we are interested in making predictions about  $f_\star$ at input $\lfv_\star$. We will assume that function inputs such as $\vlfv_s$ and $\lfv_\star$ are always known; they will not be explicitly represented. With this information, we have the predictive equations
 \begin{equation}
  \pskinny{f\st}{\vf_s} = 
 \bN{f\st}
