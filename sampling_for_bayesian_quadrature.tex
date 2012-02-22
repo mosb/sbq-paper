@@ -546,11 +546,11 @@ We then tested four novel methods. Firstly, Bayesian Quadrature (\acro{bq}), whi
 Next, we tested a novel algorithm, Doubly Bayesian Quadrature (\acro{bbq}). The method is so named for the fact that we use not only Bayesian inference (with a \gpb over the log-transformed likelihood) to compute the posterior for the evidence, but also Bayesian decision theory to select our samples actively, as described in Section \ref{sec:BBQ}. Note that \eqref{eq:exp_var} was minimised using a multi-start local optimizer, where the starting points were chosen as $\lfv_c$. Finally, \acro{bbq}* was the same algorithm, but with hyperparameters  approximated marginalised. Both algorithms demonstrate the influence of active sampling on our performance. 
 
 \paragraph{Problems:}
-We chose a myriad of problems which to compare our methods. Our goal was to evaluate evidences given various likelihood functions and Gaussian priors. As in \citet{BZMonteCarlo} and \citet{BQR}, we focus on low numbers of samples. We are motivated by real-world problems where evaluating likelihood samples is (computationally or otherwise) expensive, for which it is desirable to determine the techniques for evidence estimation that can operate best when permitted only a small number of samples. Ground truth $Z$ is available for only some integrals; for the non-analytic integrals, $Z$ was estimated by a run of \acro{smc} with $10^6$ samples.
+We chose a myriad of problems over which to compare our methods. Our goal was to evaluate evidences given various likelihood functions and Gaussian priors. As in \citet{BZMonteCarlo} and \citet{BQR}, we focus on low numbers of samples. We are motivated by real-world problems where evaluating likelihood samples is (computationally or otherwise) expensive, for which it is desirable to determine the techniques for evidence estimation that can operate best when permitted only a small number of samples. Ground truth $Z$ is available for only some integrals; for the non-analytic integrals, $Z$ was estimated by a run of \acro{smc} with $10^6$ samples.
 
 We firstly tested on six distinct one-dimensional functions. These included mixtures of two Gaussians, alternately widely separated and overlapping, along with a translation and scaling of one such problem. As a challenge, we included a high-frequency sinusoid. 
 
-In higher dimension, we included three examples of similar four-dimensional Gaussian mixtures. We also tested on a two-dimensional version of the funnel distribution of \citet{neal2003slice}, known to be particularly difficult for samplers. Another problem was drawn from \citet{BZMonteCarlo}: the computation of the evidence for a \gpb model over a synthetic function \citep{friedman1991}. This required the marginalisation of seven inputs; we also consider a restricted problem with only three inputs. Note that $\gpb$ likelihoods are often expensive to compute, scaling as $N^3$ in the number of data $N$.
+In higher dimension, we included three examples of four-dimensional Gaussian mixtures. We also tested on a two-dimensional version of the funnel distribution of \citet{neal2003slice}, known to be particularly difficult for samplers. Another problem was drawn from \citet{BZMonteCarlo}: the computation of the evidence for a \gpb model over a synthetic function \citep{friedman1991}. This required the marginalisation of seven parameters; we also consider a restricted problem with only three parameters. Note that $\gpb$ likelihoods are often expensive to compute, scaling as $N^3$ in the number of data $N$.
 
 Finally, we compared approaches on a real scientific problem. Bayesian model comparison is increasingly important to the biological sciences 
 \citep{penny2010comparing, rosa2011bayesian}. \citet{mann2012multi} applied model comparison to discover the rules of interaction between simple animals (glass prawns, {\it Paratya australiensis}) which lead to coherent group motion. We aim to reproduce the experiments of \citep{mann2012multi} to calculate the evidence for each of three different models: a mean field model, a Markovian model and a non-Markovian model. Given the large corpus of data available, evaluating likelihood samples for these models is computationally demanding; we consider only a hundredth of the available data. These problems required five parameters to be marginalised. 
@@ -605,19 +605,22 @@ Finally, we compared approaches on a real scientific problem. Bayesian model com
 
 \section{Conclusions}
 
- In this paper, we have made several advances to the \acro{bmc} method.  We have also demonstrated the many advantages of model-based integration over standard \acro{mc}: a natural stopping criterion, an estimate of uncertainty in our integral, and the ability to use active learning to select our samples rather than Monte Carlo methods.
+ In this paper, we have made several advances to the \acro{bmc} method.  We have also demonstrated the many advantages of model-based integration over standard \acro{mc}: a natural stopping criterion, an estimate of uncertainty in our integral, and the ability to use active learning to select our samples. 
+% \acro{mc} is an extremely widely used method, and advances in  allow modelers to use richer model classes and to be more confident in their model evaluations.  
+While we do not expect model-based integration approaches to be a better choice in every instance, we expect that this family of approaches will one day be seen as a standard alternative to \acro{mc}.
 
 % Adjusting the number of candidate points allows one to trade off between computational speed and number of samples required.
 
 % While we used an active learning scheme in this paper, Bayesian Quadrature can be used on samples generated by any method.
 
-There are many ways to improve the \gpb model used to model likelihood functions.  First and foremost, the Gaussian kernel used in this paper has very weak generalization abilities.  Allowing a richer class of kernels will allow the \gpb model to shrink its posterior much more quickly.  For example, log-likelihood functions typically take the form of a sum of many terms, each depending only on a small number of variables.  This prior information could easily be incorporated into the \gp, presumably allowing the \acro{bbq} algorithm to form concentrated posterior distributions over high-dimensional likelihoods.
-
-The methods developed here can be applied without modification to discrete domains.
-
+There are many ways to improve the \gpb model used to model likelihood functions.  First, the Gaussian kernel used in this paper has very weak generalization abilities.  Allowing a richer class of kernels will allow the \gpb model to shrink its posterior much more quickly. With appropriate covarances, the methods developed here can be readily applied to discrete domains.
+% For example, log-likelihood functions typically take the form of a sum of many terms, each depending only on a small number of variables.  This prior information could easily be incorporated into the \gp, presumably allowing the \acro{bbq} algorithm to form concentrated posterior distributions over high-dimensional likelihoods.
 
 
-\acro{mc} is an extremely widely used method, and advances in \acro{mcmc} allow modelers to use richer model classes and to be more confident in their model evaluations.  While we do not expect model-based integration approaches to be a better choice in every instance, we expect that this family of approaches will one day be seen as a standard alternative to \acro{mcmc}.
+
+
+
+
 
 \section*{Acknowledgements}
 
