@@ -60,19 +60,19 @@ The quadrature problem
 \begin{equation}\label{eq:Y}
 Y = \int f(\vlfv) p(\vlfv) d\vlfv
 \end{equation}
-is commonly encountered and hugely important.  In machine learning applications, the quadrature problem often appears when evaluating integrals over probabilities
-\begin{equation}
+is both common and important.  In machine learning applications, the quadrature problem often appears when evaluating integrals over probabilities
+\begin{equation}\label{eq:ev}
 Z = \int \ell(\vlfv) p(\vlfv) d\vlfv
 \end{equation}
 where $\ell(\vlfv)$ is non-negative.  Examples of this problem appear when computing marginal likelihoods, partition functions, predictive distributions at test points, or when marginalizing over variables in a model.  In this paper, we focus on computing model evidences, where $\ell(\vlfv)$ is the unnormalized likelihood of some parameters $x_1 \dots x_D$.
 
 %Training or evaluating any probabilistic model typically requires an integration over model parameters, weighted by their likelihoods.  This common problem has many names:  computing the model evidence, calculating the marginal likelihood, estimating the partition function or normalizing a distribution.  Typically, this task is performed using Markov-Chain Monte Carlo (\acro{mcmc}) methods.  These methods have many well-known problems, such as requiring extensive tuning, becoming stuck in local modes, and falsely appearing to converge \citep{NealMC}.  However, almost all standard approaches fall into the wide family of \acro{mcmc} methods.
 
-There exist several standard randomized methods for computing model evidence, such as annealed importance sampling (\acro{ais}) \citep{neal2001annealed}, nested sampling \citep{skilling2004nested} and bridge sampling.  For a review, see \citet{chen2000monte}.   These methods estimate $Z$ given the value of the integrand on a set of sample points, whose numbers is limited by the expense of evaluating $\ell(\vlfv)$.  It is well-known that convergence diagnostics for Monte Carlo estimates of partition functions are often unreliable \citep{NealMC, brooks1998convergence, cowles1999possible}.  As well, most sophisticated randomized algorithms have parameters which must be set by hand, such as proposal distributions or temperature schedules.
+There exist several standard randomized methods for computing model evidence, such as annealed importance sampling (\acro{ais}) \citep{neal2001annealed}, nested sampling \citep{skilling2004nested} and bridge sampling.  For a review, see \citet{chen2000monte}.   These methods estimate $Z$ given the value of the integrand on a set of sample points, whose size is limited by the expense of evaluating $\ell(\vlfv)$.  It is well-known that convergence diagnostics for Monte Carlo estimates of partition functions are often unreliable \citep{NealMC, brooks1998convergence, cowles1999possible}.  As well, most sophisticated randomized algorithms have parameters which must be set by hand, such as proposal distributions or temperature schedules.
 
 %\section{Model-Based Integration}
 
-An alternative, model-based approach, specifies a distribution over likelihood functions, and uses observations of the likelihood to infer a distribution for $Z$ (see Figure \ref{fig:model_based}).
+An alternative, model-based approach, Bayesian Quadrature \citep{BZHermiteQuadrature}, specifies a distribution over likelihood functions, using observations of the likelihood to infer a distribution for $Z$ (see Figure \ref{fig:model_based}). Bayesian Quadrature has previously been used to infer model evidence, \citep{BZMonteCarlo}.  We improve upon this work in three ways:
 
 \begin{figure}
 \centering
@@ -83,9 +83,7 @@ An alternative, model-based approach, specifies a distribution over likelihood f
 
 %As discussed in \citep{MCUnsound}, traditional Monte Carlo integration techniques do not make the best possible use of this valuable information. An alternative is found in Bayesian quadrature (\acro{bq}) \citep{BZHermiteQuadrature}, a method which uses function samples within a Gaussian process model to compute a closed-formed posterior over the value of the integral.
 
-\subsection{Contributions}\label{sec:ev}
 
-Bayesian Quadrature has previously been used to infer model evidence, \citep{BZMonteCarlo}.  We improve upon this work in the following four ways:
 
 \paragraph*{Log-prior:} Previous work used a \gpb prior on the likelihood function, which is a poor model since it cannot express the non-negativity and high dynamic range of most likelihood function.  We introduce tractable approximate inference under a log-\gp, which properly captures these properties of likelihood functions.
 
@@ -122,20 +120,20 @@ We compare our \acro{bq} approach to standard Monte Carlo techniques on a real s
 %While standard errors are possible for \acro{mcmc}, typically they rely on the sampler mixing well \citep{flegal2008markov}. As such, these errors can not identify exactly the failure to mix that is of most concern. The distribution of most use for our inference is a Gaussian process, which we now briefly introduce. 
 
 \section{Gaussian Processes}
-Gaussian processes (\gp s) offer a powerful method to perform Bayesian inference about functions \citep{GPsBook}. A \gpb is defined as a distribution over the functions $f: \mathcal{X} \rightarrow \mathbb{R}$ such that the distribution over the possible function values on any finite subset of $\mathcal{X}$ is multivariate Gaussian.  For a function $f(\lfv)$, the prior distribution over its values $\vf$ on a subset $\vlfv \subset \mathcal{X}$ is
+Gaussian processes (\gp s) offer a powerful method to perform Bayesian inference about functions \citep{GPsBook}. A \gpb is defined as a distribution over the functions $f: \mathcal{X} \rightarrow \mathbb{R}$ such that the distribution over the possible function values on any finite subset of $\mathcal{X}$ is multivariate Gaussian. For clarity, we'll henceforth assume $\mathcal{X} = \mathbb{R}$, although all results generalise readily to $\mathbb{R}^n$. For a function $f(\lfv)$, the prior distribution over its values $\vf$ on a subset $\vlfv \subset \mathcal{X}$ is
 \begin{align}%\label{eq:\gpbDefn}
 \textstyle
  &\po{\vf}\deq \N{\vf}{\vmu}{K}\\
  &\deq\frac{1}{\sqrt{\det{2\pi K}}}\,\exp \big(-\frac{1}{2}\,(\vf-\vmu)\tra\,K\inv\,(\vf-\vmu)\big),
 \end{align}
 This distribution is implicitly conditioned on mean and covariance functions, which generate mean vector $\vmu_{f}$ and covariance matrix $K_{f}$ respectively. 
-In this paper, we'll use Gaussian (a squared exponential with different normalisation factor) covariance functions ,
+In this paper, we'll use Gaussian (squared exponential with different normalisation factor) covariance functions,
 \begin{align} \label{eq:Gaussian_cov_fn}
 % K(\vlfv,\vlfv') & \deq \prod_{e=1}^{E} K_e\big(\phi\pha_e,\phi_e'\big)\\
 \textstyle
 K_{f}(\lfv_1,\lfv_2)& \deq h_f^2\,\N{\lfv_1}{\lfv_2}{w_{f}}.
 \end{align} 
-Here $h_f$ specifies the output scale (`height') over $f$, while $w_f$ defines a (squared) input scale (`width') over $\lfv$. Note that if $\lfv$ a function over multi-dimensional inputs, $w_f$ is a covariance matrix. For the remainder of the paper, we'll take $w_f$ as diagonal. 
+Here $h_f$ specifies the output scale (`height') over $f$, while $w_f$ defines a (squared) input scale (`width') over $\lfv$. Note that if $x$ has dimension greater than one, $w_f$ is a covariance matrix. For the remainder of the paper, we'll take $w_f$ as diagonal. 
 
 Let us assume we have observations $(\vlfv_s,\vf_s)$ and are interested in making predictions about the function valus $f_\star$ at input $\lfv_\star$. We will assume that function inputs such as $\vlfv_s$ and $\lfv_\star$ are always known; they will not be explicitly represented. With this information, we have the predictive equations
 \begin{equation}
@@ -154,7 +152,8 @@ where the mean $m$, covariance $C$, and variance $V$ are
 K_{f}(\lfv_\star,\vlfv_s)
 K_{f}(\vlfv_s,\vlfv_s)\inv\!
 \bigl(\vf_s\!-\!{\mu}_{f}(\vlfv_s)\bigr)\label{eq:GPMean}
-\\[0.2cm]
+\end{align} 
+\begin{align}
 &C_{f|s}(\lfv_\star, \lfv'_\star)
 \deq C(f_\star,f'_\star|\vf_s) 
 \nonumber\\
@@ -176,10 +175,7 @@ Note that the above assumes implicit conditioning on hyperparameter. Where requi
 \emph{Bayesian quadrature} \citep{BZHermiteQuadrature,BZMonteCarlo} is a means of performing Bayesian inference about the value of a potentially nonanalytic integral \eqref{eq:Y}.
 %Note that we use a condensed notation; this and all integrals to follow are definite integrals over the entire domain of interest.
 We'll assume we are integrating with respect to a Gaussian prior
-\begin{align}\label{eq:phiprior}
-\textstyle
- \po{\lfv} & \deq \N{\lfv}{\nu_{\lfv}}{\lambda_{\lfv}} \,,
-\end{align}
+$\po{\lfv} \deq \N{\lfv}{\nu_{\lfv}}{\lambda_{\lfv}}$,
 although other convenient forms, or, if necessary, the use of an importance re-weighting trick, allow any other integral to be approximated. If $\lfv$ is a vector, $\nu_{\lfv}$ is a  vector of identical size, and $\lambda_{\lfv}$ an appropriate covariance matrix.
 
 %\textcolor{red}{[I'm hoping to re-write the next two paragraphs; it's way too indirect, and I think the philosophical foundations of \acro{mcmc} are a poor avenue of attack]}
@@ -237,7 +233,7 @@ $\mean{\inty{f g}}{\vf_s, \vect{g}_s}$ for an integral $\int f(x) g(x) \ud x$.
 
 \section{Modeling Likelihood Functions}\label{sec:model_lik}
 
-We wish to evaluate the evidence $Z = \int \lfn(\lfv) p(\lfv) \ud\lfv$, an integral over non-negative likelihoods, $\lfn(\lfv)$, whose arguments are the parameters of the relevant model.
+We wish to evaluate the evidence \eqref{eq:ev}, an integral over non-negative likelihoods, $\lfn(\lfv)$.
 %
  \begin{figure}
  \centering
@@ -532,7 +528,7 @@ In order to minimize the expected variance, the objective in \eqref{eq:exp_var} 
 
 We now present empirical evaluation of the various components of our algorithm in a variety of different experiments.
 
-\paragraph{Metrics:} We judged our methods according to three metrics, all averages over $N$ similar experiments indexed by $i$. Define the ground truth evidence for the $i$th experiment $Z_i$, its estimated mean $m(Z_i)$ and predicted variance as $V(Z_i)$. Firstly, we compute the normalised mean square error,
+\paragraph{Metrics:} We judged our methods according to three metrics, all averages over $N$ similar experiments indexed by $i$. Define $Z_i$ as the ground truth evidence for the $i$th experiment, $m(Z_i)$ as its estimated mean  and $V(Z_i)$  as its predicted variance. Firstly, we compute the normalised mean square error,
 $
 \acro{nmse} \deq 10 \log_{10} \nicefrac{1}{N} \sum_{i=1}^{N} \nicefrac{(m(Z_i) - Z_i)^2}{Z_i^2}\,,
 $
@@ -552,33 +548,32 @@ We then tested four novel methods. Firstly, Bayesian Quadrature (\acro{bq}), whi
 Next, we tested a novel algorithm, Doubly Bayesian Quadrature (\acro{bbq}). The method is so named for the fact that we use not only Bayesian inference (with a \gpb over the log-transformed likelihood) to compute the posterior for the evidence, but also Bayesian decision theory to select our samples actively, as described in Section \ref{sec:BBQ}. Note that \eqref{eq:exp_var} was minimised using a multi-start local optimizer, where the starting points were chosen as $\lfv_c$. Finally, \acro{bbq}* was the same algorithm, but with hyperparameters  approximated marginalised. Both algorithms demonstrate the influence of active sampling on our performance. 
 
 \paragraph{Problems:}
-We chose a variety of problems which would demonstrate the strengths and weakness of the various methods we compared; please refer to Table \ref{tbl:problem_descriptions} for brief descriptions. As in \citet{BZMonteCarlo} and \citet{BQR}, we focus on evaluating evidences given only low numbers of samples; motivated by real-world problems where evaluating likelihood samples is (computationally or otherwise) expensive. 
+We chose a variety of problems which would demonstrate the strengths and weaknesses of the various methods we compared. Please refer to Table \ref{tbl:problem_descriptions} for brief descriptions of the likelihood functions chosen; for all problems, we assumed Gaussian priors. As in \citet{BZMonteCarlo} and \citet{BQR}, we focus on evaluating evidences given only low numbers of samples. We are motivated by real-world problems where evaluating likelihood samples is (computationally or otherwise) expensive, for which it is desirable to determine the techniques for evidence estimation that can operate best when permitted only a small number of samples. Ground truth $Z$ is available for only some integrals; for the non-analytic integrands, $Z$ was estimated by a run of \acro{smc} with $10^6$ samples.
 
 \input{tables/integrands.tex}
 
-The true value of $Z$ for the non-analytic integrands was estimated by a run of \acro{smc} with $10^6$ samples.
+Of particular note in Table \ref{tbl:problem_descriptions} is the funnel 2d example, drawn from \citet{NealMC}.This is known to be particularly challenging
 
-[This paragraph was contributed by Richard Mann, who provided the prawn data + likelihood function, it is yet to be integrated]
-Bayesian model comparison is emerging as an important method for comparing theories in the biological sciences 
-\citep{penny2010comparing, mann2011bayesian, mann2011objectively, rosa2011bayesian, mann2012multi}. \citet{mann2012multi} applied a model comparison methodology to discover the rules of interaction between simple individual animals (glass prawns, {\it Paratya australiensis}), which lead to coherent group motion. By evaluating the evidence for models of varying complexity, they were able to show that more complex rules of greater than expected were optimal to describe the interactions, including in particular a non-Markovian rule governing the memory of the prawns. Given the large corpus of data available, evaluating likelihood samples for these models is computationally demanding. Hence using techniques for evidence estimation that can operate given only a small set of samples is desirable. 
+We also reproduced an experiment from \citet{BZMonteCarlo}, in which we compute the evidence for a \gpb model for a synthetic function from \citet{friedman1991}. This required the marginalisation of seven inputs (friedman 7d); we also consider a restricted problem with only three inputs (friedman 3d). Note that $\gpb$ likelihoods are often expensive to compute, scaling as $N^3$ in the number of data $N$.
 
-We aim to reproduce their experiments using our 
+Finally, we compared approaches on a real scientific problem. Bayesian model comparison is emerging as an important method for comparing theories in the biological sciences 
+\citep{penny2010comparing, mann2011bayesian, mann2011objectively, rosa2011bayesian}. \citet{mann2012multi} applied a model comparison methodology to discover the rules of interaction between simple individual animals (glass prawns, {\it Paratya australiensis}) which lead to coherent group motion. We aim to reproduce the experiments of \citep{mann2012multi} to calculate the evidence for each of three different models: a mean field model, a Markovian model and a non-Markovian model. Given the large corpus of data available, evaluating likelihood samples for these models is computationally demanding. For the purposes of our own experiments, we consider only a hundredth of the available data.
 
 
 \paragraph{Evaluation}
 
- \begin{figure}
- \centering
- \begin{tabular}{ccc}
- 	\psfragfig{figures/integrands/easy_1d} &
- 	\psfragfig{figures/integrands/bumpy_1d} 
- 	\psfragfig{figures/integrands/two_spikes_1d}
- \end{tabular}
- \caption{The one-dimensional integrands in our test suite.  Green dashed lines are priors, blue lines are likelihoods.
- % \textcolor{red}{mike says: maybe we should make the lines variously dashed to help with B\&W printing. Also I'm not sure we need the posterior, which could be removed to de-clutter.}
- }
- \label{fig:1d_problems}
- \end{figure}
+%  \begin{figure}
+%  \centering
+%  \begin{tabular}{ccc}
+%  	\psfragfig{figures/integrands/easy_1d} &
+%  	\psfragfig{figures/integrands/bumpy_1d} 
+%  	\psfragfig{figures/integrands/two_spikes_1d}
+%  \end{tabular}
+%  \caption{The one-dimensional integrands in our test suite.  Green dashed lines are priors, blue lines are likelihoods.
+%  % \textcolor{red}{mike says: maybe we should make the lines variously dashed to help with B\&W printing. Also I'm not sure we need the posterior, which could be removed to de-clutter.}
+%  }
+%  \label{fig:1d_problems}
+%  \end{figure}
 % 
 % %\begin{figure}
 % %\centering
