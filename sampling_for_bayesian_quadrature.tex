@@ -22,7 +22,7 @@
 
 % The \icmltitle you define below is probably too long as a header.
 % Therefore, a short form for the running title is supplied here:
-\icmltitlerunning{Sampling for Bayesian Quadrature}
+\icmltitlerunning{Bayesian Quadrature for Active Learning of Model Evidence}
 
 \begin{document} 
 \twocolumn[
@@ -51,12 +51,12 @@ Bayesian Quadrature for Active Learning of Model Evidence}
 
 \begin{abstract} 
 %We describe a novel approach to quadrature for probabilistic integrals, offering a competitor to traditional Monte Carlo methods. We use a Bayesian quadrature framework \citep{BZHermiteQuadrature,BZMonteCarlo}.
-We introduce several innovations making Bayesian Quadrature methods suitable for computing model evidences, or normalization constants.  We demonstrate several advantages of model-based integration over standard Monte Carlo approaches.  These include sample efficiency, and an estimate of the uncertainty in our integral. We extend existing Gaussian process models by modeling the non-negativity of our integrand, and by approximately marginalising over hyperparameters in closed form.  We use active learning to select our function samples, as opposed to running a Markov chain.
+We introduce several innovations making Bayesian Quadrature methods suitable for computing model evidences, or normalization constants.  We demonstrate several advantages of model-based integration over standard Monte Carlo approaches.  These include sample efficiency, and an estimate of the uncertainty in our integral. We extend existing Gaussian process models by introducing a positivity constraint for our integrand, and by approximately marginalising over hyperparameters in closed form.  We use active learning to select our function samples, as opposed to running a Markov chain.
 \end{abstract} 
 
 \section{Introduction}
 
-The quadrature problem 
+The quadrature (or numerical integration) problem 
 \begin{equation}\label{eq:Y}
 Y = \int f(\vlfv) p(\vlfv) d\vlfv
 \end{equation}
@@ -77,7 +77,7 @@ An alternative, model-based approach, Bayesian Quadrature (\acro{bq}) \citep{BZH
 \begin{figure}
 \centering
 \psfragfig[width=\columnwidth]{figures/bmc_intro}
-\caption{An illustration of model-based integration.  We compute the expected area underneath a distribution over functions, conditioned on sampled values of the true function.  Samples added at new locations will reduce our uncertainty about the area under the function.}
+\caption{An illustration of model-based integration.  We compute the expected area underneath a distribution over functions, conditioned on sampled values of the function.  Samples added at new locations will reduce our uncertainty about the area under the function.}
 \label{fig:model_based}
 \end{figure}
 
@@ -126,12 +126,12 @@ Gaussian processes (\gp s) offer a powerful method to perform Bayesian inference
  &\po{\vf}\deq \N{\vf}{\vmu}{K}\nonumber\\
  &\deq\frac{1}{\sqrt{\det{2\pi K}}}\,\exp \big(-\frac{1}{2}\,(\vf-\vmu)\tra\,K\inv\,(\vf-\vmu)\big),
 \end{align}
-This distribution is specified by mean and covariance functions, which generate mean vector $\vmu_{f}$ and covariance matrix $K_{f}$ respectively. 
+This distribution is specified by mean and covariance functions, which generate mean vector $\vmu$ and covariance matrix $K$ respectively. 
 In this paper, we'll use Gaussian (squared exponential) covariance functions,
 \begin{align} \label{eq:Gaussian_cov_fn}
 % K(\vlfv,\vlfv') & \deq \prod_{e=1}^{E} K_e\big(\phi\pha_e,\phi_e'\big)\\
 \textstyle
-K_{f}(\lfv_1,\lfv_2)& \deq h_f^2\,\N{\lfv_1}{\lfv_2}{w_{f}}.
+K(\lfv_1,\lfv_2)& \deq h_f^2\,\N{\lfv_1}{\lfv_2}{w}.
 \end{align} 
 Here $h_f$ specifies the output scale over $f$, while $w_f$ defines a (squared) input scale over $\lfv$. 
 % Note that if $x$ has dimension greater than one, $w_f$ is a covariance matrix; we'll assume $w_f$ is diagonal. 
@@ -148,18 +148,18 @@ where the mean $m$, covariance $C$, and variance $V$ are
 &\meancond{f}{\lfv_\star}{s}
 \deq \mean{f_\star}{\vf_s}
 \nonumber\\
-&= \mu_{f}(\lfv_\star)\!+\!
-K_{f}(\lfv_\star,\vlfv_s)
-K_{f}(\vlfv_s,\vlfv_s)\inv\!
-\bigl(\vf_s\!-\!{\mu}_{f}(\vlfv_s)\bigr)\label{eq:GPMean}
+&= \mu(\lfv_\star)\!+\!
+K(\lfv_\star,\vlfv_s)
+K(\vlfv_s,\vlfv_s)\inv\!
+\bigl(\vf_s\!-\!{\mu}(\vlfv_s)\bigr)\label{eq:GPMean}
 \\[0.2cm]
 &C_{f|s}(\lfv_\star, \lfv'_\star)
 \deq C(f_\star,f'_\star|\vf_s) 
 \nonumber\\
-&=\!K_{f}(\lfv_\star,\lfv'_\star)\! - \!
-K_{f}(\lfv_\star,\!\vlfv_s)
-K_{f}(\vlfv_s,\!\vlfv_s)\inv\!
-K_{f}(\vlfv_s,\!\lfv'_\star)%\label{eq:\gpbCov}
+&=\!K(\lfv_\star,\lfv'_\star)\! - \!
+K(\lfv_\star,\!\vlfv_s)
+K(\vlfv_s,\!\vlfv_s)\inv\!
+K(\vlfv_s,\!\lfv'_\star)%\label{eq:\gpbCov}
 \\[0.2cm]
 &\covcond{f}{\lfv_\star}{s}
 \deq {\cov{f_\star}{\vf_s}} 
@@ -190,7 +190,7 @@ Quadrature involves evaluating $f(\lfv)$ at a vector of sample points $\vlfv_s$,
 %effectively ignores the information content of $\vlfv_s$, leading to unsatisfactory behaviour.
 %\footnote{  For example, imagine that we had $\card{s}=3$, and $\lfv_1 = \lfv_2$. In this case, the identical value $q(\lfv_1)= q(\lfv_2)$ will receive $\nicefrac{2}{3}$ of the weight, whereas the equally useful $q(\lfv_3)$ will receive only $\nicefrac{1}{3}$. \textcolor{red}{I'm not crazy about this argument, since the weightings are also incorporating information about the prior...} }
 
-Traditional Bayesian quadrature chooses a \gpb prior for $f$, with mean $\mu_f$ and the Gaussian covariance \eqref{eq:Gaussian_cov_fn}. Here the scales $h_f$ and $w_f$ are hyperparameters that specify the  \gpb used for Bayesian quadrature. These scales are typically fitted using maximum likelihood; we will later introduce an approximate means of marginalising them in Section \ref{sec:marginalizing}.
+Traditional Bayesian quadrature chooses a \gpb prior for $f$, with mean $\mu_f$ and the Gaussian covariance \eqref{eq:Gaussian_cov_fn}. Here the scales $h_f$ and $w_f$ are hyperparameters that specify the  \gpb used for Bayesian quadrature. These scales are typically fitted using type two maximum likelihood (\acro{mlii}); we will later introduce an approximate means of marginalising them in Section \ref{sec:marginalizing}.
 
 % Many more of these will be implicitly introduced in the coming sections; we'll take this as given and incorporate them into the (hidden) context $I$. 
 % Note that it will later become apparent that our inference for $\inty{f}$ is independent of the $h_f$ quadrature hyperparameter.
@@ -211,16 +211,16 @@ Note that variables possessing a multivariate Gaussian distribution are jointly 
 &
  = 
 %\N{\inty{f}}
-\mu_f + \ntT{s}{f}\, \dtt{s}{f}
+\mu + \ntT{s}{}\, \dtt{s}{}
 %{\varpi_{f}-\ntT{s}{f} K_{f}(\vlfv_s,\vlfv_s)\inv \nt{s}{f}}
 \,,
 \end{align}
-where for $\lfv_i \in \vlfv_s$,
+where for $\lfv_i \in \vlfv_s$ \citep{BZMonteCarlo},
 \begin{align}
-\fnt{\lfv_i}{f} & \deq \!\int K_f(\lfv_i,\lfv)\po{\lfv}\ud\lfv
- = h_f^2\,\N{\lfv_i}{\nu_{\lfv}}{\lambda_{\lfv}+w_{f}}\nonumber\\
+\fnt{\lfv_i}{} & \deq \!\int K(\lfv_i,\lfv)\po{\lfv}\ud\lfv
+ = h^2\,\N{\lfv_i}{\nu_{\lfv}}{\lambda_{\lfv}+w}\nonumber\\
 %\intertext{and}
-\dtt{s}{f} & \deq K_{f}\bigl(\vlfv_s,\vlfv_s\bigr)\inv (\vf_s-{\mu}_{f})\,.
+\dtt{s}{} & \deq K\bigl(\vlfv_s,\vlfv_s\bigr)\inv (\vf_s-{\mu})\,.
 \end{align}
 %
 %Note that the form of our `best estimate' for $\inty{f}$, \eqref{eq:mean_inty_f}, is an affine combination of the samples $\vf_s$, just as for traditional quadrature or Monte Carlo techniques. 
@@ -228,7 +228,7 @@ where for $\lfv_i \in \vlfv_s$,
 % \sout{Note also that $h_f$ represents a simple multiplicative factor to both $\ntT{s}{f}$ and $K_{f}\bigl(\vlfv_s,\vlfv_s\bigr)$, and as such cancels out of \eqref{eq:mean_inty_f}.} 
 %
 Its variance is also readily computed. Similarly, we can compute the posteriors for integrals over the product of multiple, independent functions. For example, we can calculate the posterior mean 
-$\mean{\inty{f g}}{\vf_s, \vect{g}_s}$ for an integral $\int f(x) g(x) \ud x$. 
+$\mean{\inty{f g}}{\vf_s, \vect{g}_s}$ for an integral $\int f(x) g(x) p(x) \ud x$. 
  In the following three sections, we will expand upon the improvements this paper introduces in the use of Bayesian Quadrature for computing model evidences.
 
 \section{Modeling Likelihood Functions}\label{sec:model_lik}
@@ -334,10 +334,10 @@ involved in the integral remaining in the correction factor, \eqref{eq:correctio
 We expect $\Delta(\lfv)$ to be everywhere small relative to the magnitude of $\tr(\phi)$ (see Figure \ref{fig:integrate_hypers}). This implies that
  $\tr_0$ is close to the peaks of the Gaussian over $\tr$, rendering our linearisation appropriate. 
 
-Unfortunately, \eqref{eq:mean_corrn} is non-analytic due to the $\tr_0$ term within $\Delta$. As such, we perform another stage of Bayesian quadrature by treating $\Delta$ as an unknown function of $\lfv$. We take Gaussian process priors for $\Delta$, with zero prior mean and Gaussian covariance \eqref{eq:Gaussian_cov_fn}. We must now choose sample points $\vlfv_c$ at which to evaluate the $\Delta$ function. 
+Unfortunately, \eqref{eq:mean_corrn} is non-analytic due to the $\tr_0$ term within $\Delta$. As such, we perform another stage of Bayesian quadrature by treating $\Delta$ as an unknown function of $\lfv$. We take Gaussian process priors for $\Delta$, with zero prior mean and Gaussian covariance \eqref{eq:Gaussian_cov_fn}. We must now choose \emph{candidate points} $\vlfv_c$ at which to evaluate the $\Delta$ function. 
 Note that we do not need to evaluate $\lfn(\lfv_c)$ in order to compute $\Delta(\lfv_c)$.
 % Unfortunately, it is impractical to resolve this decision problem in the same manner as the selection of $\vlfvS$, our ultimate goal (a topic that receives our full attention in Section \ref{sec:S\acro{bq}})).
-$\vlfv_c$ should firstly include $\vlfv_s$, where we know that $\Delta$ is equal to zero. Following \citet{BQR}, we select the remainder of $\vlfv_c$  as the  vertices of a Voronoi diagram \citep{okabe1997locational}, where we expect $\delta$ to be extremised. 
+$\vlfv_c$ should firstly include $\vlfv_s$, where we know that $\Delta$ is equal to zero. Following \citet{BQR}, we select the remainder of $\vlfv_c$  as the  vertices of a Voronoi diagram \citep{okabe1997locational}, where we expect $\delta$ to be extremised. The greater the number of candidate locations, the more accurate but slower we expect our calculations to be.
 
 Given these samples, we can now marginalise \eqref{eq:mean_ev1} over $\Delta$ to give
 \begin{equation} \label{eq:post_mean}
@@ -379,7 +379,7 @@ In summary, we have described a linearisation approach to exploiting a \acro{gp}
 \label{sec:marginalizing}
 
 We now present a novel means of approximately marginalising the hyperparameters of the \gpb used to model the log-integrand, $\tr$. In previous approaches to Bayesian Quadrature, hyperparameters have been fitted using 
- maximum likelihood. However, ignoring the uncertainty in the hyperparameters to which our predictions are sensitive can lead to pathologies. In particular, the reliability of the variance for $Z$ depends crucially upon marginalising over all unknown quantities. 
+ \acro{mlii}. However, ignoring the uncertainty in the hyperparameters to which our predictions are sensitive can lead to pathologies. In particular, the reliability of the variance for $Z$ depends crucially upon marginalising over all unknown quantities. 
 
 \begin{figure}
 \centering
@@ -388,12 +388,12 @@ We now present a novel means of approximately marginalising the hyperparameters 
 \label{fig:integrate_hypers}
 \end{figure}
 
-The hyperparameters of most interest are the input scales $w$ for the \gpb over the log-likelihood; these hyperparameters can have a powerful influence on the fit to a function. We use maxmimum likelihood to fit all hyperparmeters other than $w$. Unfortunately, the analytic marginalisation of $w$ is ruled out by the complex dependence of our predictions upon these input scales. However, any approximation we make is likely to improve upon the assumption made by maximum likelihood: that the posterior for all hyperparameters is a delta function. We make the following essential assumptions.
+The hyperparameters of most interest are the input scales $w$ for the \gpb over the log-likelihood; these hyperparameters can have a powerful influence on the fit to a function. We use maxmimum likelihood to fit all hyperparmeters other than $w$. Unfortunately, the analytic marginalisation of $w$ is ruled out by the complex dependence of our predictions upon these input scales. However, any approximation we make is likely to improve upon the assumption made by \acro{mlii}: that the posterior for all hyperparameters is a delta function. We make the following essential assumptions.
 
  \paragraph*{Flat prior:} We assume that the prior for $w$ is very broad, so that our posterior is a simple scaling of the likelihood. 
-\paragraph*{Laplace approximation:} The likelihood of $w$ is taken as Gaussian with mean equal to the maximum likelihood value $\hat{w}$ and with diagonal covariance matrix $C_w$, diagonal elements fitted using the second derivatives of the likelihood.
+\paragraph*{Laplace approximation:} The likelihood of $w$ is taken as Gaussian with mean equal to the \acro{mlii} value $\hat{w}$ and with diagonal covariance matrix $C_w$, diagonal elements fitted using the second derivatives of the likelihood.
 %the squared input scales $w_s$ of another \gp, fitted to the likelihood $s(w_r)$ of the input scales $w_r$. \textcolor{red}{[Neat idea, but I can think of simple examples where the lengthscale is short but the mass is spread out; it seems to me that it'd be better to first fit a \gpb, then fit a Gaussian to the \gpb posterior.]}
-\paragraph*{Affine GP mean:} Given the tightness of the likelihood for $w$, our predictions for $\tr$ are assumed to have a \gpb mean which is affine in $w$ around the maximum likelihood values, and a constant covariance;
+\paragraph*{Affine GP mean:} Given the tightness of the likelihood for $w$, our predictions for $\tr$ are assumed to have a \gpb mean which is affine in $w$ around the \acro{mlii} values, and a constant covariance;
 \begin{align}
 \hspace{-0.2cm} m_{\tr|s,w} & \simeq m_{\tr|s,\hat{w}} 
  + \pderiv{m_{\tr|s,\hat{w}}}{w} (w- \hat{w})\\
@@ -539,25 +539,25 @@ $. This allows us to determine how accurate are our variance estimates. As a fur
 
 \paragraph{Methods:} We firstly compared against simple Monte Carlo (\acro{smc}). \acro{smc} generates samples $x_1 \dots x_N$ from the prior distribution, and estimates $Z$ by $$\hat{Z} = \frac{1}{N} \sum_{n=1}^{N} \lfn(x_n).$$  An estimate of the variance of $\hat{Z}$ is given by the standard error of $\lfn({\bf x})$.
 
-As an alternative Monte Carlo technique, we also implemented Annealed Importance Sampling (\acro{ais}) using a Metropolis-Hastings sampler.  The inverse temperature schedule was linear as in \citep{BZMonteCarlo}, and the proposal width was adjusted to attain approximately a 50\% acceptance rate.  In an attempt to be as generous to \acro{ais} as possible, the posterior variance of the \acro{ais} estimate of $Z$ was set to the empirical variance over 10 chains.  An alternative sampler which we did not use was Hamiltonian Monte Carlo, which uses information about the derivatives in order to speed mixing.  However, Bayesian Quadrature can also incorporate information about the derivatives of the likelihood function, and would presumably also perform better if given this information.  An exhaustive comparison of sampling methods is beyond the scope of this paper.
+As an alternative Monte Carlo technique, we also implemented Annealed Importance Sampling (\acro{ais}) using a Metropolis-Hastings sampler.  The inverse temperature schedule was linear as in \citep{BZMonteCarlo}, and the proposal width was adjusted to attain approximately a 50\% acceptance rate.  In an attempt to be as generous to \acro{ais} as possible, the posterior variance of the \acro{ais} estimate of $Z$ was set to the empirical variance over ten chains.  
+
+% An alternative sampler which we did not use was Hamiltonian Monte Carlo, which uses information about the derivatives in order to speed mixing.  However, Bayesian Quadrature can also incorporate information about the derivatives of the likelihood function, and would presumably also perform better if given this information.  An exhaustive comparison of sampling methods is beyond the scope of this paper.
 
 Our first model-based method was Bayesian Monte Carlo (\acro{bmc}) -- the algorithm used in \citep{BZMonteCarlo}, in which samples were drawn from the \acro{ais} chain just described, and a \gp was fit to the likelihood samples. For this \gp, and the others that follow, the hyperparameters were selected as those that maximised the likelihood. 
 
-We then tested four novel methods. Firstly, Bayesian Quadrature (\acro{bq}), which employed the linearisation approach of Section \ref{sec:model_lik} to modeling the log-transformed likelihood values. The samples supplied to it were drawn from the same \acro{ais} chain as used above. \acro{bq}* is identical except that it additionally took the approach of Section \ref{sec:marginalizing} to approximately marginalising hyperparameters, where \acro{bq} did not. The performance of these methods allow us to quantify to what extent our innovations improve estimation given a fixed set of samples. 
+We then tested four novel methods. Firstly, Bayesian Quadrature (\acro{bq}), which employed the linearisation approach of Section \ref{sec:model_lik} to modeling the log-transformed likelihood values. The samples supplied to it were drawn from the same \acro{ais} chain as used above, and 400 candidate points were used. \acro{bq}* is identical except that it additionally took the approach of Section \ref{sec:marginalizing} to approximately marginalising hyperparameters, where \acro{bq} did not. The performance of these methods allow us to quantify to what extent our innovations improve estimation given a fixed set of samples. 
 
 Next, we tested a novel algorithm, Doubly Bayesian Quadrature (\acro{bbq}). The method is so named for the fact that we use not only Bayesian inference (with a \gpb over the log-transformed likelihood) to compute the posterior for the evidence, but also Bayesian decision theory to select our samples actively, as described in Section \ref{sec:BBQ}. Note that \eqref{eq:exp_var} was minimised using a multi-start local optimizer, where the starting points were chosen as $\lfv_c$. Finally, \acro{bbq}* was the same algorithm, but with hyperparameters  approximated marginalised. Both algorithms demonstrate the influence of active sampling on our performance. 
 
 \paragraph{Problems:}
-We chose a variety of problems which would demonstrate the strengths and weaknesses of the various methods we compared. Please refer to Table \ref{tbl:problem_descriptions} for brief descriptions of the likelihood functions chosen; for all problems, we assumed Gaussian priors. As in \citet{BZMonteCarlo} and \citet{BQR}, we focus on evaluating evidences given only low numbers of samples. We are motivated by real-world problems where evaluating likelihood samples is (computationally or otherwise) expensive, for which it is desirable to determine the techniques for evidence estimation that can operate best when permitted only a small number of samples. Ground truth $Z$ is available for only some integrals; for the non-analytic integrands, $Z$ was estimated by a run of \acro{smc} with $10^6$ samples.
+We chose a myriad of problems which would demonstrate the strengths and weaknesses of the methods we compared. OUr goal was to evaluate evidences given various likelihood functions and Gaussian priors. As in \citet{BZMonteCarlo} and \citet{BQR}, we focus on low numbers of samples. We are motivated by real-world problems where evaluating likelihood samples is (computationally or otherwise) expensive, for which it is desirable to determine the techniques for evidence estimation that can operate best when permitted only a small number of samples. Ground truth $Z$ is available for only some integrals; for the non-analytic integrals, $Z$ was estimated by a run of \acro{smc} with $10^6$ samples.
 
-\input{tables/integrands.tex}
+We firstly tested on six distinct one-dimensional functions. These included mixtures of two Gaussians, alternately widely separated and overlapping, along with a translation and scaling of one such problem. As a challenge, we included a high-frequency sinusoid. 
 
-Of particular note in Table \ref{tbl:problem_descriptions} is the funnel 2d example, drawn from \citet{NealMC}.This is known to be particularly challenging
-
-We also reproduced an experiment from \citet{BZMonteCarlo}, in which we compute the evidence for a \gpb model for a synthetic function from \citet{friedman1991}. This required the marginalisation of seven inputs (friedman 7d); we also consider a restricted problem with only three inputs (friedman 3d). Note that $\gpb$ likelihoods are often expensive to compute, scaling as $N^3$ in the number of data $N$.
+In higher dimension, we included three examples of similar four-dimensional Gaussian mixtures. We also tested on a two-dimensional version of the funnel distribution of \citet{neal2003slice}, known to be particularly difficult for samplers. Another problem was drawn from \citet{BZMonteCarlo}: the computation of the evidence for a \gpb model over a synthetic function \citep{friedman1991}. This required the marginalisation of seven inputs; we also consider a restricted problem with only three inputs. Note that $\gpb$ likelihoods are often expensive to compute, scaling as $N^3$ in the number of data $N$.
 
 Finally, we compared approaches on a real scientific problem. Bayesian model comparison is increasingly important to the biological sciences 
-\citep{penny2010comparing, mann2011bayesian, mann2011objectively, rosa2011bayesian}. \citet{mann2012multi} applied model comparison to discover the rules of interaction between simple animals (glass prawns, {\it Paratya australiensis}) which lead to coherent group motion. We aim to reproduce the experiments of \citep{mann2012multi} to calculate the evidence for each of three different models: a mean field model, a Markovian model and a non-Markovian model. Given the large corpus of data available, evaluating likelihood samples for these models is computationally demanding; for the purposes of our own experiments, we consider only a hundredth of the available data.
+\citep{penny2010comparing, mann2011objectively, rosa2011bayesian}. \citet{mann2012multi} applied model comparison to discover the rules of interaction between simple animals (glass prawns, {\it Paratya australiensis}) which lead to coherent group motion. We aim to reproduce the experiments of \citep{mann2012multi} to calculate the evidence for each of three different models: a mean field model, a Markovian model and a non-Markovian model. Given the large corpus of data available, evaluating likelihood samples for these models is computationally demanding; we consider only a hundredth of the available data. These problems required five parameters to be marginalised. 
 
 
 \paragraph{Evaluation}
@@ -607,21 +607,21 @@ Finally, we compared approaches on a real scientific problem. Bayesian model com
 
 
 
-\section{Discussion}
+\section{Conclusions}
 
-Adjusting the number of candidate points allows one to trade off between computational speed and number of samples required.
+ In this paper, we have made several advances to the \acro{bmc} method.  We have also demonstrated the many advantages of model-based integration over standard \acro{mc}: a natural stopping criterion, an estimate of uncertainty in our integral, and the ability to use active learning to select our samples rather than Monte Carlo methods.
 
-While we used an active learning scheme in this paper, Bayesian Quadrature can be used on samples generated by any method.
+% Adjusting the number of candidate points allows one to trade off between computational speed and number of samples required.
 
-\paragraph{Future Work}There are many ways to improve the \gpb model used to model likelihood functions.  First and foremost, the Gaussian kernel used in this paper has very weak generalization abilities.  Allowing a richer class of kernels will allow the \gpb model to shrink its posterior much more quickly.  For example, log-likelihood functions typically take the form of a sum of many terms, each depending only on a small number of variables.  This prior information could easily be incorporated into the \gp, presumably allowing the \acro{bbq} algorithm to form concentrated posterior distributions over high-dimensional likelihoods.
+% While we used an active learning scheme in this paper, Bayesian Quadrature can be used on samples generated by any method.
+
+There are many ways to improve the \gpb model used to model likelihood functions.  First and foremost, the Gaussian kernel used in this paper has very weak generalization abilities.  Allowing a richer class of kernels will allow the \gpb model to shrink its posterior much more quickly.  For example, log-likelihood functions typically take the form of a sum of many terms, each depending only on a small number of variables.  This prior information could easily be incorporated into the \gp, presumably allowing the \acro{bbq} algorithm to form concentrated posterior distributions over high-dimensional likelihoods.
 
 The methods developed here can be applied without modification to discrete domains.
 
-\section{Conclusions}
 
- In this paper, we have made several advances to the \acro{bmc} method.  We have also demonstrated the many advantages of model-based integration over standard \acro{mcmc}: a natural stopping criterion, an estimate of uncertainty in our integral, and the ability to use active learning to select our samples rather than Monte Carlo methods.
 
-\acro{mcmc} is an extremely widely used method, and advances in \acro{mcmc} allow modelers [such as...] to use richer model classes and to be more confident in their model evaluations.  While we do not expect model-based integration approaches to be a better choice in every instance, we expect that this family of approaches will one day be seen as a standard alternative to \acro{mcmc}.
+\acro{mc} is an extremely widely used method, and advances in \acro{mcmc} allow modelers to use richer model classes and to be more confident in their model evaluations.  While we do not expect model-based integration approaches to be a better choice in every instance, we expect that this family of approaches will one day be seen as a standard alternative to \acro{mcmc}.
 
 \section*{Acknowledgements}
 
