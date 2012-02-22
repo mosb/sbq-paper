@@ -426,26 +426,26 @@ The marginal posterior variance is
 %\p{\tr}{\tvr_s, \theta}\, \p{\theta}{\tvr_s}\ud \tr\,\ud \theta\\
 %& = \iint \mean{Z[\tr]}{Z_0,\tr} \N{\tr}{m_{\tr|s,\theta}}{C_{\tr|s,\theta}}
 %\\
-%& \hspace{5cm}\N{\theta}{m_\theta}{C_\theta}\ud \tr\,\ud \theta
+%& \hspace{5cm}\N{\theta}{\hat{w}}{C_w}\ud \tr\,\ud \theta
 %\\
 %& \simeq \iint \mean{Z[\tr]}{Z_0,\tr} 
 %\\
 %& \hspace{2cm}\N{\tr}
-%{m_{\tr|s,m_\theta}+\pderiv{m_{\tr|s,\theta}}{\theta}(\theta-m_\theta)}
-%{C_{\tr|s,m_\theta}}
+%{m_{\tr|s,\hat{w}}+\pderiv{m_{\tr|s,\theta}}{\theta}(\theta-\hat{w})}
+%{C_{\tr|s,\hat{w}}}
 %\\
 %& \hspace{4cm}
-%\N{\theta}{m_\theta}{C_\theta}\ud \tr\,\ud \theta
+%\N{\theta}{\hat{w}}{C_w}\ud \tr\,\ud \theta
 %\\
 %& = \iint \mean{Z[\tr]}{Z_0,\tr} \\
 %& \hspace{1cm}\N{\tr}
-%{m_{\tr|s,m_\theta}}
-%{C_{\tr|s,m_\theta}+\pderiv{m_{\tr|s,\theta}}{\theta}C_\theta\pderiv{m\tra_{\tr|s,\theta}}{\theta}}
+%{m_{\tr|s,\hat{w}}}
+%{C_{\tr|s,\hat{w}}+\pderiv{m_{\tr|s,\theta}}{\theta}C_w\pderiv{m\tra_{\tr|s,\theta}}{\theta}}
 %\ud \tr
 %\\
-%& = \mean{Z[\tr]}{Z_0,m_{\tr|s,m_\theta}}\,,
+%& = \mean{Z[\tr]}{Z_0,m_{\tr|s,\hat{w}}}\,,
 %\end{align*}
-%which is identical to \eqref{eq:mean_ev} (note that we had previously just implicitly assumed that $\theta=m_\theta$). 
+%which is identical to \eqref{eq:mean_ev} (note that we had previously just implicitly assumed that $\theta=\hat{w}$). 
 This implies that our marginal posterior mean for $Z$ 
 \begin{equation}
 \tilde{m}(\If|Z_0,\tvr_s,\Delta_c) \deq \mean{\If}{Z_0,\tvr_s,\Delta_c, \hat{w}},
@@ -509,14 +509,14 @@ where the expected loss is
  - \int\mean{\If}{Z_0,\tvr_{a,s},\Delta_c}^2\nonumber\\
 & \hspace{0.2cm}
 \times\N{\tr_a}
-{\tilde{m}_a }
-{\tilde{C}_a +\pderiv{\tilde{m}_a}{\theta}C_\theta\pderiv{\tilde{m}\tra_a}{\theta}}
+{\hat{m}_a }
+{\hat{C}_a +\pderiv{\hat{m}_a}{w}C_w\pderiv{\hat{m}\tra_a}{w}}
 \ud\tr_a\,.\label{eq:exp_var}
 \end{align}
 and
 \begin{align}
-\tilde{m}_a & \deq \mean{\tr_a}{\tvr_s,m_\theta}\\ 
-\tilde{C}_a & \deq \cov{\tr_a}{\tvr_s,m_\theta}\,.
+\hat{m}_a & \deq \mean{\tr_a}{\tvr_s,\hat{w}}\\ 
+\hat{C}_a & \deq \cov{\tr_a}{\tvr_s,\hat{w}}\,.
 \end{align}
 The first term in \eqref{eq:exp_var}, the (expected) second moment, is independent of the selection of $\lfv_a$ and hence can be safely ignored for active sampling. This is true regardless of the probabilistic model chosen for the likelihood surface. 
 Noting that $\int \exp(c\, y)\, \N{y}{m}{\sigma^2} \ud y = \exp(c\, m + \nicefrac{1}{2}\, c^2 \sigma^2)$, 
