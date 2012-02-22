@@ -72,7 +72,7 @@ There exist several standard randomized methods for computing model evidence, su
 
 %\section{Model-Based Integration}
 
-An alternative, model-based approach, Bayesian Quadrature \citep{BZHermiteQuadrature}, specifies a distribution over likelihood functions, using observations of the likelihood to infer a distribution for $Z$ (see Figure \ref{fig:model_based}). Bayesian Quadrature has previously been used to infer model evidence, \citep{BZMonteCarlo}.  We improve upon this work in three ways:
+An alternative, model-based approach, Bayesian Quadrature (\acro{bq}) \citep{BZHermiteQuadrature}, specifies a distribution over likelihood functions, using observations of the likelihood to infer a distribution for $Z$ (see Figure \ref{fig:model_based}). Bayesian Quadrature has previously been used to infer model evidence, \citep{BZMonteCarlo}.  We improve upon this work in three ways:
 
 \begin{figure}
 \centering
@@ -96,12 +96,12 @@ An alternative, model-based approach, Bayesian Quadrature \citep{BZHermiteQuadra
 
 \paragraph*{Active Sampling:} In \citep{BZMonteCarlo}, sample points were chosen in a randomized manner.  We demonstrate how to actively choose sample points in order to minimize the uncertainty in our integral.
 
-\paragraph*{Hyperparameter Marginalisation:} Uncertainty in the quadrature hyperparameters has previously been ignored, leading to overconfidence in the estimate of $Z$.  We introduce a tractable approximate marginalization of lengthscale hyperparameters.
+\paragraph*{Hyperparameter Marginalisation:} Uncertainty in the hyperparameters has previously been ignored, leading to overconfidence in the estimate of $Z$.  We introduce a tractable approximate marginalization of lengthscale hyperparameters.
 
 
 %\paragraph*{Convergence:} Here the issue of convergence is solved naturally: our posterior variance over $Z$ indicates the uncertainty remaining in the quantity we care about. 
 
-We compare our \acro{bq} approach to standard Monte Carlo techniques on both simulated and real scientific problems, where we demonstrate one of the key advantages of \acro{bq}: a closed-form expression for the posterior uncertainty over $Z$ provides a natural convergence diagnostic.
+We compare our \acro{bq} approach against standard Monte Carlo techniques on both simulated and real problems, and demonstrate one of the key advantages of \acro{bq}: a closed-form expression for the posterior uncertainty over $Z$ provides a natural convergence diagnostic.
 
 %\section{Estimating Model Evidence}\label{sec:ev}
 
@@ -123,7 +123,7 @@ We compare our \acro{bq} approach to standard Monte Carlo techniques on both sim
 Gaussian processes (\gp s) offer a powerful method to perform Bayesian inference about functions \citep{GPsBook}. A \gpb is defined as a distribution over the functions $f: \mathcal{X} \rightarrow \mathbb{R}$ such that the distribution over the possible function values on any finite subset of $\mathcal{X}$ is multivariate Gaussian. For clarity, we'll henceforth assume $\mathcal{X} = \mathbb{R}$, although all results generalise readily to $\mathbb{R}^n$. For a function $f(\lfv)$, the prior distribution over its values $\vf$ on $\vlfv \subset \mathcal{X}$ is
 \begin{align}%\label{eq:\gpbDefn}
 \textstyle
- &\po{\vf}\deq \N{\vf}{\vmu}{K}\\
+ &\po{\vf}\deq \N{\vf}{\vmu}{K}\nonumber\\
  &\deq\frac{1}{\sqrt{\det{2\pi K}}}\,\exp \big(-\frac{1}{2}\,(\vf-\vmu)\tra\,K\inv\,(\vf-\vmu)\big),
 \end{align}
 This distribution is specified by mean and covariance functions, which generate mean vector $\vmu_{f}$ and covariance matrix $K_{f}$ respectively. 
@@ -133,8 +133,8 @@ In this paper, we'll use Gaussian (squared exponential) covariance functions,
 \textstyle
 K_{f}(\lfv_1,\lfv_2)& \deq h_f^2\,\N{\lfv_1}{\lfv_2}{w_{f}}.
 \end{align} 
-Here $h_f$ specifies the output scale (`height') over $f$, while $w_f$ defines a (squared) input scale (`width') over $\lfv$. Note that if $x$ has dimension greater than one, $w_f$ is a covariance matrix; we'll assume $w_f$ is diagonal. 
-
+Here $h_f$ specifies the output scale over $f$, while $w_f$ defines a (squared) input scale over $\lfv$. 
+% Note that if $x$ has dimension greater than one, $w_f$ is a covariance matrix; we'll assume $w_f$ is diagonal. 
 Given observations $(\vlfv_s,\vf_s)$, we are interested in making predictions about  $f_\star$ at input $\lfv_\star$. We will assume that function inputs such as $\vlfv_s$ and $\lfv_\star$ are always known; they will not be explicitly represented. With this information, we have the predictive equations
 \begin{equation}
  \pskinny{f\st}{\vf_s} = 
@@ -152,8 +152,7 @@ where the mean $m$, covariance $C$, and variance $V$ are
 K_{f}(\lfv_\star,\vlfv_s)
 K_{f}(\vlfv_s,\vlfv_s)\inv\!
 \bigl(\vf_s\!-\!{\mu}_{f}(\vlfv_s)\bigr)\label{eq:GPMean}
-\end{align} 
-\begin{align}
+\\[0.2cm]
 &C_{f|s}(\lfv_\star, \lfv'_\star)
 \deq C(f_\star,f'_\star|\vf_s) 
 \nonumber\\
@@ -166,7 +165,7 @@ K_{f}(\vlfv_s,\!\lfv'_\star)%\label{eq:\gpbCov}
 \deq {\cov{f_\star}{\vf_s}} 
 \deq C_{f|s}(\lfv_\star, \lfv_\star).
 \end{align} 
-Note that the above assumes implicit conditioning on hyperparameter. Where required for disambiguation, we'll make this explicit, as per $m_{f|s,w_f}(x\st) \deq \mean{f\st}{\vf_s, w_f}$ and so forth.
+Note that the above assumes implicit conditioning on hyperparameters. Where required for disambiguation, we'll make this explicit, as per $m_{f|s,w_f}(x\st) \deq \mean{f\st}{\vf_s, w_f}$ and so forth.
 
 \section{Bayesian Quadrature} \label{sec:bq}
 
@@ -176,7 +175,8 @@ Note that the above assumes implicit conditioning on hyperparameter. Where requi
 %Note that we use a condensed notation; this and all integrals to follow are definite integrals over the entire domain of interest.
 We'll assume we are integrating with respect to a Gaussian prior
 $\po{\lfv} \deq \N{\lfv}{\nu_{\lfv}}{\lambda_{\lfv}}$,
-although other convenient forms, or, if necessary, the use of an importance re-weighting trick, allow any other integral to be approximated. If $\lfv$ is a vector, $\nu_{\lfv}$ is a  vector of identical size, and $\lambda_{\lfv}$ an appropriate covariance matrix.
+although other convenient forms, or, if necessary, the use of an importance re-weighting trick, allow any other integral to be approximated. 
+% If $\lfv$ is a vector, $\nu_{\lfv}$ is a  vector of identical size, and $\lambda_{\lfv}$ an appropriate covariance matrix.
 
 %\textcolor{red}{[I'm hoping to re-write the next two paragraphs; it's way too indirect, and I think the philosophical foundations of \acro{mcmc} are a poor avenue of attack]}
 Quadrature involves evaluating $f(\lfv)$ at a vector of sample points $\vlfv_s$, giving $\vf\pha_s\deq f(\vlfv_s)$. Often this evaluation is computationally expensive; the consequent sparsity of samples introduces uncertainty about the function $f$ between them, and hence uncertainty about the integral $Y$.
@@ -190,7 +190,7 @@ Quadrature involves evaluating $f(\lfv)$ at a vector of sample points $\vlfv_s$,
 %effectively ignores the information content of $\vlfv_s$, leading to unsatisfactory behaviour.
 %\footnote{  For example, imagine that we had $\card{s}=3$, and $\lfv_1 = \lfv_2$. In this case, the identical value $q(\lfv_1)= q(\lfv_2)$ will receive $\nicefrac{2}{3}$ of the weight, whereas the equally useful $q(\lfv_3)$ will receive only $\nicefrac{1}{3}$. \textcolor{red}{I'm not crazy about this argument, since the weightings are also incorporating information about the prior...} }
 
-Traditional Bayesian quadrature chooses a \gpb prior for $f$, with mean $\mu_f$ and the Gaussian covariance \eqref{eq:Gaussian_cov_fn}. Here the scales $h_f$ and $w_f$ are \emph{quadrature hyperparameters}, hyperparameters that specify the  \gpb used for Bayesian quadrature. These scales are typically fitted using maximum likelihood; we will later introduce an approximate means of marginalising them in Section \ref{sec:marginalizing}.
+Traditional Bayesian quadrature chooses a \gpb prior for $f$, with mean $\mu_f$ and the Gaussian covariance \eqref{eq:Gaussian_cov_fn}. Here the scales $h_f$ and $w_f$ are hyperparameters that specify the  \gpb used for Bayesian quadrature. These scales are typically fitted using maximum likelihood; we will later introduce an approximate means of marginalising them in Section \ref{sec:marginalizing}.
 
 % Many more of these will be implicitly introduced in the coming sections; we'll take this as given and incorporate them into the (hidden) context $I$. 
 % Note that it will later become apparent that our inference for $\inty{f}$ is independent of the $h_f$ quadrature hyperparameter.
@@ -375,10 +375,10 @@ which is expressible in closed form, although space precludes us from doing so. 
 
 In summary, we have described a linearisation approach to exploiting a \acro{gp} prior over log-likelihoods to determine the posterior mean \eqref{eq:post_mean} and variance \eqref{eq:post_var} for the evidence. 
 
-\section{Marginalising quadrature hyperparameters}
+\section{Marginalising hyperparameters}
 \label{sec:marginalizing}
 
-We now present a novel means of approximately marginalising the quadrature hyperparameters of the \gpb used to model the log-integrand, $\tr$. In previous approaches to Bayesian Quadrature, quadrature hyperparameters have been fitted using 
+We now present a novel means of approximately marginalising the hyperparameters of the \gpb used to model the log-integrand, $\tr$. In previous approaches to Bayesian Quadrature, hyperparameters have been fitted using 
  maximum likelihood. However, ignoring the uncertainty in the hyperparameters to which our predictions are sensitive can lead to pathologies. In particular, the reliability of the variance for $Z$ depends crucially upon marginalising over all unknown quantities. 
 
 \begin{figure}
