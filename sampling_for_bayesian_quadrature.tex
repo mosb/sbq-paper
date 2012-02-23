@@ -231,7 +231,7 @@ $\mean{\inty{f g}}{\vf_s, \vect{g}_s}$ for an integral $\int f(x) g(x) p(x) \ud 
  \begin{figure}
  \centering
  \psfragfig[width=\columnwidth]{figures/log_transform}
- \caption{The input scale of a \gpb fitted to the log-likelihood function will typically be much longer than that of a \gpb fit to the likelihood function.  A \gpb with a long input scale will generalize better to distant parts of the function, and will have a posterior more concentrated around the true evidence. }
+ \caption{The input scale of a \gpb fitted to the log-likelihood function will typically be longer than that of a \gpb fit to the likelihood function.  A \gpb with a long input scale will generalize better to distant parts of the function, and have a posterior more concentrated around the true evidence. }
  \label{fig:log_is_better}
  \end{figure}
 %
@@ -293,7 +293,14 @@ Z_0 & = Z[\tr_0]
  = \mean{\lfn(\lfv)}{\vr_s}\,\po{\lfv}.\label{eq:func_deriv}
 \end{align}
 Note that $Z_0$ and its functional derivatives are analytic due to our choice of $\tr_0$. 
-
+%
+\begin{figure}
+\centering
+\psfragfig{figures/delta}
+\caption{An illustration of our method of finding the integral under the exp of a Gaussian process.}
+\label{fig:delta}
+\end{figure}
+%
 For brevity, we assume that if we condition on $Z_0$, we will also implicitly condition on its functional derivative. This allows us to write the mean for  $Z$
 %
 \begin{align}
@@ -316,7 +323,7 @@ Here we have defined the difference between the \gpb mean over the log-transform
 \begin{align}
 \Delta & \deq m_{\tr |s} - \log(m_{l|s}) = m_{\tr |s}  - \tr_0 \,.
 \end{align}
-We expect $\Delta(\lfv)$ to be everywhere small relative to the magnitude of $\tr(\phi)$ (see Figure \ref{fig:integrate_hypers}). This implies that
+We expect $\Delta(\lfv)$ to be everywhere small relative to the magnitude of $\tr(\phi)$ (see Figure \ref{fig:delta}). This implies that
  $\tr_0$ is close to the peaks of the Gaussian over $\tr$, rendering our linearisation appropriate. 
 
 Unfortunately, \eqref{eq:mean_corrn} is non-analytic due to the $\tr_0$ term within $\Delta$. As such, we perform another stage of Bayesian quadrature by treating $\Delta$ as an unknown function of $\lfv$. We take Gaussian process priors for $\Delta$, with zero prior mean and Gaussian covariance \eqref{eq:Gaussian_cov_fn}.
@@ -359,15 +366,7 @@ and hence
  \iint m_{\lfn|s}(\lfv) m_{\lfn|s}(\lfv') C_{\tr|s}(\lfv,\lfv')  p(x) p(x') \ud \lfv \ud\lfv',
 \end{align}
 which is expressible in closed form, although space precludes us from doing so. This variance can be employed as a convergence diagnostic; it describes our uncertainty in the ultimate quantity of interest.
-%
-\begin{figure}
-\centering
-\psfragfig{figures/delta}
-\caption{An illustration of our method of finding the integral under the exp of a Gaussian process.}
-\label{fig:delta}
-\end{figure}
-%
-Figure \ref{fig:delta} illustrates the difference between the \acro{gp} models over $\tr(\lfv)$.
+
 In summary, we have described a linearisation approach to exploiting a \acro{gp} prior over log-likelihoods; this permitted the calculation of the analytic posterior mean \eqref{eq:post_mean} and variance \eqref{eq:post_var} for the evidence. 
 
 \section{Marginalising hyperparameters}
@@ -404,6 +403,14 @@ The marginal posterior variance is
 \pderiv{m_{\tr|s,\hat{w}}}{w}\,.
 \end{equation}
 %which is identical to \eqref{eq:mean_ev} (note that we had previously just implicitly assumed that $\theta=\hat{w}$). 
+%
+\begin{figure}
+\centering
+\psfragfig[width=0.4\textwidth]{figures/int_hypers2}
+\caption{Integrating hyperparameters increases the marginal posterior variance (in regions whose mean varies as the input scales change) to more closely match the true posterior marginal variance.}
+\label{fig:integrate_hypers}
+\end{figure}
+%
 An example of our approximate posterior is depicted in Figure  \ref{fig:integrate_hypers}.
 Our approximations give a marginal posterior mean for $Z$, 
 \begin{equation}
@@ -421,14 +428,7 @@ of the form \eqref{eq:post_mean}. The marginal posterior variance
 \biggr)
 \end{align}
 is possible, although laborious, to express analytically, just like \eqref{eq:post_var}. 
-%
-\begin{figure}
-\centering
-\psfragfig[width=0.4\textwidth]{figures/int_hypers2}
-\caption{An illustration of the effect of integrating hyperparameters on the marginal posterior variance.  Regions whose mean varies as the input scales changes have an increased marginal posterior variance.  This increased marginal variance more closely matches the true posterior marginal variance.}
-\label{fig:integrate_hypers}
-\end{figure}
-%
+
 Figure \ref{fig:integrate_hypers} demonstrates our approximate marginalization on a simple example.
 
 \section{Active Sampling}\label{sec:BBQ}
@@ -477,27 +477,34 @@ and we define
 $\hat{m}_a \deq \mean{\tr_a}{\tvr_s,\hat{w}}$
 and
 $\hat{C}_a \deq \cov{\tr_a}{\tvr_s,\hat{w}}$.
-
-The first term in \eqref{eq:exp_var}, the second moment, is independent of the selection of $\lfv_a$ and hence can be safely ignored for active sampling. This is true regardless of the model chosen for the likelihood surface. 
+The first term in \eqref{eq:exp_var}, the second moment, is independent of the selection of $\lfv_a$ and can hence  be safely ignored for active sampling. This is true regardless of the model chosen for the likelihood. 
 Noting that $\int \exp(c\, y)\, \N{y}{m}{\sigma^2} \ud y = \exp(c\, m + \nicefrac{1}{2}\, c^2 \sigma^2)$, 
 the second term, the negative expected squared mean, can be resolved analytically\footnote{We assume that $\Delta$ does not depend on $\tr_a$, only its location $x_a$: we know $\Delta(x_a) = 0$ and assume $\Delta$ elsewhere remains relatively unchanged.}
- for any trial $\lfv_a$ (we omit the laborious details of doing so). We do not have to make a linearisation approximation here, and the posterior over $\tr_a$ can be fully exploited for its most important purpose: selecting new samples. An illustration of the progression of the expected loss surface is contained in Figure \ref{fig:eue}.
-
+ for any trial $\lfv_a$ (we omit the laborious details of doing so). We do not have to make a linearisation approximation here, and the posterior over $\tr_a$ can be fully exploited for the purpose of selecting new samples.
+%
  \begin{figure}
  \centering
 \psfragfig[width=0.4\textwidth]{figures/eue_progression2}
- \caption{An example showing the expected uncertainty in the evidence after observing the likelihood function at that location. The prior and likelihood are plotted at the top in green and black respectively, with the next sample location shown in red.  This example shows the model discovering a new mode on the right hand side, sampling around it, then moving on to other regions of high uncertainty on the left hand side. }
+ \caption{An example showing the expected uncertainty in the evidence after observing the likelihood function at that location. The prior and likelihood are plotted at the top in green and black respectively, the next sample location in red.  Note the model discovering a new mode on the right hand side, sampling around it, then moving on to other regions of high uncertainty on the left hand side. }
  \label{fig:eue}
  \end{figure}
+%
+\begin{figure}
+%	\centering
+	\psfragfig[width=6cm,height=4cm]{figures/plots/log_of_truth_plot_simple} 	
+	\psfragfig[width=3cm]{figures/plots/legend}
+	\caption{The negative log density of the true normalization constant, versus different methods.}
+\label{fig:nll}
+\end{figure}
 
-In order to minimise the expected variance, the objective in \eqref{eq:exp_var} encourages the maximization of the expected squared mean of $Z$. Due to our log-\gpb model, one means of doing so is to seek points where the log-likelihood is predicted to be large: exploitation.  The objective in \eqref{eq:exp_var} also encourages the choice of points where our current variance in the log-likelihood is significant, leading to exploration (see Figure \ref{eue} for an example). Note that our variance for $\tr_a$ has been inflated due to our consideration of the influence of hyperparameters (See Figure \ref{fig:integrate_hypers}), which we expect to promote additional exploration.
-
-
+In order to minimise the expected variance, the objective in \eqref{eq:exp_var} encourages the maximization of the expected squared mean of $Z$. Due to our log-\gpb model, one means of doing so is to seek points where the log-likelihood is predicted to be large: exploitation.  The objective in \eqref{eq:exp_var} also encourages the choice of points where our current variance in the log-likelihood is significant, leading to exploration (see Figure \ref{fig:eue}). Note that our variance for $\tr_a$ has been inflated due to our consideration of the influence of hyperparameters, which we expect to promote additional exploration.
 
 \section{Experiments}
 \label{sec:experiments}
 
-We now present empirical evaluation of the various components of our algorithm in a variety of different experiments.
+
+
+We now present empirical evaluation of our algorithm in a variety of different experiments.
 
 \paragraph{Metrics:} We judged our methods according to three metrics, all averages over $N$ similar experiments indexed by $i$. Define $Z_i$ as the ground truth evidence for the $i$th experiment, $m(Z_i)$ as its estimated mean  and $V(Z_i)$  as its predicted variance. Firstly, we compute the normalised mean square error,
 $
@@ -507,6 +514,7 @@ providing some measure of the average percentage error, in decibels. Next we com
 $
 \log p(\vect{Z}) = \sum_i \log \N{Z_i}{m(Z_i)}{V(Z_i)}
 $. This allows us to determine how accurate are our variance estimates. We also supply the calibration $\mathcal{C}$, defined as the fraction of experiments in which the ground truth lay within our 50\% confidence interval $\bigl(m(Z_i) - 0.6745 \sqrt{V(Z_i)}, m(Z_i) + 0.6745 \sqrt{V(Z_i)}\bigr)$. Ideally, $\mathcal{C}$ would be exactly 50\%: any higher, and a method is under-confident, any lower and it is over-confident. 
+
 
 \paragraph{Methods:} We firstly compared against simple Monte Carlo (\acro{smc}). \acro{smc} generates samples $x_1 \dots x_N$ from the prior distribution, and estimates $Z$ by $\hat{Z} = \nicefrac{1}{N} \sum_{n=1}^{N} \lfn(x_n)$.  An estimate of the variance of $\hat{Z}$ is given by the standard error of $\lfn({\bf x})$. As an alternative Monte Carlo technique, we implemented Annealed Importance Sampling (\acro{ais}) using a Metropolis-Hastings sampler.  The inverse temperature schedule was linear as in \citet{BZMonteCarlo}, and the proposal width was adjusted to attain approximately a 50\% acceptance rate.  In an attempt to be generous to \acro{ais}, the posterior variance of the \acro{ais} estimate of $Z$ was set to the empirical variance over ten chains.  
 
@@ -560,13 +568,7 @@ Finally, we compared approaches on a real scientific problem. Bayesian model com
 %	\centering
 %\end{figure}
 
-\begin{figure}
-%	\centering
-	\psfragfig[width=6cm,height=4cm]{figures/plots/log_of_truth_plot_simple} 	
-	\psfragfig[width=3cm]{figures/plots/legend}
-	\caption{The negative log density of the true normalization constant, versus different methods.}
-\label{fig:nll}
-\end{figure}
+
 
 \begin{figure}
 	\centering
