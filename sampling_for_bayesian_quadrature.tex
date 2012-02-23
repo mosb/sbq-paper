@@ -235,13 +235,6 @@ $\mean{\inty{f g}}{\vf_s, \vect{g}_s}$ for an integral $\int f(x) g(x) p(x) \ud 
  \label{fig:log_is_better}
  \end{figure}
 %
-\begin{figure}
-\centering
-\psfragfig{figures/delta}
-\caption{An illustration of our method of finding the integral under the exp of a Gaussian process.}
-\label{fig:delta}
-\end{figure}
-%
 We wish to evaluate the evidence \eqref{eq:ev}, an integral over non-negative likelihoods, $\lfn(\lfv)$. Assigning a standard \gpb prior to $\lfn(\lfv)$ would ignore prior information about the range and non-negativity of $\lfn(\lfv)$, leading to pathologies such as potentially negative evidences (as observed in \citet{BZMonteCarlo}).  A much better prior would be a \gpb prior on $\log\bigl(\lfn(x)\bigr)$ (see Figure \ref{fig:log_is_better}). However, the integral under the exp of a \gpb is intractable,
 \begin{multline}\label{eq:minty_l}
 \mean{\If}{\vr_s}
@@ -366,7 +359,15 @@ and hence
  \iint m_{\lfn|s}(\lfv) m_{\lfn|s}(\lfv') C_{\tr|s}(\lfv,\lfv')  p(x) p(x') \ud \lfv \ud\lfv',
 \end{align}
 which is expressible in closed form, although space precludes us from doing so. This variance can be employed as a convergence diagnostic; it describes our uncertainty in the ultimate quantity of interest.
-
+%
+\begin{figure}
+\centering
+\psfragfig{figures/delta}
+\caption{An illustration of our method of finding the integral under the exp of a Gaussian process.}
+\label{fig:delta}
+\end{figure}
+%
+Figure \ref{fig:delta} illustrates the difference between the \acro{gp} models over $\tr(\lfv)$.
 In summary, we have described a linearisation approach to exploiting a \acro{gp} prior over log-likelihoods; this permitted the calculation of the analytic posterior mean \eqref{eq:post_mean} and variance \eqref{eq:post_var} for the evidence. 
 
 \section{Marginalising hyperparameters}
@@ -375,20 +376,12 @@ In summary, we have described a linearisation approach to exploiting a \acro{gp}
 We now present a novel means of approximately marginalising the hyperparameters of the \gpb used to model the log-integrand, $\tr$. In previous approaches to Bayesian Quadrature, hyperparameters have been fitted using 
  \acro{mlii}. However, ignoring the uncertainty in the hyperparameters to which our predictions are sensitive can lead to pathologies. In particular, the reliability of the variance for $Z$ depends crucially upon marginalising over all unknown quantities. 
 
-\begin{figure}
-\centering
-\psfragfig[width=0.4\textwidth]{figures/int_hypers2}
-\caption{An illustration of the effect of integrating hyperparameters on the marginal posterior variance.  Regions whose mean varies as the input scales changes have an increased marginal posterior variance.}
-\label{fig:integrate_hypers}
-\end{figure}
-
 The hyperparameters of most interest are the input scales $w$ for the \gpb over the log-likelihood; these hyperparameters can have a powerful influence on the fit to a function. We use \acro{mlii} to fit all hyperparameters other than $w$. Unfortunately, the analytic marginalisation of $w$ is ruled out by the complex dependence of our predictions upon these input scales. 
 % However, any approximation we make is likely to improve upon the assumption made by \acro{mlii}: that the posterior for all hyperparameters is a delta function. 
 We make the following essential assumptions:
 
  \paragraph*{Flat prior:} We assume that the prior for $w$ is broad, so that our posterior is the normalised likelihood. 
 \paragraph*{Laplace approximation:} The likelihood of $w$ is taken as Gaussian with mean equal to the \acro{mlii} value $\hat{w}$ and with diagonal covariance $C_w$, diagonal elements fitted using the second derivatives of the likelihood.
-%the squared input scales $w_s$ of another \gp, fitted to the likelihood $s(w_r)$ of the input scales $w_r$. \textcolor{red}{[Neat idea, but I can think of simple examples where the input scale is short but the mass is spread out; it seems to me that it'd be better to first fit a \gpb, then fit a Gaussian to the \gpb posterior.]}
 \paragraph*{GP mean affine in $w$:} Given the narrow width of the likelihood for $w$, our predictions for $\tr$ are assumed to have a \gpb mean which is affine in $w$ around the \acro{mlii} values, and a constant covariance;
 \begin{align}
 \hspace{-0.2cm} m_{\tr|s,w} & \simeq m_{\tr|s,\hat{w}} 
@@ -410,33 +403,6 @@ The marginal posterior variance is
 \,C_w\,
 \pderiv{m_{\tr|s,\hat{w}}}{w}\,.
 \end{equation}
- % David sez: I moved this to the appendix.
-%With these assumptions, we have
-%\begin{align*}
-%& \mean{\inty{\lfn}}{Z_0,\tvr_s} \\
-%& \deq \iint \mean{Z[\tr]}{Z_0,\tr}
-%\p{\tr}{\tvr_s, \theta}\, \p{\theta}{\tvr_s}\ud \tr\,\ud \theta\\
-%& = \iint \mean{Z[\tr]}{Z_0,\tr} \N{\tr}{m_{\tr|s,\theta}}{C_{\tr|s,\theta}}
-%\\
-%& \hspace{5cm}\N{\theta}{\hat{w}}{C_w}\ud \tr\,\ud \theta
-%\\
-%& \simeq \iint \mean{Z[\tr]}{Z_0,\tr} 
-%\\
-%& \hspace{2cm}\N{\tr}
-%{m_{\tr|s,\hat{w}}+\pderiv{m_{\tr|s,\theta}}{\theta}(\theta-\hat{w})}
-%{C_{\tr|s,\hat{w}}}
-%\\
-%& \hspace{4cm}
-%\N{\theta}{\hat{w}}{C_w}\ud \tr\,\ud \theta
-%\\
-%& = \iint \mean{Z[\tr]}{Z_0,\tr} \\
-%& \hspace{1cm}\N{\tr}
-%{m_{\tr|s,\hat{w}}}
-%{C_{\tr|s,\hat{w}}+\pderiv{m_{\tr|s,\theta}}{\theta}C_w\pderiv{m\tra_{\tr|s,\theta}}{\theta}}
-%\ud \tr
-%\\
-%& = \mean{Z[\tr]}{Z_0,m_{\tr|s,\hat{w}}}\,,
-%\end{align*}
 %which is identical to \eqref{eq:mean_ev} (note that we had previously just implicitly assumed that $\theta=\hat{w}$). 
 An example of our approximate posterior is depicted in Figure  \ref{fig:integrate_hypers}.
 Our approximations give a marginal posterior mean for $Z$, 
@@ -455,7 +421,15 @@ of the form \eqref{eq:post_mean}. The marginal posterior variance
 \biggr)
 \end{align}
 is possible, although laborious, to express analytically, just like \eqref{eq:post_var}. 
-
+%
+\begin{figure}
+\centering
+\psfragfig[width=0.4\textwidth]{figures/int_hypers2}
+\caption{An illustration of the effect of integrating hyperparameters on the marginal posterior variance.  Regions whose mean varies as the input scales changes have an increased marginal posterior variance.  This increased marginal variance more closely matches the true posterior marginal variance.}
+\label{fig:integrate_hypers}
+\end{figure}
+%
+Figure \ref{fig:integrate_hypers} demonstrates our approximate marginalization on a simple example.
 
 \section{Active Sampling}\label{sec:BBQ}
 
@@ -464,13 +438,6 @@ One major benefit of model-based integration is that samples can be chosen by an
 Surprisingly, the posterior variance of a \gpb model with fixed hyperparameters does not depend on the function values at sampled locations at all; only the location of those samples matters. In traditional Bayesian quadrature, the evidence is an affine transformation of the sampled likelihood values, hence its estimate for the variance in the evidence is also independent of likelihood values. As such, active learning with fixed hyperparameters is pointless, and the optimal sampling design can be found in advance \cite{minka2000dqr}.
 
 In Section \ref{sec:model_lik}, we took $Z$ as the affine transform of the log-likelihood, which we model with a \gp. As the affine transformation itself depends on the function values (see \eqref{eq:correction} and \eqref{eq:func_deriv}), active learning is  desirable. The uncertainty over the hyperparameters of the \gpb further motivates active learning: without assuming \textit{a priori} knowledge of the hyperparameters, we can't evaluate the \gpb to compute a sampling schedule beforehand. The approximate marginalisation of hyperparameters permits an approach to active sampling that acknowledges the influence new samples may have on the posterior over hyperparameters. This should promote exploration, particularly early on, so as to concentrate the posterior over hyperparameters. 
-
- \begin{figure}
- \centering
-\psfragfig[width=0.4\textwidth]{figures/eue_progression}
- \caption{An example showing the expected uncertainty in the evidence after observing the likelihood function at that location. The prior and likelihood are plotted at the top in black and green respectively.}
- \label{fig:eue}
- \end{figure}
  
 %\begin{figure}
 %\centering
@@ -516,7 +483,14 @@ Noting that $\int \exp(c\, y)\, \N{y}{m}{\sigma^2} \ud y = \exp(c\, m + \nicefra
 the second term, the negative expected squared mean, can be resolved analytically\footnote{We assume that $\Delta$ does not depend on $\tr_a$, only its location $x_a$: we know $\Delta(x_a) = 0$ and assume $\Delta$ elsewhere remains relatively unchanged.}
  for any trial $\lfv_a$ (we omit the laborious details of doing so). We do not have to make a linearisation approximation here, and the posterior over $\tr_a$ can be fully exploited for its most important purpose: selecting new samples. An illustration of the progression of the expected loss surface is contained in Figure \ref{fig:eue}.
 
-In order to minimise the expected variance, the objective in \eqref{eq:exp_var} encourages the maximization of the expected squared mean of $Z$. Due to our log-\gpb model, one means of doing so is to seek points where the log-likelihood is predicted to be large: exploitation.  The objective in \eqref{eq:exp_var} also encourages the choice of points where our current variance in the log-likelihood is significant, leading to exploration. Note that our variance for $\tr_a$ has been inflated due to our consideration of the influence of hyperparameters (See Figure \ref{fig:integrate_hypers}), which we expect to promote additional exploration.
+ \begin{figure}
+ \centering
+\psfragfig[width=0.4\textwidth]{figures/eue_progression2}
+ \caption{An example showing the expected uncertainty in the evidence after observing the likelihood function at that location. The prior and likelihood are plotted at the top in green and black respectively, with the next sample location shown in red.  This example shows the model discovering a new mode on the right hand side, sampling around it, then moving on to other regions of high uncertainty on the left hand side. }
+ \label{fig:eue}
+ \end{figure}
+
+In order to minimise the expected variance, the objective in \eqref{eq:exp_var} encourages the maximization of the expected squared mean of $Z$. Due to our log-\gpb model, one means of doing so is to seek points where the log-likelihood is predicted to be large: exploitation.  The objective in \eqref{eq:exp_var} also encourages the choice of points where our current variance in the log-likelihood is significant, leading to exploration (see Figure \ref{eue} for an example). Note that our variance for $\tr_a$ has been inflated due to our consideration of the influence of hyperparameters (See Figure \ref{fig:integrate_hypers}), which we expect to promote additional exploration.
 
 
 
@@ -549,7 +523,7 @@ We chose a myriad of problems over which to compare our methods. Our goal was to
 
 We firstly tested on six distinct one-dimensional functions. These included mixtures of two Gaussians, alternately widely separated and overlapping, along with a translation and scaling of one such problem. As a challenge, we also included a high-frequency sinusoid. 
 
-In higher dimension, we included three examples of four-dimensional Gaussian mixtures. We also tested on a two-dimensional version of the funnel distribution of \citet{neal2003slice}, known to be particularly difficult for samplers. Another problem was drawn from \citet{BZMonteCarlo}: the computation of the evidence for a \gpb model over a synthetic function \citep{friedman1991}. This required the marginalisation of seven parameters; we also consider a restricted problem with only three parameters. Note that $\gpb$ likelihoods are often expensive to compute, scaling as $O(D^3)$ in the number of data $D$.
+In higher dimension, we included three examples of four-dimensional Gaussian mixtures. We also tested on a two-dimensional version of the funnel distribution of \citet{neal2003slice}, known to be particularly difficult for Metropolis-Hastings samplers. Another problem was drawn from \citet{BZMonteCarlo}: the computation of the evidence for a \gpb model over a synthetic function \citep{friedman1991}. This required the marginalisation of seven parameters; we also consider a restricted problem with only three parameters. Note that $\gpb$ likelihoods are often expensive to compute, scaling as $O(D^3)$ in the number of data $D$.
 
 Finally, we compared approaches on a real scientific problem. Bayesian model comparison is increasingly important to the biological sciences 
 \citep{penny2010comparing, rosa2011bayesian}. \citet{mann2012multi} applied model comparison to discover the rules of interaction between simple animals (glass prawns, {\it Paratya australiensis}) which lead to coherent group motion. We aim to reproduce the experiments of \citet{mann2012multi} to calculate the evidence for each of three different models: a mean field model, a Markovian model and a non-Markovian model. Given the large corpus of data available, evaluating likelihood samples for these models is computationally demanding; we consider only a hundredth of the available data. These problems required five parameters to be marginalised. 
@@ -632,7 +606,7 @@ There are many ways to improve the \gpb model used to model likelihood functions
 
 \bibliography{bub}
 \bibliographystyle{icml2012}
-\pagebreak
+%\pagebreak
 %\input{tables/truth_prob.tex}
 %\input{tables/se.tex}
 
