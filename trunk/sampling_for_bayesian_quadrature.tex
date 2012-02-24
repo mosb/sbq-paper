@@ -573,7 +573,7 @@ Finally, we compared approaches on a real scientific problem. Bayesian model com
 \begin{figure}
 	\centering
 	\psfragfig[width=8cm,height=4cm]{figures/plots/log_of_truth_plot_two_hills_1d_nice1}
-	\caption{The log density of the true evidence over a one-dimensional example for different methods (colours identical to those in Figure \ref{fig:meanZs}), compared to the true $Z$ (in black).}
+	\caption{The log density of the true evidence over a one-dimensional example for different methods, compared to the true $Z$ (in black).}
 \label{fig:nll}
 \end{figure}
 
@@ -581,7 +581,7 @@ Finally, we compared approaches on a real scientific problem. Bayesian model com
 \input{tables/combined_synth_worst_case.tex}
 \input{tables/combined_prawn_worst_case.tex}
 
-Table \ref{tbl:Combined Synthetic Results} shows combined performance on the synthetic integrands listed above.  Here, aacro{BBQ*} and \ref{tbl:Combined Prawn Results}, and in Figures \ref{fig:nll} and \ref{fig:logZ}.
+Table \ref{tbl:Combined Synthetic Results} shows combined performance on the synthetic integrands listed above.  Here, \acro{BBQ*} and \ref{tbl:Combined Prawn Results}, and in Figures \ref{fig:nll} and \ref{fig:logZ}.
 
 The computation required by \acro{bbq} and \acro{bbq}* is dominated by the twin demands of training \gp s and optimising the expected loss surface. The former requires many Cholesky factorisations, which scale as $O(M^3)$, where $M$ is the number of candidates (which is always greater than the number of samples). In evaluating the expected loss, we made use of efficient Cholesky updates, leading to a cost of $O(M^2)$.
 
