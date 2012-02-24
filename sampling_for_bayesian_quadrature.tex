@@ -566,14 +566,14 @@ Finally, we compared approaches on a real scientific problem. Bayesian model com
 %	\centering
 	\psfragfig[width=6cm,height=4cm]{figures/plots/varplot_two_spikes_1d_nice1} 	
 	\psfragfig[width=3cm]{figures/plots/legend}
-	\caption{Squared error through time.}
-\label{fig:nll}
+	\caption{This figure shows the posterior distribution over $Z$ for several methods as the number of samples increases.  Shaded regions denote $\pm2$ SD's from the mean.  The shaded regions for \acro{smc} and \acro{bmc} are off the vertical scale of this figure.}
+\label{fig:se}
 \end{figure}
 
 \begin{figure}
 	\centering
 	\psfragfig[width=8cm,height=4cm]{figures/plots/log_of_truth_plot_two_hills_1d_nice1}
-	\caption{The log density of the true evidence over a one-dimensional example for different methods, compared to the true $Z$ (in black).}
+	\caption{The log density of the true evidence over a one-dimensional example for different methods (colours identical to those in Figure \ref{fig:se}), compared to the true $Z$ (in black).  The integrand is the same as that in Figure \ref{fig:eue}.}
 \label{fig:nll}
 \end{figure}
 
@@ -581,13 +581,15 @@ Finally, we compared approaches on a real scientific problem. Bayesian model com
 \input{tables/combined_synth_worst_case.tex}
 \input{tables/combined_prawn_worst_case.tex}
 
-Table \ref{tbl:Combined Synthetic Results} shows combined performance on the synthetic integrands listed above.  Here, \acro{BBQ*} and \ref{tbl:Combined Prawn Results}, and in Figures \ref{fig:nll} and \ref{fig:logZ}.
+Table \ref{tbl:Combined Synthetic Results} shows combined performance on the synthetic integrands listed above. \acro{bbq*} provides an estimate of $Z$ which is on average closer to the truth than the other methods, given the same number of samples. The calibration scores show that no method is wildly miscalibrated\footnote{Because \acro{ais} does not provide an estimate of uncertainty, it has no likelihood or calibration scores.}.  The largest difference between \acro{bbq*} and the other methods is that it assigns much higher likelihood to the true value of $Z$.  For example, Figure \ref{fig:nll} shows a case where both and \acro{bbq*} and \acro{bbq*} are relatively close to the true value, however \acro{bbq*}'s posterior variance is much smaller.
+
+\ref{tbl:Combined Prawn Results}, and in Figures \ref{fig:nll} and .
 
 The computation required by \acro{bbq} and \acro{bbq}* is dominated by the twin demands of training \gp s and optimising the expected loss surface. The former requires many Cholesky factorisations, which scale as $O(M^3)$, where $M$ is the number of candidates (which is always greater than the number of samples). In evaluating the expected loss, we made use of efficient Cholesky updates, leading to a cost of $O(M^2)$.
 
 \section{Conclusions}
 
- In this paper, we have made several advances to the \acro{bq} method for evidence estimation.  These are: imposing a positivity constraint, approximately marginalizing hyperparameters, and using active sampling to selection the location of function evaluations.  We demonstrated the superior sample efficiency of a model-based approach, and showed that the model's posterior variance over $Z$ can be used as a stopping criterion.
+ In this paper, we have made several advances to the \acro{bq} method for evidence estimation.  These are: imposing a positivity constraint, approximately marginalizing hyperparameters, and using active sampling to selection the location of function evaluations.  We demonstrated the superior sample efficiency of an active learning approach, and showed that the model's posterior variance over $Z$ can be used as a stopping criterion.
 % \acro{mc} is an extremely widely used method, and advances in  allow modelers to use richer model classes and to be more confident in their model evaluations.  
 %We hope that thse contributions expect that the class of model-based quadrature approaches will come to be seen as a viable alternative to \acro{mc} for some problem classes.
 
