@@ -527,8 +527,14 @@ We firstly tested on six distinct one-dimensional functions. These included mixt
 
 In higher dimension, we included three examples of four-dimensional Gaussian mixtures. We also tested on a two-dimensional version of the funnel distribution of \citet{neal2003slice}, known to be particularly difficult for Metropolis-Hastings samplers. Another problem was drawn from \citet{BZMonteCarlo}: the computation of the evidence for a \gpb model over a synthetic function \citep{friedman1991}. This required the marginalisation of seven parameters; we also consider a restricted problem with only three parameters. Note that $\gpb$ likelihoods are often expensive to compute, scaling as $O(D^3)$ in the number of data $D$.
 
-Finally, we compared approaches on a real scientific problem. Bayesian model comparison is increasingly important to the biological sciences 
-\citep{penny2010comparing, rosa2011bayesian}. \citet{mann2012multi} applied model comparison to discover the rules of interaction between simple animals (glass prawns, {\it Paratya australiensis}) which lead to coherent group motion. We reproduced the experiments of \citet{mann2012multi} to calculate the evidence for each of three different models: a mean field model, a Markovian model and a non-Markovian model. Given the large corpus of data available, evaluating likelihood samples for these models is computationally demanding; we considered only a hundredth of the available data. These problems each required five parameters to be marginalised. 
+Finally, we compared approaches on a real scientific problem. 
+%Bayesian model comparison is increasingly important to the biological sciences 
+%\citep{penny2010comparing, rosa2011bayesian}. 
+\citet{mann2012multi} applied Bayesian model comparison to discover the rules of interaction between simple animals (glass prawns, {\it Paratya australiensis}) which lead to coherent group motion. We reproduced the computational experiments of \citet{mann2012multi} to calculate the evidence for each of three different models: a mean field model, a Markovian model and a non-Markovian model. These problems each required five parameters to be marginalised.  Given the large corpus of data available, evaluating likelihood samples for these models is computationally demanding; we considered only a hundredth of the available data, which then required 0.5 seconds per evaluation of the likelihood function.  The computation required by \acro{bbq}* (mainly training \gp s and optimising the expected loss surface) was always smaller than the 50 seconds it would require to evaluate a sample from the full model in this real problem, thus incurring at most a 2x slowdown over \acro{mc} techniques. 
+
+%The former requires many Cholesky factorisations, which scale as $O(M^3)$, where $M$ is the number of candidates (which is always greater than the number of samples). 
+
+%In evaluating the expected loss, we made use of efficient Cholesky updates, leading to a cost of $O(M^2)$.
 
 
 \paragraph{Evaluation}
@@ -581,11 +587,9 @@ Finally, we compared approaches on a real scientific problem. Bayesian model com
 \input{tables/combined_synth_worst_case.tex}
 \input{tables/combined_prawn_worst_case.tex}
 
-Table \ref{tbl:Combined Synthetic Results} shows combined performance on the synthetic integrands listed above. \acro{bbq*} provides an estimate of $Z$ which is on average closer to the truth than the other methods, given the same number of samples. The calibration scores show that no method is wildly miscalibrated\footnote{Because \acro{ais} does not provide an estimate of uncertainty, it has no likelihood or calibration scores.}.  The largest difference between \acro{bbq*} and the other methods is that it assigns much higher likelihood to the true value of $Z$.  For example, Figure \ref{fig:nll} shows a case where both and \acro{smc} and \acro{bbq*} are relatively close to the true value, however \acro{bbq*}'s posterior variance is much smaller.
+Table \ref{tbl:Combined Synthetic Results} shows combined performance on the synthetic integrands listed above. \acro{bbq*} provides an estimate of $Z$ which is on average closer to the truth than the other methods given the same number of samples. The calibration scores $\mathcal{C}$ show that no method is wildly miscalibrated\footnote{Because \acro{ais} does not provide an estimate of uncertainty, it has no likelihood or calibration scores.}.  The largest difference between \acro{bbq*} and the other methods is that it assigns much higher likelihood to the true value of $Z$.  For example, Figure \ref{fig:nll} shows a case where both and \acro{bbq*} and \acro{bbq*} are relatively close to the true value, however \acro{bbq*}'s posterior variance is much smaller.  Figure \ref{fig:se} demonstrates the typical behavior of the active sampling of \acro{bbq*}, which quickly concentrates the posterior distribution around the true $Z$.
 
-\ref{tbl:Combined Prawn Results}, and in Figures \ref{fig:nll} and .
-
-The computation required by \acro{bbq} and \acro{bbq}* is dominated by the twin demands of training \gp s and optimising the expected loss surface. The former requires many Cholesky factorisations, which scale as $O(M^3)$, where $M$ is the number of candidates (which is always greater than the number of samples). In evaluating the expected loss, we made use of efficient Cholesky updates, leading to a cost of $O(M^2)$.
+Table \ref{tbl:Combined Prawn Results} shows results for the various methods on a real dataset.  Here, we see that although \acro{bbq*} was closest on average to the truth, it was overconfident.  The method that gave the highest likelihood to the true $Z$ was one which did not perform active sampling, but obtained samples through an AIS chain.  This is likely due to the stationarity assumption made by our GP model, which sometimes leads to overconfident extrapolation.
 
 \section{Conclusions}
 
