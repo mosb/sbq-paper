@@ -51,7 +51,7 @@ Bayesian Quadrature for Active Learning of Model Evidence}
 
 \begin{abstract} 
 %We describe a novel approach to quadrature for probabilistic integrals, offering a competitor to traditional Monte Carlo methods. We use a Bayesian quadrature framework \citep{BZHermiteQuadrature,BZMonteCarlo}.
-We propose a novel Bayesian Quadrature approach to the numerical integration problem. Bayesian Quadrature is a model-based means of numerical integration, which, relative to standard Monte Carlo methods, offers sample efficiency and a more robust estimate of the uncertainty in the integral. We extend existing Bayesian Quadrature approaches by introducing a positivity constraint for the integrand and by approximately marginalising over the model's hyperparameters in closed form. We also introduce an active learning scheme to select our function samples, rather than running a Markov chain. We demonstrate our method on a real model comparison problem from the biological sciences.
+We propose a novel Bayesian Quadrature approach to the numerical integration problem. Bayesian Quadrature is a model-based means of numerical integration, which, relative to standard Monte Carlo methods, offers sample efficiency and a more robust estimate of the uncertainty in the integral. We extend existing Bayesian Quadrature approaches by introducing a positivity constraint for the integrand, useful for the estimation of normalization constants. We also approximately marginalise the model's hyperparameters in closed form. Finally, we introduce an active learning scheme to select our function samples, rather than running a Markov chain. We demonstrate our method on a real model comparison problem from biology.
 \end{abstract} 
 
 \section{Introduction}
