@@ -566,14 +566,14 @@ Finally, we compared approaches on a real scientific problem. Bayesian model com
 %	\centering
 	\psfragfig[width=6cm,height=4cm]{figures/plots/varplot_two_spikes_1d_nice1} 	
 	\psfragfig[width=3cm]{figures/plots/legend}
-	\caption{This figure shows the posterior distribution over $Z$ for several methods as the number of samples increases.  Shaded regions denote $\pm2$ SD's from the mean.  The shaded regions for \acro{smc} and \acro{bmc} are off the vertical scale of this figure.}
+	\caption{The posterior distribution over $Z$ for several methods on a one-dimenional example as the number of samples increases.  Shaded regions denote $\pm2$ \acro{sd}'s from the mean.  The shaded regions for \acro{smc} and \acro{bmc} are off the vertical scale of this figure.}
 \label{fig:se}
 \end{figure}
 
 \begin{figure}
 	\centering
 	\psfragfig[width=8cm,height=4cm]{figures/plots/log_of_truth_plot_two_hills_1d_nice1}
-	\caption{The log density of the true evidence over a one-dimensional example for different methods (colours identical to those in Figure \ref{fig:se}), compared to the true $Z$ (in black).  The integrand is the same as that in Figure \ref{fig:eue}.}
+	\caption{The log density of the true evidence over a one-dimensional example for different methods (colours identical to those in Figure \ref{fig:se}, although the problem differs), compared to the true $Z$ (in black).  The integrand is the same as that in Figure \ref{fig:eue}.}
 \label{fig:nll}
 \end{figure}
 
@@ -581,7 +581,7 @@ Finally, we compared approaches on a real scientific problem. Bayesian model com
 \input{tables/combined_synth_worst_case.tex}
 \input{tables/combined_prawn_worst_case.tex}
 
-Table \ref{tbl:Combined Synthetic Results} shows combined performance on the synthetic integrands listed above. \acro{bbq*} provides an estimate of $Z$ which is on average closer to the truth than the other methods, given the same number of samples. The calibration scores show that no method is wildly miscalibrated\footnote{Because \acro{ais} does not provide an estimate of uncertainty, it has no likelihood or calibration scores.}.  The largest difference between \acro{bbq*} and the other methods is that it assigns much higher likelihood to the true value of $Z$.  For example, Figure \ref{fig:nll} shows a case where both and \acro{bbq*} and \acro{bbq*} are relatively close to the true value, however \acro{bbq*}'s posterior variance is much smaller.
+Table \ref{tbl:Combined Synthetic Results} shows combined performance on the synthetic integrands listed above. \acro{bbq*} provides an estimate of $Z$ which is on average closer to the truth than the other methods, given the same number of samples. The calibration scores show that no method is wildly miscalibrated\footnote{Because \acro{ais} does not provide an estimate of uncertainty, it has no likelihood or calibration scores.}.  The largest difference between \acro{bbq*} and the other methods is that it assigns much higher likelihood to the true value of $Z$.  For example, Figure \ref{fig:nll} shows a case where both and \acro{smc} and \acro{bbq*} are relatively close to the true value, however \acro{bbq*}'s posterior variance is much smaller.
 
 \ref{tbl:Combined Prawn Results}, and in Figures \ref{fig:nll} and .
 
