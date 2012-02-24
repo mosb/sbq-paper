@@ -215,14 +215,14 @@ where \citep{BZMonteCarlo} for $\lfv_i \in \vlfv_s$,
 \fnt{\lfv_i}{} & \deq \!\int K(\lfv_i,\lfv)\po{\lfv}\ud\lfv
  = h^2\,\N{\lfv_i}{\nu_{\lfv}}{\lambda_{\lfv}+w}\nonumber\\
 %\intertext{and}
-\dtt{s}{} & \deq K\bigl(\vlfv_s,\vlfv_s\bigr)\inv (\vf_s-{\mu})\,;
+\dtt{s}{} & \deq K\bigl(\vlfv_s,\vlfv_s\bigr)\inv (\vf_s-{\mu})\,.
 \end{align}
 %
 %Note that the form of our `best estimate' for $\inty{f}$, \eqref{eq:mean_inty_f}, is an affine combination of the samples $\vf_s$, just as for traditional quadrature or Monte Carlo techniques. 
 % Indeed, if $\mu_f$ is taken as the mean of $\vf_s$ (as is usual for \gpb inference), the second term in \eqref{eq:mean_inty_f} can be viewed as a correction factor to the Monte Carlo estimate \eqref{eq:MC_integral_estimate}. \textcolor{red}{[Since we're using a different sampling strategy than \acro{mcmc} in this paper, I think the preceeding statement is kind of misleading / confusing...]}
 % \sout{Note also that $h_f$ represents a simple multiplicative factor to both $\ntT{s}{f}$ and $K_{f}\bigl(\vlfv_s,\vlfv_s\bigr)$, and as such cancels out of \eqref{eq:mean_inty_f}.} 
 %
-the variance is also readily computed. This closed-form expression for the posterior variance lends itself as a natural convergence diagnostic. Similarly, we can compute the posteriors for integrals over the product of multiple, independent functions. For example, we can calculate the posterior mean 
+The corresponding closed-form expression for the posterior variance lends itself as a natural convergence diagnostic. Similarly, we can compute the posteriors for integrals over the product of multiple, independent functions. For example, we can calculate the posterior mean 
 $\mean{\inty{f g}}{\vf_s, \vect{g}_s}$ for an integral $\int f(x) g(x) p(x) \ud x$. 
  In the following three sections, we will expand upon the improvements this paper introduces in the use of Bayesian Quadrature for computing model evidences.
 
@@ -521,7 +521,7 @@ We then tested four novel methods. Firstly, Bayesian Quadrature (\acro{bq}), whi
 Next, we tested a novel algorithm, Doubly Bayesian Quadrature (\acro{bbq}). The method is so named for the fact that we use not only Bayesian inference (with a \gpb over the log-transformed likelihood) to compute the posterior for the evidence, but also Bayesian decision theory to select our samples actively, as described in Section \ref{sec:BBQ}. Note that \eqref{eq:exp_var} was minimised using a multi-start local optimizer, where the starting points were chosen both near the current likelihood maximum, for exploitation, and as draws from the prior, for exploration. Finally, \acro{bbq}* was the same algorithm, but with hyperparameters  approximated marginalised. Both algorithms demonstrate the influence of active sampling on our performance. 
 
 \paragraph{Problems:}
-We chose a myriad of problems over which to compare our methods. Our goal was to evaluate evidences given Gaussian priors and a variety of likelihood functions. As in \citet{BZMonteCarlo} and \citet{BQR}, we focus on low numbers of samples; we permitted tested methods 150 samples on synthetic problems, and 300 on real problems. We are motivated by real-world problems where evaluating likelihood samples is (computationally or otherwise) expensive, making it desirable to determine the techniques for evidence estimation that can operate best when permitted only a small number of samples. Ground truth $Z$ is available for only some integrals; for the non-analytic integrals, $Z$ was estimated by a run of \acro{smc} with $10^6$ samples.
+We chose a myriad of problems over which to compare our methods. Our goal was to evaluate evidences given Gaussian priors and a variety of likelihood functions. As in \citet{BZMonteCarlo} and \citet{BQR}, we focus on low numbers of samples; we permitted tested methods 150 samples on synthetic integrands, and 300 when using real data. We are motivated by real-world problems where evaluating likelihood samples is (computationally or otherwise) expensive, making it desirable to determine the techniques for evidence estimation that can operate best when permitted only a small number of samples. Ground truth $Z$ is available for only some integrals; for the non-analytic integrals, $Z$ was estimated by a run of \acro{smc} with $10^6$ samples.
 
 We considered a range of synthetic examples. We firstly tested on six distinct one-dimensional functions. These included mixtures of two Gaussians, alternately widely separated and overlapping. As a challenge, we also included a high-frequency sinusoid. In higher dimension, we included three examples of four-dimensional Gaussian mixtures. We also tested on a two-dimensional version of the funnel distribution of \citet{neal2003slice}, known to be particularly difficult for Metropolis-Hastings samplers.
 
