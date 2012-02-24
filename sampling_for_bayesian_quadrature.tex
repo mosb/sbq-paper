@@ -51,7 +51,7 @@ Bayesian Quadrature for Active Learning of Model Evidence}
 
 \begin{abstract} 
 %We describe a novel approach to quadrature for probabilistic integrals, offering a competitor to traditional Monte Carlo methods. We use a Bayesian quadrature framework \citep{BZHermiteQuadrature,BZMonteCarlo}.
-Problems of numerical integration occur in many different contexts, including the computation of model evidences or normalisation constants. Model-based integration, or Bayesian Quadrature, offers many advantages over standard Monte Carlo approaches. These include sample efficiency and an estimate of the uncertainty in the integral.  We extend existing Bayesian Quadrature models by introducing a positivity constraint for the integrand and by approximately marginalising over the model's hyperparameters in closed form. We also introduce an active learning scheme to select our function samples, rather than running a Markov chain. We demonstrate our method on a real model comparison problem from biological science.
+We propose a novel Bayesian Quadrature approach to the numerical integration problem. Bayesian Quadrature is a model-based means of numerical integration, which, relative to standard Monte Carlo methods, offers sample efficiency and a more robust estimate of the uncertainty in the integral. We extend existing Bayesian Quadrature approaches by introducing a positivity constraint for the integrand and by approximately marginalising over the model's hyperparameters in closed form. We also introduce an active learning scheme to select our function samples, rather than running a Markov chain. We demonstrate our method on a real model comparison problem from the biological sciences.
 \end{abstract} 
 
 \section{Introduction}
@@ -573,8 +573,8 @@ Finally, we compared approaches on a real scientific problem. Bayesian model com
 
 \begin{figure}
 	\centering
-	\psfragfig[width=8cm,height=6cm]{figures/plots/varplot_easy_4d}
-	\caption{The posterior mean and variance over $Z$ for different methods, compared to the true $Z$ (in black).}
+	\psfragfig[width=8cm,height=6cm]{figures/plots/varplot_simple}
+	\caption{The posterior mean plus or minus two SDs over $Z$ for different methods (colours identical to those in Figure \ref{fig:nll}), compared to the true $Z$ (in black).}
 \label{fig:logZ}
 \end{figure}
 
