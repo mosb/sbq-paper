@@ -81,7 +81,7 @@ An alternative, model-based approach, Bayesian Quadrature (\acro{bq}) \citep{BZH
 
 
 
-\paragraph*{Log-GP:} \citet{BZMonteCarlo} used a \gpb prior on the likelihood function; this is a poor model, unable to express the non-negativity and high dynamic range of most likelihood functions. \citet{BQR} introduced an approximate means of performing tractable inference under a log-\gp, which properly captures these properties of likelihood functions. We apply this method to estimate $Z$, and extend it to compute $Z$'s posterior variance, and expected variance after adding a sample. 
+\paragraph*{Log-GP} \citet{BZMonteCarlo} used a \gpb prior on the likelihood function; this is a poor model, unable to express the non-negativity and high dynamic range of most likelihood functions. \citet{BQR} introduced an approximate means of performing tractable inference under a log-\gp, which properly captures these properties of likelihood functions. We apply this method to estimate $Z$, and extend it to compute $Z$'s posterior variance, and expected variance after adding a sample. 
 
 \paragraph*{Active Sampling:} Previous work on \acro{bq} has used either randomized or {\it a priori} fixed sampling schedules. We demonstrate active sampling, treating the expected variance in $Z$ as an expected loss function and selecting samples so as to minimise it.
 
@@ -491,9 +491,9 @@ the second term, the negative expected squared mean, can be resolved analyticall
 %
 \begin{figure}
 %	\centering
-	\psfragfig[width=6cm,height=4cm]{figures/plots/varplot_two_spikes_1d_nice1} 	
+	\psfragfig[width=6cm,height=4cm]{figures/plots/log_of_truth_plot_simple} 	
 	\psfragfig[width=3cm]{figures/plots/legend}
-	\caption{Squared error through time.}
+	\caption{The negative log density of the true normalization constant, versus different methods, on a one-dimensional example.}
 \label{fig:nll}
 \end{figure}
 
@@ -574,7 +574,7 @@ Finally, we compared approaches on a real scientific problem. Bayesian model com
 \begin{figure}
 	\centering
 	\psfragfig[width=8cm,height=6cm]{figures/plots/log_of_truth_plot_two_hills_1d_nice1}
-	\caption{The posterior mean and variance over $Z$ for different methods, compared to the true $Z$.}
+	\caption{The posterior mean plus or minus two \acro{sd}s over $Z$ for different methods over a one-dimensional example (colours identical to those in Figure \ref{fig:nll}), compared to the true $Z$ (in black).}
 \label{fig:logZ}
 \end{figure}
 
@@ -582,7 +582,8 @@ Finally, we compared approaches on a real scientific problem. Bayesian model com
 \input{tables/combined_synth_worst_case.tex}
 \input{tables/combined_prawn_worst_case.tex}
 
-The performance of methods tested is illustrated in Tables \ref{tbl:Combined Synthetic Results} and \ref{tbl:Combined Prawn Results}, and in Figures \ref{fig:nll} and \ref{fig:logZ}.
+The performance of methods tested is illustrated in Tables \ref{tbl:Combined Synthetic Results} and \ref{tbl:Combined Prawn Results}, and in Figures \ref{fig:nll} and \ref{fig:logZ}. Note that the mean predictions
+I have a little paragraph in mind about the results, basically saying that we're overconfident, probably due to some feature of real problems that's poorly modeled by a stationary GP or something like that
 
 The computation required by \acro{bbq} and \acro{bbq}* is dominated by the twin demands of training \gp s and optimising the expected loss surface. The former requires many Cholesky factorisations, which scale as $O(M^3)$, where $M$ is the number of candidates (which is always greater than the number of samples). In evaluating the expected loss, we made use of efficient Cholesky updates, leading to a cost of $O(M^2)$.
 
