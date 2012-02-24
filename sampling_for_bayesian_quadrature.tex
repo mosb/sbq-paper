@@ -506,14 +506,15 @@ In order to minimise the expected variance, the objective in \eqref{eq:exp_var} 
 
 We now present empirical evaluation of our algorithm in a variety of different experiments.
 
-\paragraph{Metrics:} We judged our methods according to three metrics, all averages over $N$ similar experiments indexed by $i$. Define $Z_i$ as the ground truth evidence for the $i$th experiment, $m(Z_i)$ as its estimated mean  and $V(Z_i)$  as its predicted variance. Firstly, we computed the normalised mean square error,
+\paragraph{Metrics:} We judged our methods according to three metrics, all averages over $N$ similar experiments indexed by $i$. Define $Z_i$ as the ground truth evidence for the $i$th experiment, $m(Z_i)$ as its estimated mean  and $V(Z_i)$  as its predicted variance. Firstly, we computed the root mean normalised square error,
 $
-\acro{nmse} \deq 10 \log_{10} \nicefrac{1}{N} \sum_{i=1}^{N} \nicefrac{(m(Z_i) - Z_i)^2}{Z_i^2}\,,
+\acro{rmnse} 
+\deq \surd\frac{1}{N} \sum_{i=1}^{N} \nicefrac{(m(Z_i) - Z_i)^2}{Z_i^2}\,,
 $
-providing the average percentage error, in decibels. Next we computed the log-density of the truth, assuming experiments are independent,
+providing the average percentage error. Next we computed the negative log-density of the truth, assuming experiments are independent,
 $
-\log p(\vect{Z}) = \sum_i \log \N{Z_i}{m(Z_i)}{V(Z_i)}
-$, which quantifies the accuracy of our variance estimates. We also computed the calibration $\mathcal{C}$, defined as the fraction of experiments in which the ground truth lay within our 50\% confidence interval $\bigl(m(Z_i) - 0.6745 \sqrt{V(Z_i)}, m(Z_i) + 0.6745 \sqrt{V(Z_i)}\bigr)$. Ideally, $\mathcal{C}$ would be exactly 50\%: any higher, and a method is under-confident, any lower and it is over-confident. 
+-\log p(\vect{Z}) = -\sum_i \log \N{Z_i}{m(Z_i)}{V(Z_i)}
+$, which quantifies the accuracy of our variance estimates. We also computed the calibration $\mathcal{C}$, defined as the fraction of experiments in which the ground truth lay within our 50\% confidence interval $\bigl(m(Z_i) - 0.6745 \surd{V(Z_i)}, m(Z_i) + 0.6745 \surd{V(Z_i)}\bigr)$. Ideally, $\mathcal{C}$ would be  50\%: any higher, and a method is under-confident, any lower and it is over-confident. 
 
 
 \paragraph{Methods:} We first compared against simple Monte Carlo (\acro{smc}). \acro{smc} generates samples $x_1 \dots x_N$ from the prior distribution, and estimates $Z$ by $\hat{Z} = \nicefrac{1}{N} \sum_{n=1}^{N} \lfn(x_n)$.  An estimate of the variance of $\hat{Z}$ is given by the standard error of $\lfn({\bf x})$. As an alternative Monte Carlo technique, we implemented Annealed Importance Sampling (\acro{ais}) using a Metropolis-Hastings sampler.  The inverse temperature schedule was linear as in \citet{BZMonteCarlo}, and the proposal width was adjusted to attain approximately a 50\% acceptance rate.  In an attempt to be generous to \acro{ais}, the posterior variance of the \acro{ais} estimate of $Z$ was set to the empirical variance over ten chains.  
@@ -579,7 +580,7 @@ Finally, we compared approaches on a real scientific problem. Bayesian model com
 
 
 \input{tables/combined_synth.tex}
-\input{tables/combined_prawn.tex}
+\input{tables/combined_prawn_worst_case.tex}
 
 The performance of methods tested is illustrated in Tables \ref{tbl:Combined Synthetic Results} and \ref{tbl:Combined Prawn Results}, and in Figures \ref{fig:nll} and \ref{fig:logZ}.
 
