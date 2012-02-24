@@ -83,7 +83,7 @@ An alternative, model-based approach is Bayesian Quadrature (\acro{bq}) \citep{B
 
 \paragraph*{Log-GP:} \citet{BZMonteCarlo} used a \gpb prior on the likelihood function; this is a poor model, since it is unable to express the non-negativity and high dynamic range of most likelihood functions. \citet{BQR} introduced an approximate means of performing inference using a \gpb on the logarithm of a function (henceforth, a log-\gp), which better captures these properties of likelihood functions. We apply this method to estimate $Z$, and extend it to compute $Z$'s posterior variance, and expected variance after adding a sample. 
 
-\paragraph*{Active Sampling:} Previous work on \acro{bq} has used either randomized or {\it a priori} fixed sampling schedules. We demonstrate active sampling, treating the expected variance in $Z$ as an expected loss function and selecting samples so as to minimise it.
+\paragraph*{Active Sampling:} Previous work on \acro{bq} has used either randomized or {\it a priori} fixed sampling schedules. We use active sampling, selecting sample locations which minimize the expected variance in $Z$.
 
 %Our problem is to estimate the evidence of some model $M$. This is computed as 
 %\begin{equation}\label{eq:ev}
@@ -115,14 +115,14 @@ We compare our \acro{bq} approach against standard Monte Carlo techniques on bot
 %While standard errors are possible for \acro{mcmc}, typically they rely on the sampler mixing well \citep{flegal2008markov}. As such, these errors can not identify exactly the failure to mix that is of most concern. The distribution of most use for our inference is a Gaussian process, which we now briefly introduce. 
 
 \section{Gaussian Processes}
-Gaussian processes (\gp s) offer a powerful method to perform Bayesian inference about functions \citep{GPsBook}. A \gpb is defined as a distribution over the functions $f: \mathcal{X} \rightarrow \mathbb{R}$ such that the distribution over the possible function values on any finite subset of $\mathcal{X}$ is multivariate Gaussian. For clarity, we'll henceforth assume $\mathcal{X} = \mathbb{R}$, although all results generalise readily to $\mathbb{R}^n$. For a function $f(\lfv)$, the prior distribution over its values $\vf$ on $\vlfv \subset \mathcal{X}$ is
+Gaussian processes (\gp s) offer a powerful method to perform Bayesian inference about functions \citep{GPsBook}. A \gpb is defined as a distribution over the functions $f: \mathcal{X} \rightarrow \mathbb{R}$ such that the distribution over the possible function values on any finite subset of $\mathcal{X}$ is multivariate Gaussian. For clarity, we henceforth assume $\mathcal{X} = \mathbb{R}$, although all results generalise readily to $\mathbb{R}^n$. For a function $f$, the prior distribution over its values $\vf$ on $\vlfv \subset \mathcal{X}$ is
 \begin{align}%\label{eq:\gpbDefn}
 \textstyle
  &\po{\vf}\deq \N{\vf}{\vmu}{K}\nonumber\\
- &\deq\frac{1}{\sqrt{\det{2\pi K}}}\,\exp \big(-\frac{1}{2}\,(\vf-\vmu)\tra\,K\inv\,(\vf-\vmu)\big),
+ &\deq\frac{1}{\sqrt{\det({2\pi K})}}\,\exp \big(-\frac{1}{2}\,(\vf-\vmu)\tra\,K\inv\,(\vf-\vmu)\big).
 \end{align}
-This distribution is specified by mean and covariance functions, which generate mean vector $\vmu$ and covariance matrix $K$ respectively. 
-In this paper, we'll use Gaussian (squared exponential) covariance functions,
+This distribution is specified by mean and covariance functions, which give the mean vector $\vmu$ and covariance matrix $K$ respectively. 
+In this paper, we use Gaussian (squared exponential) covariance functions,
 \begin{align} \label{eq:Gaussian_cov_fn}
 % K(\vlfv,\vlfv') & \deq \prod_{e=1}^{E} K_e\big(\phi\pha_e,\phi_e'\big)\\
 \textstyle
