@@ -323,7 +323,7 @@ Here we have defined the difference between the \gpb mean over the log-transform
 \begin{align}
 \Delta & \deq m_{\tr |s} - \log(m_{l|s}) = m_{\tr |s}  - \tr_0 \,.
 \end{align}
-We expect $\Delta(\lfv)$ to be everywhere small relative to the magnitude of $\tr(\phi)$ (see Figure \ref{fig:delta}). This implies that
+We expect $\Delta(\lfv)$ to be everywhere small relative to the magnitude of $\tr(x)$ (see Figure \ref{fig:delta}). This implies that
  $\tr_0$ is close to the peaks of the Gaussian over $\tr$, rendering our linearisation appropriate. 
 
 Unfortunately, \eqref{eq:mean_corrn} is non-analytic due to the $\tr_0$ term within $\Delta$. As such, we perform another stage of Bayesian quadrature by treating $\Delta$ as an unknown function of $\lfv$. We take Gaussian process priors for $\Delta$, with zero prior mean and Gaussian covariance \eqref{eq:Gaussian_cov_fn}.
