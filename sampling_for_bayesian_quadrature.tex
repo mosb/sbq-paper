@@ -479,7 +479,7 @@ $\hat{m}_a \deq \mean{\tr_a}{\tvr_s,\hat{w}}$
 and
 $\hat{C}_a \deq \cov{\tr_a}{\tvr_s,\hat{w}}$.
 The first term in \eqref{eq:exp_var}, the second moment, is independent of the selection of $\lfv_a$ and can hence  be safely ignored for active sampling. This is true regardless of the model chosen for the likelihood. 
-The second term, the negative expected squared mean, can be resolved analytically\footnote{By using the fact that $\int \exp(c\, y)\, \N{y}{m}{\sigma^2} \ud y = \exp(c\, m + \nicefrac{1}{2}\, c^2 \sigma^2)$.  We assume that $\Delta$ does not depend on $\tr_a$, only its location $x_a$: we know $\Delta(x_a) = 0$ and assume $\Delta$ elsewhere remains relatively unchanged.}
+The second term, the negative expected squared mean, can be resolved analytically\footnote{Here we use the fact that $\int \exp(c\, y)\, \N{y}{m}{\sigma^2} \ud y = \exp(c\, m + \nicefrac{1}{2}\, c^2 \sigma^2)$.  We assume that $\Delta$ does not depend on $\tr_a$, only its location $x_a$: we know $\Delta(x_a) = 0$ and assume $\Delta$ elsewhere remains relatively unchanged.}
  for any trial $\lfv_a$ (we omit the laborious details). We do not have to make a linearisation approximation here, and the posterior over $\tr_a$ can be fully exploited for the purpose of selecting new samples.
 %
  \begin{figure}
