@@ -489,13 +489,7 @@ the second term, the negative expected squared mean, can be resolved analyticall
  \label{fig:eue}
  \end{figure}
 %
-\begin{figure}
-%	\centering
-	\psfragfig[width=6cm,height=4cm]{figures/plots/varplot_two_spikes_1d_nice1} 	
-	\psfragfig[width=3cm]{figures/plots/legend}
-	\caption{The posterior mean plus or minus two \acro{sd}s over $Z$ for different methods over a one-dimensional example, compared to the true $Z$ (in black).}
-\label{fig:meanZs}
-\end{figure}
+
 
 In order to minimise the expected variance, the objective in \eqref{eq:exp_var} encourages the maximization of the expected squared mean of $Z$. Due to our log-\gpb model, one means of doing so is to seek points where the log-likelihood is predicted to be large: exploitation.  The objective in \eqref{eq:exp_var} also encourages the choice of points where our current variance in the log-likelihood is significant, leading to exploration (see Figure \ref{fig:eue}). Note that our variance for $\tr_a$ has been inflated due to our consideration of the influence of hyperparameters, which we expect to promote additional exploration.
 
@@ -515,7 +509,6 @@ providing the average percentage error. Next we computed the negative log-densit
 $
 -\log p(\vect{Z}) = -\sum_i \log \N{Z_i}{m(Z_i)}{V(Z_i)}
 $, which quantifies the accuracy of our variance estimates. We also computed the calibration $\mathcal{C}$, defined as the fraction of experiments in which the ground truth lay within our 50\% confidence interval $\bigl(m(Z_i) - 0.6745 \surd{V(Z_i)}, m(Z_i) + 0.6745 \surd{V(Z_i)}\bigr)$. Ideally, $\mathcal{C}$ would be  50\%: any higher, and a method is under-confident, any lower and it is over-confident. 
-
 
 \paragraph{Methods:} We first compared against simple Monte Carlo (\acro{smc}). \acro{smc} generates samples $x_1 \dots x_N$ from the prior distribution, and estimates $Z$ by $\hat{Z} = \nicefrac{1}{N} \sum_{n=1}^{N} \lfn(x_n)$.  An estimate of the variance of $\hat{Z}$ is given by the standard error of $\lfn({\bf x})$. As an alternative Monte Carlo technique, we implemented Annealed Importance Sampling (\acro{ais}) using a Metropolis-Hastings sampler.  The inverse temperature schedule was linear as in \citet{BZMonteCarlo}, and the proposal width was adjusted to attain approximately a 50\% acceptance rate. Note that \acro{ais} provides no ready means of determining the posterior variance for its  estimate of $Z$.  
 
@@ -569,7 +562,13 @@ Finally, we compared approaches on a real scientific problem. Bayesian model com
 %	\centering
 %\end{figure}
 
-
+\begin{figure}
+%	\centering
+	\psfragfig[width=6cm,height=4cm]{figures/plots/varplot_two_spikes_1d_nice1} 	
+	\psfragfig[width=3cm]{figures/plots/legend}
+	\caption{Squared error through time.}
+\label{fig:nll}
+\end{figure}
 
 \begin{figure}
 	\centering
@@ -582,22 +581,21 @@ Finally, we compared approaches on a real scientific problem. Bayesian model com
 \input{tables/combined_synth_worst_case.tex}
 \input{tables/combined_prawn_worst_case.tex}
 
-The performance of methods tested is illustrated in Tables \ref{tbl:Combined Synthetic Results} and \ref{tbl:Combined Prawn Results}, and in Figures \ref{fig:meanZs} and \ref{fig:nll}. Note that the mean predictions
-I have a little paragraph in mind about the results, basically saying that we're overconfident, probably due to some feature of real problems that's poorly modeled by a stationary GP or something like that
+Table \ref{tbl:Combined Synthetic Results} shows combined performance on the synthetic integrands listed above.  Here, aacro{BBQ*} and \ref{tbl:Combined Prawn Results}, and in Figures \ref{fig:nll} and \ref{fig:logZ}.
 
 The computation required by \acro{bbq} and \acro{bbq}* is dominated by the twin demands of training \gp s and optimising the expected loss surface. The former requires many Cholesky factorisations, which scale as $O(M^3)$, where $M$ is the number of candidates (which is always greater than the number of samples). In evaluating the expected loss, we made use of efficient Cholesky updates, leading to a cost of $O(M^2)$.
 
 \section{Conclusions}
 
- In this paper, we have made several advances to the \acro{bq} method for evidence estimation, including imposing a positivity constraint and approximate hyperparameter marginalisation.  We have also demonstrated the many advantages of model-based integration over standard \acro{mc}: a natural stopping criterion, an estimate of uncertainty in our integral, and the ability to use active learning to select our samples. 
+ In this paper, we have made several advances to the \acro{bq} method for evidence estimation.  These are: imposing a positivity constraint, approximately marginalizing hyperparameters, and using active sampling to selection the location of function evaluations.  We demonstrated the superior sample efficiency of a model-based approach, and showed that the model's posterior variance over $Z$ can be used as a stopping criterion.
 % \acro{mc} is an extremely widely used method, and advances in  allow modelers to use richer model classes and to be more confident in their model evaluations.  
-While we do not expect model-based integration to be a better choice in every instance, we expect that this family of approaches will come to be seen as a standard alternative to \acro{mc}.
+%We hope that thse contributions expect that the class of model-based quadrature approaches will come to be seen as a viable alternative to \acro{mc} for some problem classes.
 
 % Adjusting the number of candidate points allows one to trade off between computational speed and number of samples required.
 
 % While we used an active learning scheme in this paper, Bayesian Quadrature can be used on samples generated by any method.
 
-There are many ways to improve the \gpb model used to model likelihood functions.  Notably, the Gaussian kernel used in this paper has very weak generalization abilities;  allowing a richer class of kernels might permit the \gpb model to shrink its posterior more quickly. With other covarances, the methods developed here can also be readily applied to discrete domains.
+%There are many ways to improve the \gpb model used to model likelihood functions.  Notably, the Gaussian kernel used in this paper has very weak generalization abilities;  allowing a richer class of kernels might permit the \gpb model to shrink its posterior more quickly. With other covarances, the methods developed here can also be readily applied to discrete domains.
 % For example, log-likelihood functions typically take the form of a sum of many terms, each depending only on a small number of variables.  This prior information could easily be incorporated into the \gp, presumably allowing the \acro{bbq} algorithm to form concentrated posterior distributions over high-dimensional likelihoods.
 
 
