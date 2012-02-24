@@ -51,7 +51,7 @@ Bayesian Quadrature for Active Learning of Model Evidence}
 
 \begin{abstract} 
 %We describe a novel approach to quadrature for probabilistic integrals, offering a competitor to traditional Monte Carlo methods. We use a Bayesian quadrature framework \citep{BZHermiteQuadrature,BZMonteCarlo}.
-We introduce several innovations making Bayesian Quadrature methods suitable for computing model evidences, or normalization constants.  We demonstrate several advantages of model-based integration over standard Monte Carlo approaches.  These include sample efficiency, and an estimate of the uncertainty in our integral. We extend existing Gaussian process models by introducing a positivity constraint for our integrand, and by approximately marginalising over hyperparameters in closed form.  We use active learning to select our function samples, as opposed to running a Markov chain.
+Problems of numerical integration occur in many different contexts, including the computation of model evidences or normalisation constants. Model-based integration, or Bayesian Quadrature, offers many advantages over standard Monte Carlo approaches. These include sample efficiency and an estimate of the uncertainty in our integral.  We extend existing Bayesian Quadrature models by introducing a positivity constraint for our integrand, and by approximately marginalising over our model's hyperparameters in closed form. We also introduce an active learning scheme to select our function samples, as opposed to running a Markov chain. We demonstrate our method on a real model comparison problem from biological science.
 \end{abstract} 
 
 \section{Introduction}
@@ -60,7 +60,7 @@ The quadrature (or numerical integration) problem is both common and important. 
 \begin{equation}\label{eq:ev}
 Z = \inty{\lfn} = \int \lfn(\vlfv) p(\vlfv) d\vlfv
 \end{equation}
-where $\ell(\vlfv)$ is non-negative.  Examples of this problem appear when computing marginal likelihoods, partition functions, predictive distributions at test points, or when marginalising over variables in a model.  In this paper, we focus on computing model evidences, where $\ell(\vlfv)$ is the unnormalized likelihood of some parameters $x_1 \dots x_D$.
+where $\ell(\vlfv)$ is non-negative.  Examples of this problem appear when computing marginal likelihoods, partition functions, predictive distributions at test points, or when integrating over (latent) variables in a model.  In this paper, we focus on computing model evidences, where $\ell(\vlfv)$ is the unnormalized likelihood of some parameters $x_1 \dots x_D$.
 
 %Training or evaluating any probabilistic model typically requires an integration over model parameters, weighted by their likelihoods.  This common problem has many names:  computing the model evidence, calculating the marginal likelihood, estimating the partition function or normalizing a distribution.  Typically, this task is performed using Markov-Chain Monte Carlo (\acro{mcmc}) methods.  These methods have many well-known problems, such as requiring extensive tuning, becoming stuck in local modes, and falsely appearing to converge \citep{NealMC}.  However, almost all standard approaches fall into the wide family of \acro{mcmc} methods.
 
@@ -72,7 +72,7 @@ An alternative, model-based approach, Bayesian Quadrature (\acro{bq}) \citep{BZH
 
 \begin{figure}
 \centering
-\psfragfig[width=\columnwidth]{figures/bmc_intro}
+\psfragfig[width=0.8\columnwidth]{figures/bmc_intro}
 \caption{An illustration of model-based integration.  We compute the expected area underneath a distribution over functions, conditioned on sampled values of the function.  Samples added at new locations will reduce our uncertainty about the area under the function.}
 \label{fig:model_based}
 \end{figure}
