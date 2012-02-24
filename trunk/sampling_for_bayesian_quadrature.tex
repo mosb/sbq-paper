@@ -51,24 +51,24 @@ Bayesian Quadrature for Active Learning of Model Evidence}
 
 \begin{abstract} 
 %We describe a novel approach to quadrature for probabilistic integrals, offering a competitor to traditional Monte Carlo methods. We use a Bayesian quadrature framework \citep{BZHermiteQuadrature,BZMonteCarlo}.
-We propose a novel Bayesian Quadrature approach to the numerical integration problem. Bayesian Quadrature is a model-based means of numerical integration, which, relative to standard Monte Carlo methods, offers sample efficiency and a more robust estimate of the uncertainty in the integral. We extend existing Bayesian Quadrature approaches by introducing a positivity constraint for the integrand, useful for the estimation of normalization constants. We also approximately marginalise the model's hyperparameters in closed form. Finally, we introduce an active learning scheme to select our function samples, rather than running a Markov chain. We demonstrate our method on a real biological model comparison problem.
+We propose a novel Bayesian Quadrature approach to the numerical integration problem. Bayesian Quadrature is a model-based method of numerical integration, which, relative to standard Monte Carlo methods, offers increased sample efficiency and a more robust estimate of the uncertainty in the approximation. We extend existing Bayesian Quadrature approaches by introducing a positivity constraint for the integrand, which is useful for the estimation of normalization constants. We also approximately marginalise the model's hyperparameters in closed form. Finally, we introduce an active learning scheme to select our function samples, rather than running a Markov chain. We demonstrate our method on a real biological model comparison problem.
 \end{abstract} 
 
 \section{Introduction}
 
 The quadrature (or numerical integration) problem is both common and important.  In machine learning applications, this problem often appears when evaluating integrals over probabilities
 \begin{equation}\label{eq:ev}
-Z = \inty{\lfn} = \int \lfn(\vlfv) p(\vlfv) d\vlfv
+Z = \inty{\lfn} = \int \lfn(\vlfv) p(\vlfv) d\vlfv,
 \end{equation}
-where $\ell(\vlfv)$ is non-negative.  Examples of this problem appear when computing marginal likelihoods, partition functions, predictive distributions at test points, or when integrating over (latent) variables in a model.  In this paper, we focus on computing model evidences, where $\ell(\vlfv)$ is the unnormalized likelihood of some parameters $x_1 \dots x_D$.
+where $\ell(\vlfv)$ is non-negative.  Examples include computing marginal likelihoods, partition functions, predictive distributions at test points, and integrating over (latent) variables in a model.  In this paper, we focus on computing model evidences, where $\ell(\vlfv)$ is the unnormalized likelihood of some parameters $x_1, \dots, x_D$.
 
 %Training or evaluating any probabilistic model typically requires an integration over model parameters, weighted by their likelihoods.  This common problem has many names:  computing the model evidence, calculating the marginal likelihood, estimating the partition function or normalizing a distribution.  Typically, this task is performed using Markov-Chain Monte Carlo (\acro{mcmc}) methods.  These methods have many well-known problems, such as requiring extensive tuning, becoming stuck in local modes, and falsely appearing to converge \citep{NealMC}.  However, almost all standard approaches fall into the wide family of \acro{mcmc} methods.
 
-There exist several standard randomized methods for computing model evidence, such as annealed importance sampling (\acro{ais}) \citep{neal2001annealed}, nested sampling \citep{skilling2004nested} and bridge sampling.  For a review, see \citet{chen2000monte}.   These methods estimate $Z$ given the value of the integrand on a set of sample points, whose size is limited by the expense of evaluating $\ell(\vlfv)$.  It is well-known that convergence diagnostics are often unreliable for Monte Carlo estimates of partition functions  \citep{NealMC, brooks1998convergence, cowles1999possible}.  Most randomized algorithms also have parameters which must be set by hand, such as proposal distributions or temperature schedules.
+There exist several standard randomized methods for computing model evidence, such as annealed importance sampling (\acro{ais}) \citep{neal2001annealed}, nested sampling \citep{skilling2004nested} and bridge sampling.  For a review, see \citet{chen2000monte}.   These methods estimate $Z$ given the value of the integrand on a set of sample points, whose size is limited by the expense of evaluating $\ell(\vlfv)$.  It is well known that convergence diagnostics are often unreliable for Monte Carlo estimates of partition functions  \citep{NealMC, brooks1998convergence, cowles1999possible}.  Most randomized algorithms also have parameters which must be set by hand, such as proposal distributions or annealing schedules.
 
 %\section{Model-Based Integration}
 
-An alternative, model-based approach, Bayesian Quadrature (\acro{bq}) \citep{BZHermiteQuadrature, BZMonteCarlo}, specifies a distribution over likelihood functions, using observations of the likelihood to infer a distribution for $Z$ (see Figure \ref{fig:model_based}). We improve upon this work in three ways:
+An alternative, model-based approach is Bayesian Quadrature (\acro{bq}) \citep{BZHermiteQuadrature, BZMonteCarlo}, which specifies a distribution over likelihood functions, using observations of the likelihood to infer a distribution for $Z$ (see Figure \ref{fig:model_based}). We improve upon existing work in three ways:
 
 \begin{figure}
 \centering
@@ -81,7 +81,7 @@ An alternative, model-based approach, Bayesian Quadrature (\acro{bq}) \citep{BZH
 
 
 
-\paragraph*{Log-GP:} \citet{BZMonteCarlo} used a \gpb prior on the likelihood function; this is a poor model, unable to express the non-negativity and high dynamic range of most likelihood functions. \citet{BQR} introduced an approximate means of performing inference using a \gpb on the logarithm of a function (henceforth, a log-\gp), which properly captures these properties of likelihoods. We apply this method to estimate $Z$, and extend it to compute $Z$'s posterior variance, and expected variance after adding a sample. 
+\paragraph*{Log-GP:} \citet{BZMonteCarlo} used a \gpb prior on the likelihood function; this is a poor model, since it is unable to express the non-negativity and high dynamic range of most likelihood functions. \citet{BQR} introduced an approximate means of performing inference using a \gpb on the logarithm of a function (henceforth, a log-\gp), which better captures these properties of likelihood functions. We apply this method to estimate $Z$, and extend it to compute $Z$'s posterior variance, and expected variance after adding a sample. 
 
 \paragraph*{Active Sampling:} Previous work on \acro{bq} has used either randomized or {\it a priori} fixed sampling schedules. We demonstrate active sampling, treating the expected variance in $Z$ as an expected loss function and selecting samples so as to minimise it.
 
