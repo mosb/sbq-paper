@@ -96,7 +96,7 @@ An alternative, model-based approach, Bayesian Quadrature (\acro{bq}) \citep{BZH
 
 %\paragraph*{Convergence:} Here the issue of convergence is solved naturally: our posterior variance over $Z$ indicates the uncertainty remaining in the quantity we care about. 
 
-We compare our \acro{bq} approach against standard Monte Carlo techniques on both simulated and real problems, and demonstrate one of the key advantages of \acro{bq}: a closed-form expression for the posterior variance, providing a natural convergence diagnostic. 
+We compare our \acro{bq} approach against standard Monte Carlo techniques on both simulated and real problems.
 
 %\section{Estimating Model Evidence}\label{sec:ev}
 
@@ -222,7 +222,7 @@ where \citep{BZMonteCarlo} for $\lfv_i \in \vlfv_s$,
 % Indeed, if $\mu_f$ is taken as the mean of $\vf_s$ (as is usual for \gpb inference), the second term in \eqref{eq:mean_inty_f} can be viewed as a correction factor to the Monte Carlo estimate \eqref{eq:MC_integral_estimate}. \textcolor{red}{[Since we're using a different sampling strategy than \acro{mcmc} in this paper, I think the preceeding statement is kind of misleading / confusing...]}
 % \sout{Note also that $h_f$ represents a simple multiplicative factor to both $\ntT{s}{f}$ and $K_{f}\bigl(\vlfv_s,\vlfv_s\bigr)$, and as such cancels out of \eqref{eq:mean_inty_f}.} 
 %
-the variance is also readily computed. Similarly, we can compute the posteriors for integrals over the product of multiple, independent functions. For example, we can calculate the posterior mean 
+the variance is also readily computed. This closed-form expression for the posterior variance lends itself as a natural convergence diagnostic. Similarly, we can compute the posteriors for integrals over the product of multiple, independent functions. For example, we can calculate the posterior mean 
 $\mean{\inty{f g}}{\vf_s, \vect{g}_s}$ for an integral $\int f(x) g(x) p(x) \ud x$. 
  In the following three sections, we will expand upon the improvements this paper introduces in the use of Bayesian Quadrature for computing model evidences.
 
@@ -516,12 +516,12 @@ $, which quantifies the accuracy of our variance estimates. We also computed the
 
 Our first model-based method was Bayesian Monte Carlo (\acro{bmc}) -- the algorithm used in \citep{BZMonteCarlo}. Here samples were drawn from the \acro{ais} chain above, and a \gpb was fit to the likelihood samples. For this and other methods, where not otherwise mentioned, \gpb hyperparameters were selected using \acro{mlii}. 
 
-We then tested four novel methods. Firstly, Bayesian Quadrature (\acro{bq}), which employed the linearisation approach of Section \ref{sec:model_lik} to modeling the log-transformed likelihood values. The samples supplied to it were drawn from the same \acro{ais} chain as used above, and 400 candidate points were permitted. \acro{bq}* is identical except that it additionally took the approach of Section \ref{sec:marginalising} to approximately marginalising hyperparameters. The performance of these methods allow us to quantify to what extent our innovations improve estimation given a fixed set of samples. 
+We then tested four novel methods. Firstly, Bayesian Quadrature (\acro{bq}), which employed the linearisation approach of Section \ref{sec:model_lik} to modeling the log-transformed likelihood values. The samples supplied to it were drawn from the same \acro{ais} chain as used above, and 400 candidate points were permitted. \acro{bq}* is identical except that it additionally took the approach of Section \ref{sec:marginalising} to approximately marginalising hyperparameters. Note that this influences only the variance of the estimate; the means for \acro{bq} and \acro{bq*} are identical. The performance of these methods allow us to quantify to what extent our innovations improve estimation given a fixed set of samples. 
 
-Next, we tested a novel algorithm, Doubly Bayesian Quadrature (\acro{bbq}). The method is so named for the fact that we use not only Bayesian inference (with a \gpb over the log-transformed likelihood) to compute the posterior for the evidence, but also Bayesian decision theory to select our samples actively, as described in Section \ref{sec:BBQ}. Note that \eqref{eq:exp_var} was minimised using a multi-start local optimizer, where the starting points were chosen as $\lfv_c$. Finally, \acro{bbq}* was the same algorithm, but with hyperparameters  approximated marginalised. Both algorithms demonstrate the influence of active sampling on our performance. 
+Next, we tested a novel algorithm, Doubly Bayesian Quadrature (\acro{bbq}). The method is so named for the fact that we use not only Bayesian inference (with a \gpb over the log-transformed likelihood) to compute the posterior for the evidence, but also Bayesian decision theory to select our samples actively, as described in Section \ref{sec:BBQ}. Note that \eqref{eq:exp_var} was minimised using a multi-start local optimizer, where the starting points were chosen both near the current likelihood maximum, for exploitation, and as draws from the prior, for exploration. Finally, \acro{bbq}* was the same algorithm, but with hyperparameters  approximated marginalised. Both algorithms demonstrate the influence of active sampling on our performance. 
 
 \paragraph{Problems:}
-We chose a myriad of problems over which to compare our methods. Our goal was to evaluate evidences given Gaussian priors and a variety of likelihood functions. As in \citet{BZMonteCarlo} and \citet{BQR}, we focus on low numbers of samples. We are motivated by real-world problems where evaluating likelihood samples is (computationally or otherwise) expensive, making it desirable to determine the techniques for evidence estimation that can operate best when permitted only a small number of samples. Ground truth $Z$ is available for only some integrals; for the non-analytic integrals, $Z$ was estimated by a run of \acro{smc} with $10^6$ samples.
+We chose a myriad of problems over which to compare our methods. Our goal was to evaluate evidences given Gaussian priors and a variety of likelihood functions. As in \citet{BZMonteCarlo} and \citet{BQR}, we focus on low numbers of samples; we permitted tested methods 150 samples on synthetic problems, and 300 on real problems. We are motivated by real-world problems where evaluating likelihood samples is (computationally or otherwise) expensive, making it desirable to determine the techniques for evidence estimation that can operate best when permitted only a small number of samples. Ground truth $Z$ is available for only some integrals; for the non-analytic integrals, $Z$ was estimated by a run of \acro{smc} with $10^6$ samples.
 
 We considered a range of synthetic examples. We firstly tested on six distinct one-dimensional functions. These included mixtures of two Gaussians, alternately widely separated and overlapping. As a challenge, we also included a high-frequency sinusoid. In higher dimension, we included three examples of four-dimensional Gaussian mixtures. We also tested on a two-dimensional version of the funnel distribution of \citet{neal2003slice}, known to be particularly difficult for Metropolis-Hastings samplers.
 
@@ -590,9 +590,14 @@ Table \ref{tbl:Combined Synthetic Results} shows combined performance on the syn
 
 Table \ref{tbl:Combined Prawn Results} shows results for the various methods on the real prawn dataset.  Here, we see that although \acro{bbq*} was again closest on average to the truth, it was overconfident.  The method that gave the highest likelihood to the true $Z$ was one which did not perform active sampling, but obtained samples through an \acro{ais} chain.  This is likely due to the stationarity assumption made by our \gpb model, which sometimes leads to overconfident extrapolation.
 
+The relative likelihoods of \acro{bq} and \acro{bq*} indicate that the approximate marginalisation of hyperparameters offers a small but notable improvement in variance estimate. The relative performances of \acro{bbq} and \acro{bbq*} reveal that this marginalisation forms a significant contribution to the effective selection of samples. 
+
 \section{Conclusions}
 
- In this paper, we have made several advances to the \acro{bq} method for evidence estimation.  These are: imposing a positivity constraint, approximately marginalizing hyperparameters, and using active sampling to selection the location of function evaluations.  We demonstrated the superior sample efficiency of an active learning approach, and showed that the model's posterior variance over $Z$ can be used as a stopping criterion.
+ In this paper, we have made several advances to the \acro{bq} method for evidence estimation.  These are: imposing a positivity constraint, approximately marginalising hyperparameters, and using active sampling to select the location of function evaluations. Of these contributions, the active learning approach yielded the most significant gains for integral estimation.
+ 
+ 
+%   We  have demonstrated the superior sample efficiency of an active learning approach to integral estimation.
 % \acro{mc} is an extremely widely used method, and advances in  allow modelers to use richer model classes and to be more confident in their model evaluations.  
 %We hope that thse contributions expect that the class of model-based quadrature approaches will come to be seen as a viable alternative to \acro{mc} for some problem classes.
 
