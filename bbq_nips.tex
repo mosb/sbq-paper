@@ -1,10 +1,12 @@
-\documentclass{article}
+\documentclass{article} % For LaTeX2e
+\usepackage{nips12submit_e,times}
 \usepackage{preamble}
 %\usepackage{subfig}
 \newcommand{\dblspace}{\setlength{\baselineskip}{0.8cm}}
 \renewcommand{\pskinny}[2]{p\big(#1|#2\big)}
 \usepackage{graphicx} % For figures
-\usepackage{subfigure} 
+\usepackage{caption}
+\usepackage{subcaption} 
 \usepackage{natbib}   % For citations
 \usepackage{algorithm}
 \usepackage{algorithmic}
@@ -14,40 +16,57 @@
 \usepackage{color} % for comments to each other
 \usepackage{comment}
 \usepackage{pgfplots}
-\usepackage{icml2012}
 
-% The width of one column in cm: \printinunitsof{cm}\prntlen{\columnwidth} = 8.25381
+\title{Bayesian Quadrature for Active Learning of Model Evidence}
 
-% \usepackage[accepted]{icml2012}¡
+\author{
+David S.~Hippocampus\thanks{ Use footnote for providing further information
+about author (webpage, alternative address)---\emph{not} for acknowledging
+funding agencies.} \\
+Department of Computer Science\\
+Cranberry-Lemon University\\
+Pittsburgh, PA 15213 \\
+\texttt{hippo@cs.cranberry-lemon.edu} \\
+\And
+Coauthor \\
+Affiliation \\
+Address \\
+\texttt{email} \\
+\AND
+Coauthor \\
+Affiliation \\
+Address \\
+\texttt{email} \\
+\And
+Coauthor \\
+Affiliation \\
+Address \\
+\texttt{email} \\
+\And
+Coauthor \\
+Affiliation \\
+Address \\
+\texttt{email} \\
+(if needed)\\
+}
 
-% The \icmltitle you define below is probably too long as a header.
-% Therefore, a short form for the running title is supplied here:
-\icmltitlerunning{Bayesian Quadrature for Active Learning of Model Evidence}
+% The \author macro works with any number of authors. There are two commands
+% used to separate the names and addresses of multiple authors: \And and \AND.
+%
+% Using \And between authors leaves it to \LaTeX{} to determine where to break
+% the lines. Using \AND forces a linebreak at that point. So, if \LaTeX{}
+% puts 3 of 4 authors names on the first line, and the last on the second
+% line, try using \AND instead of \And before the third author name.
+
+\newcommand{\fix}{\marginpar{FIX}}
+\newcommand{\new}{\marginpar{NEW}}
+
+%\nipsfinalcopy % Uncomment for camera-ready version
+
 
 \begin{document} 
-\twocolumn[
-\icmltitle{
-Bayesian Quadrature for Active Learning of Model Evidence}
-%Sampling for Bayesian Quadrature\\or\\Actively Learning Normalization Constants\\or\\Doubly Bayesian Quadrature: The \acro{bbq} Algorithm\\or\\
 
-% It is OKAY to include author information, even for blind
-% submissions: the style file will automatically remove it for you
-% unless you've provided the [accepted] option to the icml2012
-% package.
-\icmlauthor{Your Name}{email@yourdomain.edu}
-\icmladdress{Your Fantastic Institute,
-            314159 Pi St., Palo Alto, CA 94306 USA}
-\icmlauthor{Your CoAuthor's Name}{email@coauthordomain.edu}
-\icmladdress{Their Fantastic Institute,
-            27182 Exp St., Toronto, ON M6H 2T1 CANADA}
-
-% You may provide any keywords that you 
-% find helpful for describing your paper; these are used to populate 
-% the "keywords" metadata in the PDF but will not be shown in the document
-\icmlkeywords{Bayesian Quadrature, Monte Carlo, Gaussian Processes, Numerical Integration, Model Evidence, Likelihood ratios}
-
-\vskip 0.3in
-]
+\maketitle
 
 \begin{abstract} 
 %We describe a novel approach to quadrature for probabilistic integrals, offering a competitor to traditional Monte Carlo methods. We use a Bayesian quadrature framework \citep{BZHermiteQuadrature,BZMonteCarlo}.
@@ -72,7 +91,7 @@ An alternative, model-based approach is Bayesian Quadrature (\acro{bq}) \citep{B
 
 \begin{figure}
 \centering
-\psfragfig[width=0.8\columnwidth]{figures/bmc_intro}
+\psfragfig[height=3.5cm]{figures/bmc_intro}
 \caption{An illustration of model-based integration.  We compute the expected area underneath a distribution over functions, conditioned on sampled values of the function.  Samples added at new locations will reduce our uncertainty about the area under the function.}
 \label{fig:model_based}
 \end{figure}
@@ -118,8 +137,8 @@ We compare our \acro{bq} approach against standard Monte Carlo techniques on bot
 Gaussian processes (\gp s) offer a powerful method to perform Bayesian inference about functions \citep{GPsBook}. A \gpb is defined as a distribution over the functions $f: \mathcal{X} \rightarrow \mathbb{R}$ such that the distribution over the possible function values on any finite subset of $\mathcal{X}$ is multivariate Gaussian. For clarity, we henceforth assume $\mathcal{X} = \mathbb{R}$, although all results generalise readily to $\mathbb{R}^n$. For a function $f$, the prior distribution over its values $\vf$ on $\vlfv \subset \mathcal{X}$ is
 \begin{align}%\label{eq:\gpbDefn}
 \textstyle
- &\po{\vf}\deq \N{\vf}{\vmu}{K}\nonumber\\
- &\deq\frac{1}{\sqrt{\det({2\pi K})}}\,\exp \big(-\frac{1}{2}\,(\vf-\vmu)\tra\,K\inv\,(\vf-\vmu)\big).
+ \po{\vf}\deq \N{\vf}{\vmu}{K}
+ \deq\frac{1}{\sqrt{\det({2\pi K})}}\,\exp \big(-\frac{1}{2}\,(\vf-\vmu)\tra\,K\inv\,(\vf-\vmu)\big).
 \end{align}
 This distribution is specified by mean and covariance functions, which give the mean vector $\vmu$ and covariance matrix $K$ respectively. 
 In this paper, we use Gaussian (squared exponential) covariance functions,
@@ -140,24 +159,22 @@ Given observations $(\vlfv_s,\vf_s)$, we are interested in making predictions ab
 where the mean $m$, covariance $C$, and variance $V$ are
 \begin{align} 
 \textstyle
-&\meancond{f}{\lfv_\star}{s}
-\deq \mean{f_\star}{\vf_s}
-\nonumber\\
-&= \mu(\lfv_\star)+
+\meancond{f}{\lfv_\star}{s}
+& \deq \mean{f_\star}{\vf_s}
+= \mu(\lfv_\star)+
 K(\lfv_\star,\vlfv_s)
 K(\vlfv_s,\vlfv_s)\inv
 \bigl(\vf_s-{\mu}(\vlfv_s)\bigr)\label{eq:GPMean}
 \\[0.2cm]
-&C_{f|s}(\lfv_\star, \lfv'_\star)
-\deq C(f_\star,f'_\star|\vf_s) 
-\nonumber\\
-&=K(\lfv_\star,\lfv'_\star) - 
+C_{f|s}(\lfv_\star, \lfv'_\star)
+& \deq C(f_\star,f'_\star|\vf_s) 
+=K(\lfv_\star,\lfv'_\star) - 
 K(\lfv_\star,\vlfv_s)
 K(\vlfv_s,\vlfv_s)\inv
 K(\vlfv_s,\lfv'_\star)%\label{eq:\gpbCov}
 \\[0.2cm]
-&\covcond{f}{\lfv_\star}{s}
-\deq {\cov{f_\star}{\vf_s}} 
+\covcond{f}{\lfv_\star}{s}
+&\deq {\cov{f_\star}{\vf_s}} 
 \deq C_{f|s}(\lfv_\star, \lfv_\star).
 \end{align} 
 Note that the above assumes implicit conditioning on hyperparameters. Where required for disambiguation, we'll make this explicit, as per $m_{f|s,w}(x\st) \deq \mean{f\st}{\vf_s, w}$ and so forth.
@@ -232,20 +249,20 @@ $\mean{\inty{f g}}{\vf_s, \vect{g}_s}$ for an integral $\int f(x) g(x) p(x) \ud 
 %
  \begin{figure}
  \centering
- \psfragfig[width=\columnwidth]{figures/log_transform2}
+ \psfragfig[height=3cm, width = 12cm]{figures/log_transform2}
  \caption{The input scale of a \gpb fitted to the log-likelihood function will typically be longer than that of a \gpb fit to the likelihood function.  A \gpb with a long input scale will generalize better to distant parts of the function, and have a posterior more concentrated around the true evidence. }
  \label{fig:log_is_better}
  \end{figure}
 %
 We wish to evaluate the evidence \eqref{eq:ev}, an integral over non-negative likelihoods, $\lfn(\lfv)$. Assigning a standard \gpb prior to $\lfn(\lfv)$ would ignore prior information about the range and non-negativity of $\lfn(\lfv)$, leading to pathologies such as potentially negative evidences (as observed in \citet{BZMonteCarlo}).  A much better prior would be a \gpb prior on $\log \lfn(x)$ (see Figure \ref{fig:log_is_better}). However, the integral under the exp of a \gpb is intractable,
-\begin{multline}\label{eq:minty_l}
+\begin{equation}\label{eq:minty_l}
 \mean{\If}{\vr_s}
 % & 
 % =\iint \inty{l}\,\p{\inty{l}}{l}\p{l}{\vl_s} \ud \inty{l} \,\ud l                                                                                                                                                               \nonumber\\
 % &
- =\int \Bigl( \int \exp\bigl(\tr(\lfv)\bigr)\po{\lfv}\,\ud\lfv\Bigr)\\
+ =\int \Bigl( \int \exp\bigl(\tr(\lfv)\bigr)\po{\lfv}\,\ud\lfv\Bigr)
 \N{\tr}{\meancondfn{\tr}{s}}{C_{\tr|s}} \ud \tr\,.
-\end{multline}
+\end{equation}
 
 Note that \eqref{eq:minty_l} does not possess the affine property exploited in \eqref{eq:mean_inty_f}. To progress, we adopt the approximate inference method of \citet{BQR} to tractably integrate under a log-\gpb prior.\footnote{In practice, we use the transform 
 $\log\left(\lfn(\lfv) + 1\right)$, allowing us to assume the transformed quantity has zero mean. For the sake of simplicity, we omit this detail in the following derivations.} That is, we perform inference for $Z$ directly as a functional of $\tr$;
@@ -306,12 +323,11 @@ Note that $Z_0$ and its functional derivatives are analytic due to our choice of
 This allows us to write the mean for $Z$
 %
 \begin{align}
-& \mean{\If}{Z_0,\tvr_s} \nonumber\\
-& \deq \int \mean{Z[\tr]}{Z_0,\tr}
+ \mean{\If}{Z_0,\tvr_s}
+ & \deq \int \mean{Z[\tr]}{Z_0,\tr}
 \p{\tr}{\tvr_s}\, \ud \tr 
 \nonumber\\
-& = \mean{Z[m_{\tr|s}]}{Z_0,m_{\tr|s}} \nonumber\\
-& = \mean{\If}{\vr_s} + 
+& \phantom{:}= \mean{Z[m_{\tr|s}]}{Z_0,m_{\tr|s}} = \mean{\If}{\vr_s} + 
 \mean{\varepsilon}{Z_0,\tvr_s,\Delta}
 \label{eq:mean_ev1}
 \end{align}
@@ -341,8 +357,7 @@ Given these candidates, we can now marginalise \eqref{eq:mean_ev1} over $\Delta$
 \end{equation}
 where the correction factor, the second term in \eqref{eq:post_mean}, is expected to be small, since $\Delta$ is small. We extend the work of \citet{BQR} to calculate the variance in the evidence,
 \begin{align} 
-& \cov{\If}{Z_0,\tvr_s,\Delta_c}\nonumber\\ 
-& = \secm{\If}{Z_0,\tvr_s} - \mean{\If}{Z_0,\tvr_s,\Delta_c}^2\,,
+\cov{\If}{Z_0,\tvr_s,\Delta_c} = \secm{\If}{Z_0,\tvr_s} - \mean{\If}{Z_0,\tvr_s,\Delta_c}^2\,,
 \end{align}
 where the second moment is 
 \begin{align}
@@ -568,17 +583,18 @@ Finally, we compared approaches on a real scientific problem.
 
 \begin{figure}
 %	\centering
-	\psfragfig[width=6cm,height=4cm]{figures/plots/varplot_two_spikes_1d_nice1} 	
-	\psfragfig[width=3cm]{figures/plots/legend}
-	\caption{The posterior distribution over $Z$ for several methods on a one-dimenional example as the number of samples increases.  Shaded regions denote $\pm2$ \acro{sd}'s from the mean.  The shaded regions for \acro{smc} and \acro{bmc} are off the vertical scale of this figure.}
-\label{fig:se}
-\end{figure}
-
-\begin{figure}
-	\centering
-	\psfragfig[width=8cm,height=4cm]{figures/plots/log_of_truth_plot_two_hills_1d_nice1}
-	\caption{The log density of the true evidence for different methods (colours identical to those in Figure \ref{fig:se}), compared to the true $Z$ (in black).  The integrand is the same as that in Figure \ref{fig:eue}.}
-\label{fig:nll}
+	\begin{subfigure}[b]{7.5cm}
+		\psfragfig[width=5cm,height=4cm]{figures/plots/varplot_two_spikes_1d_nice1} 	
+		\psfragfig[width=3cm]{figures/plots/legend}
+		\caption{}
+		\label{fig:se}
+	\end{subfigure}
+	\begin{subfigure}[b]{6cm}
+		\psfragfig[width=6cm,height=4cm]{figures/plots/log_of_truth_plot_two_hills_1d_nice1}
+		\caption{}
+		\label{fig:nll}
+	\end{subfigure}
+	\caption{\subref{fig:se}) The posterior distribution over $Z$ for several methods on a one-dimenional example as the number of samples increases.  Shaded regions denote $\pm2$ \acro{sd}'s from the mean.  The shaded regions for \acro{smc} and \acro{bmc} are off the vertical scale of this figure. \subref{fig:nll}) The log density of the true evidence for different methods (colours identical to those in \subref{fig:se}), compared to the true $Z$ (in black).  The integrand is the same as that in Figure \ref{fig:eue}.}
 \end{figure}
 
 
