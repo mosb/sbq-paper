@@ -77,7 +77,7 @@ We propose a novel Bayesian Quadrature approach to the numerical integration pro
 
 The fitting of complex models to big data often requires computationally intractable integrals to be approximated. In particular, machine learning applications often require integrals over probabilities
 \begin{equation}\label{eq:ev}
-Z = \inty{\lfn} = \int \lfn(\vlfv) p(\vlfv) d\vlfv,
+Z = \inty{\lfn} = \int \lfn(\vlfv) p(\vlfv) \ud\vlfv,
 \end{equation}
 where $\ell(\vlfv)$ is non-negative.  Examples include computing marginal likelihoods, partition functions, predictive distributions at test points, and integrating over (latent) variables or parameters in a model. While the methods we will describe are applicable to all such problems, we will explicitly consider computing model evidences, where $\ell(\vlfv)$ is the unnormalised likelihood of some parameters $x_1, \dots, x_D$. This is a particular challenge in modelling big data, where evaluating the likelihood over the entire dataset is highly computationally demanding. 
 
@@ -87,7 +87,7 @@ There exist several standard randomised methods for computing model evidence, su
 
 %\section{Model-Based Integration}
 
-An alternative, model-based, approach is Bayesian Quadrature (\acro{bq}) \cite{BZHermiteQuadrature, BZMonteCarlo}, which specifies a distribution over likelihood functions, using observations of the likelihood to infer a distribution for $Z$ (see Figure \ref{fig:model_based}). This approach offers improved sample efficiency, crucial for expensive samples computed on big data. We improve upon this existing work in three ways:
+An alternative, model-based, approach is Bayesian Quadrature (\acro{bq}) \cite{stanford1986bayesian, BZHermiteQuadrature, BZMonteCarlo}, which specifies a distribution over likelihood functions, using observations of the likelihood to infer a distribution for $Z$ (see Figure \ref{fig:model_based}). This approach offers improved sample efficiency, crucial for expensive samples computed on big data. We improve upon this existing work in three ways:
 
 \begin{figure}
 \centering
@@ -231,7 +231,7 @@ The corresponding closed-form expression for the posterior variance lends itself
 $\mean{\inty{f g}}{\vf_s, \vect{g}_s}$ for an integral $\int f(x) g(x) p(x) \ud x$. 
  In the following three sections, we will expand upon the improvements this paper introduces in the use of Bayesian Quadrature for computing model evidences.
 
-\section{Modeling Likelihood Functions}\label{sec:model_lik}
+\section{Modelling Likelihood Functions}\label{sec:model_lik}
 %
  \begin{figure}
  \centering
@@ -381,7 +381,7 @@ of the form \eqref{eq:post_mean}. The marginal posterior variance
 \pderiv{\hat{m}(x')}{w}
 \biggr)
 \end{align}
-is possible, although laborious, to express analytically, just like \eqref{eq:post_var}. 
+is possible, although laborious, to express analytically, as with \eqref{eq:post_var}. 
 
 %Figure \ref{fig:integrate_hypers} demonstrates our approximate marginalisation on a simple example.
 
@@ -444,12 +444,12 @@ In order to minimise the expected variance, the objective in \eqref{eq:exp_var} 
 
 We now present empirical evaluation of our algorithm in a variety of different experiments.
 
-\paragraph{Metrics:} We judged our methods according to three metrics, all averages over $N$ similar experiments indexed by $i$. Define $Z_i$ as the ground truth evidence for the $i$th experiment, $m(Z_i)$ as its estimated mean  and $V(Z_i)$  as its predicted variance. Firstly, we computed the root mean normalised square error,
+\paragraph{Metrics:} We judged our methods according to three metrics, all averages over $N$ similar experiments indexed by $i$. Define $Z_i$ as the ground truth evidence for the $i$th experiment, $m(Z_i)$ as its estimated mean  and $V(Z_i)$  as its predicted variance. Firstly, we computed the average log error,
 $
-\acro{rmnse} 
-\deq \surd\frac{1}{N} \sum_{i=1}^{N} \nicefrac{(m(Z_i) - Z_i)^2}{Z_i^2}\,,
+\acro{ale} 
+\deq \frac{1}{N} \sum_{i=1}^{N} \left|{\log m(Z_i) - \log Z_i}\right|\,.
 $
-providing the average percentage error. Next we computed the negative log-density of the truth, assuming experiments are independent,
+Next we computed the negative log-density of the truth, assuming experiments are independent,
 $
 -\log p(\vect{Z}) = -\sum_{i=1}^{N} \log \N{Z_i}{m(Z_i)}{V(Z_i)}
 $, which quantifies the accuracy of our variance estimates. We also computed the calibration $\mathcal{C}$, defined as the fraction of experiments in which the ground truth lay within our 50\% confidence interval $\bigl(m(Z_i) - 0.6745 \surd{V(Z_i)}, m(Z_i) + 0.6745 \surd{V(Z_i)}\bigr)$. Ideally, $\mathcal{C}$ would be  50\%: any higher, and a method is under-confident, any lower and it is over-confident. 
@@ -467,9 +467,9 @@ Next, we tested a novel algorithm, Doubly Bayesian Quadrature (\acro{bbq}). The 
 \paragraph{Problems:}
 We chose a myriad of problems over which to compare our methods. Our goal was to evaluate evidences given Gaussian priors and a variety of likelihood functions. As in \cite{BZMonteCarlo} and \cite{BQR}, we focus on low numbers of samples; we permitted tested methods 150 samples on synthetic integrands, and 300 when using real data. We are motivated by real-world, big-data, problems where evaluating likelihood samples is expensive, making it desirable to determine the techniques for evidence estimation that can operate best when permitted only a small number of samples. Ground truth $Z$ is available for some integrals; for the non-analytic integrals, $Z$ was estimated by a run of \acro{smc} with $10^6$ samples.
 
-We considered a range of synthetic examples. We firstly tested on six distinct one-dimensional functions. These included mixtures of two Gaussians, alternately widely separated and overlapping. As a challenge, we also included a high-frequency sinusoid. In higher dimension, we included three examples of four-dimensional Gaussian mixtures. We also tested on a two-dimensional version of the funnel distribution \cite{neal2003slice}, particularly difficult for Metropolis-Hastings samplers.
+We considered seven synthetic examples. We firstly tested using single Gaussians, in one, four, ten and twenty dimensions. We also tested on mixtures of two Gaussians in one dimension (two examples, alternately widely separated and overlapping) and four dimensions. In dimension greater than four, the great difficulty of 
 
-% Finally, we compared approaches on a real scientific problem. 
+Finally, we compared approaches on a real scientific problem. 
 % %Bayesian model comparison is increasingly important to the biological sciences 
 % %\cite{penny2010comparing, rosa2011bayesian}. 
 % \cite{mann2012multi} applied Bayesian model comparison to discover the rules of interaction between simple animals (glass prawns, {\it Paratya australiensis}) which lead to coherent group motion. We reproduced the computational experiments of \cite{mann2012multi} to calculate the evidence for each of three different models: a mean field model, a Markovian model and a non-Markovian model. These problems each required five parameters to be marginalised.  Given the large corpus of data available, evaluating likelihood samples for these models is computationally demanding; we considered only a hundredth of the available data, which then required 0.5 seconds per evaluation of the likelihood function.  The computation required by \acro{bbq}* (mainly training \gp s and optimising the expected loss surface) was always smaller than the 50 seconds it would require to evaluate a sample from the full model in this real problem, thus incurring at most a 2x slowdown over \acro{mc} techniques. 
@@ -526,15 +526,24 @@ We considered a range of synthetic examples. We firstly tested on six distinct o
 	\caption{\subref{fig:se}) The posterior distribution over $Z$ for several methods on a one-dimensional example as the number of samples increases.  Shaded regions denote $\pm2$ \acro{sd}'s from the mean.  The shaded regions for \acro{smc} and \acro{bmc} are off the vertical scale of this figure. \subref{fig:nll}) The log density of the true evidence for different methods (colours identical to those in \subref{fig:se}), compared to the true $Z$ (in black).  The integrand is the same as that in Figure \ref{fig:eue}.}
 \end{figure}
 
-\input{tables/combined_synth_worst_case.tex}
+\begin{table}[h!]
+\begin{minipage}[b]{0.5\linewidth}\centering
+\input{tables/combined_synth.tex}
+\end{minipage}
+%\hspace{0.5cm}
+\begin{minipage}[b]{0.5\linewidth}\centering
+\input{tables/combined_dla.tex}
+\end{minipage}
 %\input{tables/combined_prawn_worst_case.tex}
+\end{table}
 
-Table \ref{tbl:Combined Synthetic Results} shows combined performance on the synthetic integrands listed above. \acro{bbq*} provides an estimate of $Z$ which is on average closer to the truth than the other methods given the same number of samples. The calibration scores $\mathcal{C}$ show that no method is wildly miscalibrated\footnote{Because a single \acro{ais} chain gives no estimate of uncertainty, it has no likelihood or calibration scores.}.  The largest difference between \acro{bbq*} and the other methods is that it assigns much higher likelihood to the true value of $Z$.  For example, Figure \ref{fig:se} shows a case where both
- \acro{smc} and \acro{bbq*} are relatively close to the true value, however \acro{bbq*}'s posterior variance is much smaller.  Figure \ref{fig:nll} demonstrates the typical behavior of the active sampling of \acro{bbq*}, which quickly concentrates the posterior distribution around the true $Z$.
+Table \ref{tbl:Combined Synthetic Results} shows combined performance on the synthetic integrands listed above. The calibration scores $\mathcal{C}$ show that all methods\footnote{Because a single \acro{ais} chain gives no estimate of uncertainty, it has no likelihood or calibration scores.} are systematically overconfident, although our approaches are at least as well calibrated as alternatives. \acro{bbq*} provides an estimate of $Z$ which is on average closer to the truth than the other methods given the same number of samples, and assigns much higher likelihood to the true value of $Z$.  For example, Figure \ref{fig:se} shows a case where both
+ \acro{smc} and \acro{bbq*} are relatively close to the true value, however \acro{bbq*}'s posterior variance is much smaller.  Figure \ref{fig:nll} demonstrates the typical behavior of the active sampling of \acro{bbq*}, which quickly concentrates the posterior distribution around the true $Z$. 
 
-% Table \ref{tbl:Combined Prawn Results} shows results for the various methods on the real prawn dataset.  Here, we see that although \acro{bbq*} was again closest on average to the truth, it was overconfident.  The method that gave the highest likelihood to the true $Z$ was one which did not perform active sampling, but obtained samples through an \acro{ais} chain.  This is likely due to the stationarity assumption made by our \gpb model, which sometimes leads to overconfident extrapolation.
+Table \ref{tbl:Combined Real Results} shows results for the various methods on the real dataset.  
+%Here, we see that although \acro{bbq*} was again closest on average to the truth, it was overconfident.  The method that gave the highest likelihood to the true $Z$ was one which did not perform active sampling, but obtained samples through an \acro{ais} chain.  This is likely due to the stationarity assumption made by our \gpb model, which sometimes leads to overconfident extrapolation.
 
-The relative likelihoods of \acro{bq} and \acro{bq*} indicate that the approximate marginalisation of hyperparameters offers a small but notable improvement in variance estimate. The relative performances of \acro{bbq} and \acro{bbq*} reveal that this marginalisation forms a significant contribution to the effective selection of samples. 
+The negative likelihoods of \acro{bq*} are for every problem slightly lower than for \acro{bq} ($-\log p(\mathbf{Z})$ is on average $0.2$ lower), indicating that the approximate marginalisation of hyperparameters grants a small improvement in variance estimate. The relative performances of \acro{bbq} and \acro{bbq*} reveal that this marginalisation forms a significant contribution to the effective selection of samples. 
 
 \section{Conclusions}
 
