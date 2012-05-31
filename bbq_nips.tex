@@ -87,7 +87,7 @@ There exist several standard randomised methods for computing model evidence, su
 
 %\section{Model-Based Integration}
 
-An alternative, model-based, approach is Bayesian Quadrature (\acro{bq}) \cite{stanford1986bayesian, BZHermiteQuadrature, BZMonteCarlo}, which specifies a distribution over likelihood functions, using observations of the likelihood to infer a distribution for $Z$ (see Figure \ref{fig:model_based}). This approach offers improved sample efficiency, crucial for expensive samples computed on big data. We improve upon this existing work in three ways:
+An alternative, model-based, approach is Bayesian Quadrature (\acro{bq}) \cite{stanford1986bayesian, BZHermiteQuadrature, kennedy1998bayesian, BZMonteCarlo}, which specifies a distribution over likelihood functions, using observations of the likelihood to infer a distribution for $Z$ (see Figure \ref{fig:model_based}). This approach offers improved sample efficiency, crucial for expensive samples computed on big data. We improve upon this existing work in three ways:
 
 \begin{figure}
 \centering
@@ -538,7 +538,7 @@ Finally, we compared approaches on a real scientific problem.
 \end{table}
 
 Table \ref{tbl:Combined Synthetic Results} shows combined performance on the synthetic integrands listed above. The calibration scores $\mathcal{C}$ show that all methods\footnote{Because a single \acro{ais} chain gives no estimate of uncertainty, it has no likelihood or calibration scores.} are systematically overconfident, although our approaches are at least as well calibrated as alternatives. On average, \acro{bbq*} provides an estimate of $Z$ which is closer to the truth than the other methods given the same number of samples, and assigns much higher likelihood to the true value of $Z$. \acro{bbq*} also achieved the lowest error on five, and best likelihood on six, of the seven problems, including the twenty dimensional problem for both metrics.  Figure \ref{fig:se} shows a case where both
- \acro{smc} and \acro{bbq*} are relatively close to the true value, however \acro{bbq*}'s posterior variance is much smaller.  Figure \ref{fig:nll} demonstrates the typical behavior of the active sampling of \acro{bbq*}, which quickly concentrates the posterior distribution around the true $Z$. 
+ \acro{smc} and \acro{bbq*} are relatively close to the true value, however \acro{bbq*}'s posterior variance is much smaller.  Figure \ref{fig:nll} demonstrates the typical behavior of the active sampling of \acro{bbq*}, which quickly concentrates the posterior distribution at the true $Z$. 
 
 Table \ref{tbl:Combined Real Results} shows results for the various methods on the real dataset.  
 %Here, we see that although \acro{bbq*} was again closest on average to the truth, it was overconfident.  The method that gave the highest likelihood to the true $Z$ was one which did not perform active sampling, but obtained samples through an \acro{ais} chain.  This is likely due to the stationarity assumption made by our \gpb model, which sometimes leads to overconfident extrapolation.
