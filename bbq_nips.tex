@@ -92,7 +92,7 @@ An alternative, model-based, approach is Bayesian Quadrature (\acro{bq}) \cite{s
 \begin{figure}
 \centering
 \psfragfig[height=3.5cm]{figures/bmc_intro6}
-\caption{An illustration of model-based integration.  We compute a posterior for the integral $Z = \int \lfn(\vlfv) p(\vlfv) \ud\vlfv$, conditioned on sampled values of the function $\lfn(\vlfv)$. For this plot, we assume a broad Gaussian prior $p(x)$. Samples added at new locations will reduce our uncertainty about $Z$.}
+\caption{Model-based integration computes a posterior for the integral $Z = \int \lfn(\vlfv) p(\vlfv) \ud\vlfv$, conditioned on sampled values of the function $\lfn(\vlfv)$. For this plot, we assume a Gaussian process model for $\lfn(\vlfv)$ and a broad Gaussian prior $p(x)$. The variously probable integrands permitted under the model will give different possible values for $Z$, with associated differing probabilities.}
 \label{fig:model_based}
 \end{figure}
 
