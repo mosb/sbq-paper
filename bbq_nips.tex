@@ -92,7 +92,7 @@ An alternative, model-based, approach is Bayesian Quadrature (\acro{bq}) \cite{s
 \begin{figure}
 \centering
 \psfragfig[height=3.5cm]{figures/bmc_intro6}
-\caption{An illustration of model-based integration.  We compute the expected area underneath a distribution over functions, conditioned on sampled values of the function.  Samples added at new locations will reduce our uncertainty about the area under the function.}
+\caption{An illustration of model-based integration.  We compute a posterior for the integral $Z = \int \lfn(\vlfv) p(\vlfv) \ud\vlfv$, conditioned on sampled values of the function $\lfn(\vlfv)$. For this plot, we assume a broad Gaussian prior $p(x)$. Samples added at new locations will reduce our uncertainty about $Z$.}
 \label{fig:model_based}
 \end{figure}
 
