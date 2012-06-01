@@ -269,7 +269,7 @@ The integral \eqref{eq:minty_l} consists of the product of $Z$ and a \gpb for $\
 \,.
 \end{equation}
 
-We now introduce a secondary \gpb model for $\lfn$, the non-log space, to assist in the linearisation of the first non-analytic integral in \eqref{eq:minty_l2}.\footnote{Although separately modelling $\lfn$ and $\log \lfn$ may seem excessive and redudant it provides significant advantages in the  computational efficiency of the overall algorithm.} That is, we choose $\lfn_0 \deq  m_{\lfn|s}$, where $m_{\lfn|s}$ is the \gpb conditional mean (as per \eqref{eq:GPMean}) for $\lfn$ given observations $\lfn(\vlfv_s)$. For this \gpb (over the non-log space), we take zero prior means and Gaussian
+We now introduce a secondary \gpb model for $\lfn$, the non-log space, to assist in the linearisation of the first non-analytic integral in \eqref{eq:minty_l2}.\footnote{Although separately modelling $\lfn$ and $\log \lfn$ may seem excessive and redundant, it provides significant advantages in the  computational efficiency of the overall algorithm.} That is, we choose $\lfn_0 \deq  m_{\lfn|s}$, where $m_{\lfn|s}$ is the \gpb conditional mean (as per \eqref{eq:GPMean}) for $\lfn$ given observations $\lfn(\vlfv_s)$. For this \gpb (over the non-log space), we take zero prior means and Gaussian
 covariances of the form \eqref{eq:Gaussian_cov_fn}. If a probability is dependent upon this \gpb prior, it will be represented as conditional on $\vl_s$; if dependent upon the former \gpb prior over $\ll$, it will be conditional upon $\vll_s$.
 % Our linearisation corresponds to giving our \gpb over $Z$ observations
 % at $\ll_0= \log (m_{r|s})$ of both the functional itself,
@@ -465,16 +465,15 @@ Next, we tested a novel algorithm, Doubly Bayesian Quadrature (\acro{bbq}). The 
 \paragraph{Problems:}
 We used these methods to evaluate evidences given Gaussian priors and a variety of likelihood functions. As in \cite{BZMonteCarlo} and \cite{BQR}, we focus on low numbers of samples; we permitted tested methods 150 samples on synthetic integrands, and 300 when using real data. We are motivated by real-world, big-data, problems where evaluating likelihood samples is expensive, making it desirable to determine the techniques for evidence estimation that can operate best when permitted only a small number of samples. Ground truth $Z$ is available for some integrals; for the non-analytic integrals, $Z$ was estimated by a run of \acro{smc} with $10^5$ samples.
 
-We considered seven synthetic examples. We firstly tested using single Gaussians, in one, four, ten and twenty dimensions. We also tested on mixtures of two Gaussians in one dimension (two examples, alternately widely separated and overlapping) and four dimensions. %In dimension greater than four, the great difficulty of 
+We considered seven synthetic examples. We firstly tested using single Gaussians, in one, four, ten and twenty dimensions. We also tested on mixtures of two Gaussians in one dimension (two examples, alternately widely separated and overlapping) and four dimensions (a single example). %In dimension greater than four, the great difficulty of 
 
 We additionally tested methods on a real scientific problem: detecting a damped Lyman-$\alpha$ absorber (\textsc{dla}) between the Earth and
 an observed quasar from spectrographic readings of the quasar.
-\textsc{dla}s are large objects in the universe consisting primarily
+\textsc{dla}s are large objects consisting primarily
 of neutral hydrogen gas.  
-The statistical properties of \textsc{dla}s
-are inform us about the distribution of neutral hydrogen in the
+The statistical properties of \textsc{dla}s inform us about the distribution of neutral hydrogen in the
 universe, which is of fundamental cosmological importance. We model the quasar spectra using a \gp; the presence
-of a \textsc{dla} is represented as an observation fault with known dynamics \citep{garnett2010sequential}. This model has five hyperparameters to be marginalised, to which we assign priors drawn from the large corpus of data obtained from the Sloan Digital Sky Survey (\acro{sdss}) \citep{sdss}. We tested over four datasets; the expense of evaluating a \gpb likelihood sample on the large datasets available from the \acro{sdss} (140TB of data has been released in total) motivates the small sample sizes considered.
+of a \textsc{dla} is represented as an observation fault with known dynamics \citep{garnett2010sequential}. This model has five hyperparameters to be marginalised, to which we assign priors drawn from the large corpus of data obtained from the Sloan Digital Sky Survey (\acro{sdss}) \citep{sdss}. We tested over four datasets; the expense of evaluating a \gpb likelihood sample on the large datasets available from the \acro{sdss} (140TB of data have been released in total) motivates the small sample sizes considered.
 
 
 
@@ -538,12 +537,12 @@ of a \textsc{dla} is represented as an observation fault with known dynamics \ci
 \end{table}
 
 Table \ref{tbl:Combined Synthetic Results} shows combined performance on the synthetic integrands listed above. The calibration scores $\mathcal{C}$ show that all methods\footnote{Because a single \acro{ais} chain gives no estimate of uncertainty, it has no likelihood or calibration scores.} are systematically overconfident, although our approaches are at least as well calibrated as alternatives. On average, \acro{bbq*} provides an estimate of $Z$ which is closer to the truth than the other methods given the same number of samples, and assigns much higher likelihood to the true value of $Z$. \acro{bbq*} also achieved the lowest error on five, and best likelihood on six, of the seven problems, including the twenty dimensional problem for both metrics.  Figure \ref{fig:se} shows a case where both
- \acro{smc} and \acro{bbq*} are relatively close to the true value, however \acro{bbq*}'s posterior variance is much smaller.  Figure \ref{fig:nll} demonstrates the typical behavior of the active sampling of \acro{bbq*}, which quickly concentrates the posterior distribution at the true $Z$. 
+ \acro{smc} and \acro{bbq*} are relatively close to the true value, however \acro{bbq*}'s posterior variance is much smaller.  Figure \ref{fig:nll} demonstrates the typical behavior of the active sampling of \acro{bbq*}, which quickly concentrates the posterior distribution at the true $Z$. The negative likelihoods of \acro{bq*} are for every problem slightly lower than for \acro{bq} ($-\log p(\mathbf{Z})$ is on average $0.2$ lower), indicating that the approximate marginalisation of hyperparameters grants a small improvement in variance estimate. 
 
-Table \ref{tbl:Combined Real Results} shows results for the various methods on the real dataset.  
+Table \ref{tbl:Combined Real Results} shows results for the various methods on the real integration problems. Here \acro{bbq} is clearly the best performer; the additional exploration induced by the hyperparameter marginalisation of \acro{bbq*} may have led to local peaks being incompletely exploited. Exploration in a relatively high dimensional, multi-modal space is inherently risky; nonetheless, \acro{bbq*} achieved lower error than \acro{bbq} on two of the problems.
 %Here, we see that although \acro{bbq*} was again closest on average to the truth, it was overconfident.  The method that gave the highest likelihood to the true $Z$ was one which did not perform active sampling, but obtained samples through an \acro{ais} chain.  This is likely due to the stationarity assumption made by our \gpb model, which sometimes leads to overconfident extrapolation.
 
-The negative likelihoods of \acro{bq*} are for every problem slightly lower than for \acro{bq} ($-\log p(\mathbf{Z})$ is on average $0.2$ lower), indicating that the approximate marginalisation of hyperparameters grants a small improvement in variance estimate. The relative performances of \acro{bbq} and \acro{bbq*} reveal that this marginalisation forms a significant contribution to the effective selection of samples. 
+%The relative performances of \acro{bbq} and \acro{bbq*} reveal that this marginalisation forms a significant contribution to the effective selection of samples. 
 
 \section{Conclusions}
 
