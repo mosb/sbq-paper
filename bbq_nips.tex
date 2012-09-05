@@ -17,37 +17,33 @@
 \usepackage{comment}
 \usepackage{pgfplots}
 
+
 \title{Active Learning of Model Evidence \\Using Bayesian Quadrature }
 
 \author{
-David S.~Hippocampus\thanks{ Use footnote for providing further information
-about author (webpage, alternative address)---\emph{not} for acknowledging
-funding agencies.} \\
-Department of Computer Science\\
-Cranberry-Lemon University\\
-Pittsburgh, PA 15213 \\
-\texttt{hippo@cs.cranberry-lemon.edu} \\
+Michael A.~Osborne \\
+University of Oxford\\
+\texttt{mosb@robots.ox.ac.uk} \\
 \And
-Coauthor \\
-Affiliation \\
-Address \\
-\texttt{email} \\
+David Duvenaud \\
+University of Cambridge \\
+\texttt{dkd23@cam.ac.uk} \\
+\And
+Roman Garnett \\
+Carnegie Mellon University\\
+\texttt{rgarnett@cs.cmu.edu} \\
 \AND
-Coauthor \\
-Affiliation \\
-Address \\
-\texttt{email} \\
+Carl E.~Rasmussen \\
+University of Cambridge \\
+\texttt{cer54@cam.ac.uk} \\
 \And
-Coauthor \\
-Affiliation \\
-Address \\
-\texttt{email} \\
+Stephen J.~Roberts \\
+University of Oxford \\
+\texttt{mosb@robots.ox.ac.uk} \\
 \And
-Coauthor \\
-Affiliation \\
-Address \\
-\texttt{email} \\
-(if needed)\\
+Zoubin Ghahramani \\
+University of Cambridge \\
+\texttt{zoubin@eng.cam.ac.uk} \\
 }
 
 % The \author macro works with any number of authors. There are two commands
@@ -61,7 +57,7 @@ Address \\
 \newcommand{\fix}{\marginpar{FIX}}
 \newcommand{\new}{\marginpar{NEW}}
 
-%\nipsfinalcopy % Uncomment for camera-ready version
+\nipsfinalcopy % Uncomment for camera-ready version
 
 
 \begin{document} 
@@ -284,7 +280,7 @@ We expect $\Delta(\lfv)$ to be small everywhere relative to the magnitude of $\l
 
 Unfortunately, the second integral in \eqref{eq:minty_l2} is non-analytic due to the $\ll_0$ term within $\Delta$. As such, we perform another stage of Bayesian quadrature by treating $\Delta$ as an unknown function of $\lfv$. We use another \gpb for $\Delta$, with zero prior mean and Gaussian covariance \eqref{eq:Gaussian_cov_fn}. We must now choose \emph{candidate points} $\vlfv_c$ at which to evaluate the $\Delta$ function (note we do not need to evaluate $\lfn(\lfv_c)$ in order to compute $\Delta(\lfv_c)$).
 % Unfortunately, it is impractical to resolve this decision problem in the same manner as the selection of $\vlfvS$, our ultimate goal (a topic that receives our full attention in Section \ref{sec:S\acro{bq}})).
-$\vlfv_c$ should firstly include $\vlfv_s$, where we know that $\Delta$ is equal to zero. We select the remainder of $\vlfv_c$ as points removed by a single input scale from existing observations; we expect $\delta$ to be extremised at such $\vlfv_c$. 
+$\vlfv_c$ should firstly include $\vlfv_s$, where we know that $\Delta$ is equal to zero. We select the remainder of $\vlfv_c$ at random on the hyper-ellipses (whose axes are defined by the input scales for $\ell$) surrounding existing observations; we expect $\delta$ to be extremised at such $\vlfv_c$. 
 
 Given these candidates, we can now marginalise \eqref{eq:minty_l2} over $\Delta$ to give
 \begin{equation} \label{eq:post_mean}
@@ -561,12 +557,10 @@ Table \ref{tbl:Combined Real Results} shows results for the various methods on t
 % For example, log-likelihood functions typically take the form of a sum of many terms, each depending only on a small number of variables.  This prior information could easily be incorporated into the \gp, presumably allowing the \acro{bbq} algorithm to form concentrated posterior distributions over high-dimensional likelihoods.
 
 
+\subsubsection*{Acknowledgements}
+\small
+We would like to thank
 
-
-
-
-
-%\section*{Acknowledgements}
 \pagebreak
 \bibliography{bub}
 \bibliographystyle{unsrt}
