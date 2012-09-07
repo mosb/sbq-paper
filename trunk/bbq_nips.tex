@@ -129,7 +129,10 @@ From a Bayesian perspective, numerical integration is fundamentally an inference
 %While standard errors are possible for \acro{mcmc}, typically they rely on the sampler mixing well \cite{flegal2008markov}. As such, these errors can not identify exactly the failure to mix that is of most concern. The distribution of most use for our inference is a Gaussian process, which we now briefly introduce. 
 
 \section{Gaussian Processes}
-Since our \acro{bq} approach makes extensive use of Gaussian processes (\gp) \cite{GPsBook}, in this section we provide a brief introduction to \gp s and to our notation. A \gpb is defined as a distribution over the functions $f: \mathcal{X} \rightarrow \mathbb{R}$ such that the distribution over the possible function values on any finite subset of $\mathcal{X}$ is multivariate Gaussian. For clarity, we henceforth assume $\mathcal{X} = \mathbb{R}$, although all results generalise to $\mathbb{R}^n$. For a function $f$, the prior distribution over its vector of values $\vf$ on $\vlfv \subset \mathcal{X}$ is
+Since our \acro{bq} approach makes extensive use of Gaussian processes (\gp) \cite{GPsBook}, in this section we provide a brief introduction to \gp s and to our notation. 
+
+
+A \gpb is defined as a distribution over the functions $f: \mathcal{X} \rightarrow \mathbb{R}$ such that the distribution over the possible function values on any finite subset of $\mathcal{X}$ is multivariate Gaussian. For clarity, we henceforth assume $\mathcal{X} = \mathbb{R}$, although all results generalise to $\mathbb{R}^n$. For a function $f$, the prior distribution over its vector of values $\vf$ on $\vlfv \subset \mathcal{X}$ is
 \begin{align}%\label{eq:\gpbDefn}
 \textstyle
  \po{\vf}\deq \N{\vf}{\vmu}{K}
@@ -559,7 +562,7 @@ Table \ref{tbl:Combined Real Results} shows results for the various methods on t
 
 \subsubsection*{Acknowledgements}
 \small
-We would like to thank
+\acro{m.a.o.} was funded by the \acro{orchid} project (\url{http://www.orchid.ac.uk/}).
 
 \pagebreak
 \bibliography{bub}
