@@ -1,0 +1,1 @@
+paper on sampling for bayesian quadrature
